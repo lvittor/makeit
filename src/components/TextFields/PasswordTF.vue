@@ -1,0 +1,10 @@
+<template>
+  <v-text-field
+    placeholder="E-mail"
+    outlined
+    v-model="email"
+    :rules="emailRules"
+    label="E-mail"
+    required
+  ></v-text-field>
+</template>
