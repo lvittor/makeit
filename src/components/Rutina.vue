@@ -21,7 +21,9 @@
             hover
             class="mr-2"
           ></v-rating>
-          <span class="primary--text text-subtitle-2">64 Reviews</span>
+          <span class="primary--text text-subtitle-2"
+            >{{ reviews }} Reviews</span
+          >
         </v-card-title>
 
         <v-fade-transition>
@@ -38,6 +40,7 @@
 export default {
   data: () => ({
     overlay: false,
+    reviews: 64,
   }),
 };
 </script>

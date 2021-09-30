@@ -20,7 +20,11 @@ const routes = [
     name: "Login",
     component: () => import("../views/Login.vue"),
   },
-
+  {
+    path: "/find-rutine",
+    name: "FindRutine",
+    component: () => import("../views/FindRutine.vue"),
+  },
 ];
 
 const router = new VueRouter({
