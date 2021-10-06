@@ -7,13 +7,14 @@
         ></v-img>
 
         <v-card-text>
-          <h2 class="text-h6 primary--text">Rutina de Toro</h2>
-          Rutina para quedar mas ancho que el placard de tu cuarto
+          <h2 class="text-h6 primary--text">
+          <slot>{{ namerutina }}</slot></h2>
+          <slot>{{ desc }}</slot>
         </v-card-text>
 
         <v-card-title>
           <v-rating
-            :value="4"
+            :value="4" 
             dense
             color="red"
             background-color="red"
@@ -51,6 +52,8 @@ export default {
   data: () => ({
     overlay: false,
     reviews: 64,
+    namerutina: "Rutinovich",
+    desc: "zarpada"
   }),
 };
 </script>

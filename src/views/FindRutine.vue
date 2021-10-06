@@ -4,15 +4,15 @@
       <v-row align="end">
         <v-col md="2" />
         <v-col md="6" class="left">
-          <tit class="titulazos">Rutinas recientes</tit>
+          <tit class="titulazos">Favoritas</tit>
         </v-col>
         <v-col md="4">
-          <more class="view-more">Ver más rutinas recientes</more>
+          <more class="view-more">Ver más rutinas favoritas</more>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col md="2"><Rutine></Rutine></v-col>
-        <v-col md="2"> <Rutine></Rutine></v-col>
+        <v-col md="2"><Rutine></Rutine></v-col>
         <v-col md="2"><Rutine></Rutine></v-col>
         <v-col md="2"><Rutine></Rutine></v-col>
       </v-row>
@@ -22,15 +22,15 @@
       <v-row align="end">
         <v-col md="2" />
         <v-col md="6" class="left">
-          <tit class="titulazos">Favoritas</tit>
+          <tit class="titulazos">De Categoría X</tit>
         </v-col>
         <v-col md="4" class="left">
-          <more class="view-more">Ver más rutinas favoritas</more>
+          <more class="view-more">Ver más rutinas X</more>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col md="2"><Rutine></Rutine></v-col>
-        <v-col md="2"> <Rutine></Rutine></v-col>
+        <v-col md="2"><Rutine></Rutine></v-col>
         <v-col md="2"><Rutine></Rutine></v-col>
         <v-col md="2"><Rutine></Rutine></v-col>
       </v-row>
