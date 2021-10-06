@@ -7,12 +7,22 @@
         ></v-img>
 
         <v-card-text>
-          <h2 class="text-h6 primary--text">Magento Forests</h2>
-          Travel to the best outdoor experience on planet Earth. A vacation you
-          will never forget!
+          <h2 class="text-h6 primary--text">Rutina de Toro</h2>
+          Rutina para quedar mas ancho que el placard de tu cuarto
         </v-card-text>
 
         <v-card-title>
+          <v-rating
+            :value="4"
+            dense
+            color="red"
+            background-color="red"
+            hover
+            class="mr-2"
+          ></v-rating>
+          <span class="primary--text text-subtitle-2"
+            >Dificultad</span
+          >
           <v-rating
             :value="4"
             dense
@@ -22,7 +32,7 @@
             class="mr-2"
           ></v-rating>
           <span class="primary--text text-subtitle-2"
-            >{{ reviews }} Reviews</span
+            >{{ reviews }} votos</span
           >
         </v-card-title>
 
