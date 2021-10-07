@@ -17,6 +17,7 @@
       href="https://github.com/vuetifyjs/vuetify/releases/latest"
       target="_blank"
       text
+      to="/profile"
     >
       <span class="mr-2">Nombre de usuario</span>
       <v-icon>mdi-account</v-icon>

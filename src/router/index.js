@@ -37,6 +37,16 @@ const routes = [
     component: () => import("../views/FindRoutine.vue"),
   },
   {
+    path: "/profile",
+    name: "UserProfile",
+    component: () => import("../views/UserProfile.vue"),
+  },
+  {
+    path: "/profile-edit",
+    name: "UserProfileEdit",
+    component: () => import("../views/UserProfileEdit.vue"),
+  },
+  {
     path: "*",
     redirect: { name: "signin" },
   },
