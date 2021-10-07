@@ -25,6 +25,16 @@ const routes = [
     name: "FindRutine",
     component: () => import("../views/FindRutine.vue"),
   },
+  {
+    path: "/profile",
+    name: "UserProfile",
+    component: () => import("../views/UserProfile.vue"),
+  },
+  {
+    path: "/profile-edit",
+    name: "UserProfileEdit",
+    component: () => import("../views/UserProfileEdit.vue"),
+  },
 ];
 
 const router = new VueRouter({
