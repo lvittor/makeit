@@ -37,6 +37,11 @@ const routes = [
     component: () => import("../views/FindRoutine.vue"),
   },
   {
+    path: "/all-your-exercises",
+    name: "AllYourExercises",
+    component: () => import("../views/AllYourExercises.vue"),
+  },
+  {
     path: "*",
     redirect: { name: "signin" },
   },
