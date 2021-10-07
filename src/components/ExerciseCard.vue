@@ -7,7 +7,7 @@
         </v-card-title>
 
         <v-img
-            :src="img"
+            src="@/assets/defaultImage.png"
         ></v-img>
       </v-card>
     
