@@ -1,7 +1,7 @@
 <template>
   <v-hover>
-    <!-- <template v-slot:default="{ hover }"> -->
-    <template>
+    <template v-slot:default="{ hover }">
+    <!-- <template> -->
       <v-card class="mx-auto" max-width="344">
         <v-img
           src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"
@@ -39,11 +39,11 @@
           <span class="primary--text text-subtitle-2">{{ reviews }} votos</span>
         </v-card-title>
 
-        <!-- <v-fade-transition>
+        <v-fade-transition>
           <v-overlay v-if="hover" absolute color="#036358">
-            <v-btn>Ver mas</v-btn>
+            <v-btn >Ver mas</v-btn>
           </v-overlay>
-        </v-fade-transition> -->
+        </v-fade-transition>
       </v-card>
     </template>
   </v-hover>

@@ -1,6 +1,10 @@
 <template>
   <div>
     <v-container class="primary lighten-5" fluid>
+      <NavDrawer ref="nav"/>
+      <v-btn @click="$refs.nav.toggleDrawer()">
+      click
+      </v-btn>
       <v-row align="end">
         <v-col md="2" />
         <v-col md="6" class="left">
@@ -20,7 +24,7 @@
             :score="normalizeScore(9)"
           />
         </v-col>
-        <v-col md="2"><Routine :reviews="22" /></v-col>
+        <v-col md="2"><Routine :reviews="22" /> </v-col>
         <v-col md="2"><Routine /></v-col>
         <v-col md="2"><Routine /></v-col>
       </v-row>
@@ -61,6 +65,7 @@
 
 <script>
 import Routine from "../components/Routine.vue";
+import NavDrawer from "../components/NavigationDrawer.vue"
 
 export default {
   name: "FindRoutine",
@@ -99,6 +104,7 @@ export default {
   },
   components: {
     Routine,
+    NavDrawer
   },
 };
 </script>
