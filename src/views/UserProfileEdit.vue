@@ -91,12 +91,20 @@
           <v-row align="center" justify="space-around" class="mt-10">
               <v-btn
                 depressed
-                outlined
                 color="primary"
                 x-large
                 :to="buttons[1].route"
               >
                 {{ buttons[1].text }}
+              </v-btn>
+              <v-btn
+                depressed
+                outlined
+                color="primary"
+                x-large
+                :to="buttons[2].route"
+              >
+                {{ buttons[2].text }}
               </v-btn>
           </v-row>
             
@@ -144,6 +152,7 @@ export default {
             
             buttons: [
               { text: "Editar", route: "/" },
+              { text: "Cancelar", route: "/" },
               { text: "Guardar cambios", route: "/" },
             ],
             
