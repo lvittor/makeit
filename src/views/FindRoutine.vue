@@ -11,9 +11,15 @@
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-col md="2"
-          ><Routine namep="titulo rutina 1" desc="descripcion de la rutina 1" :reviews="20"
-        /></v-col>
+        <v-col md="2">
+          <Routine
+            namep="titulo rutina 1"
+            desc="descripcion de la rutina 1"
+            :reviews="20"
+            :difficulty="getDifficulty('rookie')"
+            :score="normalizeScore(9)"
+          />
+        </v-col>
         <v-col md="2"><Routine :reviews="22" /></v-col>
         <v-col md="2"><Routine /></v-col>
         <v-col md="2"><Routine /></v-col>
@@ -60,9 +66,37 @@ export default {
   name: "FindRoutine",
 
   data: () => ({
-    // routines: [{}, {}]
+    //
   }),
-
+  methods: {
+    /**
+     * @param   {String} difficultyString a string given by the api call.
+     * @returns {Number}                  the numeric representation of the difficultyString.
+     */
+    getDifficulty(difficultyString) {
+      switch (difficultyString) {
+        case "rookie":
+          return 1;
+        case "beginner":
+          return 2;
+        case "intermediate":
+          return 3;
+        case "advanced":
+          return 4;
+        case "expert":
+          return 5;
+      }
+    },
+    /**
+     * @param   {Number} score010 a score number from 0 to 10 given by the api call
+     * @returns {Number}          the normalized score number (if the resulting number is float, 
+     *                            the Routine component will use the integer part only. 
+     *                            Resulting in {0...5} the only posibble score values)
+     */
+    normalizeScore(score010){
+      return score010 / 2;
+    }
+  },
   components: {
     Routine,
   },
