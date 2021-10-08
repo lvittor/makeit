@@ -37,7 +37,7 @@ export default {
     return {
       buttons: [
         { text: "Buscar una rutina", route: "/find-rutine" },
-        { text: "Crear una rutina", route: "/about" },
+        { text: "Crear una rutina", route: "/create-routine" },
         { text: "Tus rutinas", route: "/about" },
       ],
     };
