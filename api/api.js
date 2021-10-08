@@ -13,7 +13,8 @@ class Api {
 
   static async fetch(url, secure, init = {}, controller) {
     if (secure && Api.token) {
-      if (!init.headers)
+ 
+     if (!init.headers)
         init.headers = {}
 
       init.headers['Authorization'] = `bearer ${Api.token}`

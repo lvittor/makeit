@@ -57,7 +57,7 @@
             style="min-width: 88px"
             color="primary"
             depressed
-            @click="wip"
+            @click="Helper.login"
           >
             {{ $vuetify.lang.t("$vuetify.auth.sign-up.signup") }}
           </v-btn>
@@ -68,7 +68,7 @@
 </template>
 
 <script>
-import { wip } from "@/helpers.js";
+import { Helper } from "@/helpers.js";
 
 export default {
   components: {
@@ -78,7 +78,7 @@ export default {
   },
 
   methods: {
-    wip,
+    Helper,
   },
 };
 </script>

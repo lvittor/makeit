@@ -10,7 +10,7 @@
 </template>
 
 <script>
-import { wip } from "@/helpers.js";
+//import { wip } from "@/helpers.js";
 
 export default {
   computed: {
@@ -20,8 +20,8 @@ export default {
         : ["¿Ya tenes una cuenta?", "Iniciar sesion", "/auth/signin"];
     },
   },
-  methods: {
-    wip,
-  },
+  // methods: {
+  //   wip,
+  // },
 };
 </script>

@@ -12,9 +12,11 @@
           <EmailTF
             class="mb-3"
             :label="$vuetify.lang.t('$vuetify.auth.sign-up.email')"
+            :email.sync="email"
           />
           <PasswordTF
             :label="$vuetify.lang.t('$vuetify.auth.sign-up.password')"
+            :password.sync="password"
           />
           <div class="d-flex justify-end">
             <a class="pa-0 text-none" text color="primary" max-height="19">
@@ -30,7 +32,7 @@
             style="min-width: 88px"
             color="primary"
             depressed
-            @click="wip"
+            @click="login(email, password)"
           >
             {{ $vuetify.lang.t("$vuetify.auth.sign-in.signin") }}
           </v-btn>
@@ -41,16 +43,55 @@
 </template>
 
 <script>
-import { wip } from "@/helpers.js";
+import {mapState, mapGetters, mapActions} from 'vuex'
+import {Credentials} from "@/../api/user.js";
+
 
 export default {
   components: {
     PasswordTF: () => import("../../components/TextFields/Password"),
     EmailTF: () => import("../../components/TextFields/Email"),
   },
-
-  methods: {
-    wip,
+  data() {
+    return {
+      email: '',
+      password: '',
+      result: null,
+      controller: null
+    }
   },
+  computed: {
+    ...mapState('security', {
+      $user: state => state.user,
+    }),
+    ...mapGetters('security', {
+      $isLoggedIn: 'isLoggedIn'
+    }),
+    canAbort() {
+      return this.$isLoggedIn && this.controller
+    }
+  },
+  methods: {
+     ...mapActions('security', {
+      $getCurrentUser: 'getCurrentUser',
+      $login: 'login',
+      $logout: 'logout',
+    }),
+    setResult(result){
+      this.result = JSON.stringify(result, null, 2)
+    },
+    clearResult() {
+      this.result = null
+    },
+    async login(username, password) {
+      try {
+        const credentials = new Credentials(username, password)
+        await this.$login({credentials, rememberMe: true })
+        this.clearResult()
+      } catch (e) {
+        this.setResult(e)
+      }
+    },
+  }
 };
 </script>
