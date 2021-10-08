@@ -3,11 +3,10 @@
         <v-card-title>
             <slot><h2 class="h6">{{ namep }}</h2></slot>
             <slot>{{ desc }}</slot>
-            <slot>{{ img }}</slot>
         </v-card-title>
 
         <v-img
-            src="@/assets/defaultImage.png"
+            :src="img"
         ></v-img>
       </v-card>
     
@@ -22,17 +21,18 @@ export default {
     },
     img: {
       type: String,
-      default: "@/assets/defaultImage.png",
+      default: require("@/assets/defaultImage.png"),
     },
     namep: {
       type: String,
     },
     desc: {
       type: String,
+      default: "",
     },
   },
   data: () => ({
-    //
+    
   }),
 };
 </script>

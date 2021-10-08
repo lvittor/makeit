@@ -1,17 +1,18 @@
 <template>
   <div>
-    <v-container fluid class="mt-16">
+    <v-container class="mt-16">
       <v-row align="end">
-        <v-col md="2" />
         <v-col md="6" class="left">
           <tit class="titulazos">Tus Ejercicios</tit>
         </v-col>
       </v-row>
       <v-row justify="center">
         <v-col md="2"><NewExercise/></v-col>
-        <v-col md="2"><ExerciseCard namep="Estocadas" desc="fortalecimiento"/></v-col>
-        <v-col md="2"></v-col>
-        <v-col md="2"></v-col>
+        <v-col md="3"><ExerciseCard namep="Estocadas" desc="fortalecimiento"/></v-col>
+        <v-col md="3"><ExerciseCard namep="Estocadas" desc="fortalecimiento"/></v-col>
+        <v-col md="3"><ExerciseCard namep="Estocadas" desc="fortalecimiento"/></v-col>
+        <v-col md="3"><ExerciseCard namep="Estocadas" desc="fortalecimiento"/></v-col>
+        <v-col md="3"><ExerciseCard namep="Estocadas" desc="fortalecimiento"/></v-col>
       </v-row>
     </v-container>
   </div>
