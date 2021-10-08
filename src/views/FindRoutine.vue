@@ -2,9 +2,9 @@
   <div>
     <v-container class="primary lighten-5" fluid>
       <NavDrawer ref="nav"/>
-      <v-btn @click="$refs.nav.toggleDrawer()">
-      click
-      </v-btn>
+      <!-- <v-btn @click="$refs.nav.toggleDrawer()">
+      click 
+      </v-btn> -->
       <v-row align="end">
         <v-col md="2" />
         <v-col md="6" class="left">
@@ -15,18 +15,24 @@
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-col md="2">
-          <Routine
-            namep="titulo rutina 1"
-            desc="descripcion de la rutina 1"
-            :reviews="20"
-            :difficulty="getDifficulty('rookie')"
-            :score="normalizeScore(9)"
-          />
+        <v-col md="2" v-for="eachroutine in favs" v-bind:key="eachroutine"> <!-- que pingo hago con el key?-->
+          <div @click="$refs.nav.toggleDrawer(getDifficulty(eachroutine.diff), normalizeScore(eachroutine.score), eachroutine.title, eachroutine.desc)">
+            <Routine
+              :namep= "eachroutine.title"
+              :desc="eachroutine.desc"
+              :reviews="20"
+              :difficulty="getDifficulty(eachroutine.diff)"
+              :score="normalizeScore(eachroutine.score)"
+            />
+          </div>
         </v-col>
-        <v-col md="2"><Routine :reviews="22" /> </v-col>
+        <!-- <v-col md="2">
+          <div @click="$refs.nav.toggleDrawer(getDifficulty('rookie'), normalizeScore(9), 'titulo rutina 1', 'descripcion de la rutina 1')">
+            <Routine :reviews="22"  />
+          </div>
+        </v-col>
         <v-col md="2"><Routine /></v-col>
-        <v-col md="2"><Routine /></v-col>
+        <v-col md="2"><Routine /></v-col> -->
       </v-row>
     </v-container>
 
@@ -71,7 +77,11 @@ export default {
   name: "FindRoutine",
 
   data: () => ({
-    //
+    favs: [{title: 'Principiantes I', desc:'Rutina para gente que arranca a entrenar', score:9, diff:'rookie'},
+           {title: 'Principiantes II', desc:'Rutina para gente que lleva un tiempo entrenando', score:8, diff:'intermediate'},
+           {title: 'Rutina de Toro', desc:'Rutina excigente para deportistas experimentados', score:10, diff:'expert'},
+           {title: 'Rutina pikante', desc:'Para quedar más duro que cachetazo de padrastro', score:4, diff:'advanced'}
+           ]
   }),
   methods: {
     /**
@@ -79,6 +89,7 @@ export default {
      * @returns {Number}                  the numeric representation of the difficultyString.
      */
     getDifficulty(difficultyString) {
+      //debería pasarsele el id de la rutina para luego extraer la dificultad
       switch (difficultyString) {
         case "rookie":
           return 1;
@@ -98,9 +109,16 @@ export default {
      *                            the Routine component will use the integer part only. 
      *                            Resulting in {0...5} the only posibble score values)
      */
+    //debería pasarsele el id de la rutina para luego extraer el score
     normalizeScore(score010){
       return score010 / 2;
-    }
+    },
+    /* getTitle(id){
+      return ;
+    },
+    getDesc(id){
+      return ;
+    } */
   },
   components: {
     Routine,

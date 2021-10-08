@@ -36,7 +36,7 @@
             class="mr-2"
             readonly
           ></v-rating>
-          <span class="primary--text text-subtitle-2">{{ reviews }} votos</span>
+          <span class="primary--text text-subtitle-2">Puntuación</span>
         </v-card-title>
 
         <v-fade-transition>
