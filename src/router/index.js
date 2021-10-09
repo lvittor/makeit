@@ -40,6 +40,11 @@ const routes = [
     path: "*",
     redirect: { name: "signin" },
   },
+  {
+    path: "/find-all-routines",
+    name: "FindAllRoutines",
+    component: () => import("../views/FindAllRoutines.vue"),
+  },
 ];
 
 const router = new VueRouter({
