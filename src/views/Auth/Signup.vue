@@ -107,7 +107,7 @@ export default {
 
     async createUser(mail, password, confirmpassword, firstName, lastName, username) {
       if(password == confirmpassword){
-        const user = new User(mail, password, firstName, lastName, username);
+        const user = new User(mail, password, firstName, lastName, username + "@gmail.com"  );
         try {
           this.user = await this.$createUser(user);
           Helper.setResult(this.user)

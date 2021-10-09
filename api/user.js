@@ -23,6 +23,10 @@ class UserApi {
         return await Api.post(UserApi.getUrl(), false, user, controller)
     }
 
+    static async modify(user, controller) {
+        return await Api.put(UserApi.getUrl('current'), true, user, controller)
+      }
+
 }
 
 class Credentials {
@@ -36,11 +40,11 @@ class User {
     /**
      * username <-> email for internal api reasons
      */
-    constructor(mail, password, firstName, secondName, username) {
+    constructor(mail, password, firstName, lastName, username) {
         this.username = mail;
         this.password = password;
         this.firstName = firstName;
-        this.secondName = secondName;
+        this.lastName = lastName;
         this.email = username;
     }
 }

@@ -39,9 +39,6 @@
           </v-btn>
           
         </div>
-        <v-btn @click="logout()">
-            logout
-        </v-btn>
       </div>
     </v-container>
   </div>
@@ -90,11 +87,8 @@ export default {
         Helper.clearResult()
       } catch (e) {
         Helper.setResult(e)
+        alert(e)
       }
-    },
-    async logout() {
-      await this.$logout()
-      Helper.clearResult()
     },
   }
 };

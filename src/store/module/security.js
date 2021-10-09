@@ -44,6 +44,7 @@ export default {
         async login({dispatch}, {credentials, rememberMe}) {
             const result = await UserApi.login(credentials)
             dispatch('updateToken', { token: result.token, rememberMe })
+            return result
         },
         async logout({dispatch}) {
             await UserApi.logout()
@@ -58,6 +59,12 @@ export default {
         },
         async createUser({commit}, user) {
             const result = await UserApi.add(user)
+            commit('setUser', result)
+            return result
+        },
+
+        async modifyUser({commit}, user) {
+            const result = await UserApi.modify(user)
             commit('setUser', result)
             return result
         },
