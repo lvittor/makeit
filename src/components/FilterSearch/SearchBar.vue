@@ -18,13 +18,13 @@
                 solo
                 @click.native.stop
                 @input="setSearch($event)"
+                @change="pushFound()"
                 hide-details="auto"
                 class="mr-2 ml-4"
               /> 
             </v-expansion-panel-header>
             <v-expansion-panel-content class="grey lighten-2">
               <Filters />
-
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
@@ -49,8 +49,16 @@ export default {
 
   methods: {
     setSearch(text) {
+      this.search = text;
       this.$root.$emit('search', text);
-    }
-  }
+    },
+
+    pushFound() {
+      this.$router.push({
+        name: 'filtertable',
+        params: {search: this.search}
+      });
+    },
+  },
 }
 </script>

@@ -54,12 +54,14 @@
         </v-card>
       </v-col>
     </v-row>
+    <v-btn @click="get()"> HOLA </v-btn>
   </v-container>
 </template>
 
 <script>
 
 export default {
+  name: 'filtertable',
   data() {
     return {
       sort: 'fecha',
@@ -164,13 +166,17 @@ export default {
           break;
         case 2:
           this.sort = 'intensidad';
-          this.desc = true;
+          this.desc = false;
           break;
         case 3:
           this.sort = 'categoria';
           this.desc = false;
           break;
       }
+    },
+
+    get() {
+      alert(this.search);
     },
 
     setRating(n) {
@@ -185,6 +191,10 @@ export default {
       this.search = text;
     }
   }, 
+
+  beforeMount() {
+    alert(this.$route.params.search);
+  },
 
   mounted() {
     this.$root.$on('filtertable', (n) => {
@@ -201,7 +211,8 @@ export default {
     }),
     this.$root.$on('search', (text) => {
       this.setSearch(text);
-    })
+    }),
+    alert('LA VARIABLE: ' + this.search);
   },
 
   computed: {

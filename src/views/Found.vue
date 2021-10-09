@@ -1,7 +1,6 @@
 <template>
   <div class="back grey lighten-5" @click="message()">
     <FilterTable />
-    
   </div>
 </template>
 
