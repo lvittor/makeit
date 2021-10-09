@@ -20,4 +20,8 @@ export default class Helper{
       this.setResult(e)
     }
   }
+
+  
+
+  
 }

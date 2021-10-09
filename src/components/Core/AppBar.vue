@@ -19,8 +19,44 @@
       text
       to="/profile"
     >
-      <span class="mr-2">Nombre de usuario</span>
+      <span class="mr-2">{{ user }}</span>
       <v-icon>mdi-account</v-icon>
     </v-btn>
   </v-app-bar>
 </template>
+
+<script>
+
+import {mapState, mapGetters, mapActions} from 'vuex'
+
+export default {
+  data: () => {
+    return {
+      firstName: '',
+      lastName: '',
+      user: '',
+    }
+  },
+  computed: {
+    ...mapState('security', {
+      $user: state => state.user,
+    }),
+    ...mapGetters('security', {
+      $isLoggedIn: 'isLoggedIn'
+    }),
+  },
+  methods: {
+    ...mapActions('security', {
+      $getCurrentUser: 'getCurrentUser',
+    }),
+    async getFirstAndLastName(){
+      if (this.$isLoggedIn){
+        let currUser = await this.$getCurrentUser();
+        this.user = currUser.firstName + ' ' + currUser.lastName;
+      }
+      this.user = ''
+    }
+  }
+
+}
+</script>>

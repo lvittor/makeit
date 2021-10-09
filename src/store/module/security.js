@@ -12,7 +12,7 @@ export default {
     getters: {
         isLoggedIn(state) {
             return state.token != null
-        }
+        },
     },
     mutations: {
         setUser(state, user) {
@@ -55,6 +55,11 @@ export default {
 
             const result = await UserApi.get()
             commit('setUser', result)
-        }
+        },
+        async createUser({commit}, user) {
+            const result = await UserApi.add(user)
+            commit('setUser', result)
+            return result
+        },
     },
 }

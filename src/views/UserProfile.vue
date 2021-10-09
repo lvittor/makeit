@@ -55,7 +55,7 @@
             <v-divider/>
           </v-row>
           
-          <v-row justify="center">
+          <v-row justify="center" >
             <v-col>
               <h3 class="font-weight-light" >{{textfields.username}}</h3>
             </v-col>
@@ -106,6 +106,9 @@
 </template>
 
 <script>
+
+import {mapState, mapGetters, mapActions} from 'vuex'
+
 export default {
    
   name: "UserProfile",
@@ -117,15 +120,16 @@ export default {
 
   data(){
        return {
-            
+            waitData: null,
+            currUser:" null",
             user: {
-              id: 1,
-              username: "johndoe",
-              firstName: "John",
-              lastName: "Doe",
+              id: null,
+              username: '',
+              firstName: '',
+              lastName: '',
               gender: "male",
               birthdate: 284007600000,
-              email: "johndoe@email.com",
+              email: '',
               phone: "98295822",
               avatarUrl: "https://cdn.vuetifyjs.com/images/john.jpg",
               metadata: null,
@@ -148,8 +152,49 @@ export default {
             ],
             
             overlay: false,
-       }
+       } 
   },
+
+  
+
+  computed: {
+    ...mapState('security', {
+      $user: state => state.user,
+    }),
+    ...mapGetters('security', {
+      $isLoggedIn: 'isLoggedIn',
+    }),
+  },
+
+  created() {
+    this.getCurrentUser().then(
+      ()=>{
+          this.user.email = this.$user.username 
+          this.user.username = this.$user.email 
+          this.user.firstName = this.$user.firstName 
+          this.user.lastName = this.$user.lastName 
+      }
+    )
+    
+  },
+
+  methods: {
+    ...mapActions('security', {
+      $getCurrentUser: 'getCurrentUser',
+    }),
+
+    setResult(result){
+      this.result = JSON.stringify(result, null, 2)
+    },
+
+    async getCurrentUser() {
+      await this.$getCurrentUser()
+      this.setResult(this.$user)
+    },
+
+  },
+
+  
 };
 </script>
 

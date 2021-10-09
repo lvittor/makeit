@@ -33,16 +33,22 @@
             color="primary"
             depressed
             @click="login(email, password)"
+            :disabled="$isLoggedIn"
           >
             {{ $vuetify.lang.t("$vuetify.auth.sign-in.signin") }}
           </v-btn>
+          
         </div>
+        <v-btn @click="logout()">
+            logout
+        </v-btn>
       </div>
     </v-container>
   </div>
 </template>
 
 <script>
+import { Helper } from "@/helpers.js";
 import {mapState, mapGetters, mapActions} from 'vuex'
 import {Credentials} from "@/../api/user.js";
 
@@ -77,20 +83,18 @@ export default {
       $login: 'login',
       $logout: 'logout',
     }),
-    setResult(result){
-      this.result = JSON.stringify(result, null, 2)
-    },
-    clearResult() {
-      this.result = null
-    },
     async login(username, password) {
       try {
         const credentials = new Credentials(username, password)
         await this.$login({credentials, rememberMe: true })
-        this.clearResult()
+        Helper.clearResult()
       } catch (e) {
-        this.setResult(e)
+        Helper.setResult(e)
       }
+    },
+    async logout() {
+      await this.$logout()
+      Helper.clearResult()
     },
   }
 };
