@@ -47,9 +47,15 @@ const routes = [
     component: () => import("../views/UserProfileEdit.vue"),
   },
   {
+    path: "/found",
+    name: "Found",
+    component: () => import("../views/Found.vue"),
+  },
+  {
     path: "*",
     redirect: { name: "signin" },
   },
+  
 ];
 
 const router = new VueRouter({
