@@ -42,15 +42,18 @@
           </v-row>
         </v-col>
       </v-row>
+      <div class="text-center">
+        <v-pagination
+          v-model="page"
+          :length="totalPages"
+          :total-visible="7"
+          class="my-4"
+          @input="changePage()"
+        ></v-pagination>
+      </div>
     </v-container>
-    <div class="text-center">
-    <v-pagination
-      v-model="page"
-      :length="totalPages"
-      :total-visible="7"
-      @input="changePage()"
-    ></v-pagination>
-  </div>
+    
+    
   </div>
 </template>
 
