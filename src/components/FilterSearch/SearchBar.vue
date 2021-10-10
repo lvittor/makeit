@@ -18,7 +18,7 @@
                 solo
                 @click.native.stop
                 @input="setSearch($event)"
-                @change="pushFound()"
+                @keyup.enter="pushFound()"
                 hide-details="auto"
                 class="mr-2 ml-4"
               /> 
@@ -55,8 +55,8 @@ export default {
 
     pushFound() {
       this.$router.push({
-        name: 'filtertable',
-        params: {search: this.search}
+        name: "Found",
+        params: {value: this.search}
       });
     },
   },

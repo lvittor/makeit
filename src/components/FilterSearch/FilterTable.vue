@@ -5,15 +5,6 @@
         cols="6"
       >
         <v-card>
-          <!-- <v-card-title>
-            <v-text-field
-              v-model="search"
-              append-icon="mdi-magnify"
-              label="Search"
-              single-line
-              hide-details
-            ></v-text-field>
-          </v-card-title> -->
           <v-data-table
             :headers="headers"
             :items="filteredItems"
@@ -61,12 +52,13 @@
 <script>
 
 export default {
-  name: 'filtertable',
   data() {
     return {
       sort: 'fecha',
       desc: true,
-      search: '',
+      search: {
+        type: String,
+      },
       filterRating: 1,
       filterIntensity: 1, 
       headers: [
@@ -189,11 +181,11 @@ export default {
 
     setSearch(text) {
       this.search = text;
-    }
+    },
   }, 
 
   beforeMount() {
-    alert(this.$route.params.search);
+    this.search = this.$route.params.value;
   },
 
   mounted() {
@@ -211,8 +203,7 @@ export default {
     }),
     this.$root.$on('search', (text) => {
       this.setSearch(text);
-    }),
-    alert('LA VARIABLE: ' + this.search);
+    })
   },
 
   computed: {
