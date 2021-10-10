@@ -36,9 +36,9 @@ export default {
   data() {
     return {
       buttons: [
-        { text: "Buscar una rutina", route: "/find-rutine" },
+        { text: "Buscar una rutina", route: "/find-routine" },
         { text: "Crear una rutina", route: "/create-routine" },
-        { text: "Tus rutinas", route: "/about" },
+        { text: "Tus rutinas", route: "/all-your-routines-and-exercises" },
       ],
     };
   },

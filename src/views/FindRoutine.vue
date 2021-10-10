@@ -4,17 +4,22 @@
       <v-row align="end">
         <v-col md="2" />
         <v-col md="6" class="left">
-          <tit class="titulazos">Rutinas recientes</tit>
+          <tit class="titulazos">Favoritas</tit>
         </v-col>
         <v-col md="4">
-          <more class="view-more">Ver más rutinas recientes</more>
+          <more class="view-more">Ver más rutinas favoritas</more>
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-col md="2"><Rutine></Rutine></v-col>
-        <v-col md="2"> <Rutine></Rutine></v-col>
-        <v-col md="2"><Rutine></Rutine></v-col>
-        <v-col md="2"><Rutine></Rutine></v-col>
+        <v-col md="2"
+          ><Routine
+            namep="titulo rutina 1"
+            desc="descripcion de la rutina 1"
+            :reviews="20"
+        /></v-col>
+        <v-col md="2"><Routine :reviews="22" /></v-col>
+        <v-col md="2"><Routine /></v-col>
+        <v-col md="2"><Routine /></v-col>
       </v-row>
     </v-container>
 
@@ -22,17 +27,17 @@
       <v-row align="end">
         <v-col md="2" />
         <v-col md="6" class="left">
-          <tit class="titulazos">Favoritas</tit>
+          <tit class="titulazos">De Categoría X</tit>
         </v-col>
         <v-col md="4" class="left">
-          <more class="view-more">Ver más rutinas favoritas</more>
+          <more class="view-more">Ver más rutinas X</more>
         </v-col>
       </v-row>
       <v-row justify="center">
-        <v-col md="2"><Rutine></Rutine></v-col>
-        <v-col md="2"> <Rutine></Rutine></v-col>
-        <v-col md="2"><Rutine></Rutine></v-col>
-        <v-col md="2"><Rutine></Rutine></v-col>
+        <v-col md="2"><Routine /></v-col>
+        <v-col md="2"><Routine /></v-col>
+        <v-col md="2"><Routine /></v-col>
+        <v-col md="2"><Routine /></v-col>
       </v-row>
     </v-container>
   </div>
@@ -52,17 +57,17 @@
 </style>
 
 <script>
-import Rutine from "../components/Rutina.vue";
+import Routine from "../components/Routine.vue";
 
 export default {
-  name: "FindRutine",
+  name: "FindRoutine",
 
   data: () => ({
-    //
+    // routines: [{}, {}]
   }),
 
   components: {
-    Rutine,
+    Routine,
   },
 };
 </script>

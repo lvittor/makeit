@@ -1,14 +1,17 @@
 <template>
   <v-hover>
-    <template v-slot:default="{ hover }">
+    <!-- <template v-slot:default="{ hover }"> -->
+    <template>
       <v-card class="mx-auto" max-width="344">
         <v-img
           src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"
         ></v-img>
 
         <v-card-text>
-          <h2 class="text-h6 primary--text">Rutina de Toro</h2>
-          Rutina para quedar mas ancho que el placard de tu cuarto
+          <slot
+            ><h2 class="primary--text h-6">{{ namep }}</h2></slot
+          >
+          <slot>{{ desc }}</slot>
         </v-card-text>
 
         <v-card-title>
@@ -20,9 +23,7 @@
             hover
             class="mr-2"
           ></v-rating>
-          <span class="primary--text text-subtitle-2"
-            >Dificultad</span
-          >
+          <span class="primary--text text-subtitle-2">Dificultad</span>
           <v-rating
             :value="4"
             dense
@@ -31,16 +32,14 @@
             hover
             class="mr-2"
           ></v-rating>
-          <span class="primary--text text-subtitle-2"
-            >{{ reviews }} votos</span
-          >
+          <span class="primary--text text-subtitle-2">{{ reviews }} votos</span>
         </v-card-title>
 
-        <v-fade-transition>
+        <!-- <v-fade-transition>
           <v-overlay v-if="hover" absolute color="#036358">
-            <v-btn>See more info</v-btn>
+            <v-btn>Ver mas</v-btn>
           </v-overlay>
-        </v-fade-transition>
+        </v-fade-transition> -->
       </v-card>
     </template>
   </v-hover>
@@ -48,9 +47,24 @@
 
 <script>
 export default {
+  props: {
+    overlay: {
+      type: Boolean,
+      default: false,
+    },
+    reviews: {
+      type: Number,
+      default: 0,
+    },
+    namep: {
+      type: String,
+    },
+    desc: {
+      type: String,
+    },
+  },
   data: () => ({
-    overlay: false,
-    reviews: 64,
+    //
   }),
 };
 </script>
