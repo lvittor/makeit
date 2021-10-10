@@ -19,7 +19,6 @@ export default {
             state.user = user
         },
         setToken(state, token) {
-            alert('removetoken')
             state.token = token
         }
     },
@@ -38,7 +37,6 @@ export default {
             Api.token = token
         },
         removeToken({commit}) {
-            alert('removetoken')
             localStorage.removeItem(SECURITY_TOKEN_KEY)
             commit('setToken', null)
             Api.token = null
@@ -48,7 +46,6 @@ export default {
             dispatch('updateToken', { token: result.token, rememberMe })
         },
         async logout({dispatch}) {
-            alert('logout')
             await UserApi.logout()
             dispatch('removeToken')
         },

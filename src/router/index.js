@@ -59,21 +59,17 @@ const router = new VueRouter({
 
 router.beforeEach((to, from, next) => {
   if (to.matched.some(route => route.meta.requiresAuth)) {
-    alert(index.getters['security/isLoggedIn'])
     if (!index.getters['security/isLoggedIn']) {
       
       next({ path: "/auth/signin", query: { redirect: to.fullPath } });
-    } else {
-      alert('auth')
+    } 
+    else {
       next();
     }
   } else {
     next();
   }
 });
-
-
-
 
 
 export default router;

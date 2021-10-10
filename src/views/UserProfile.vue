@@ -144,7 +144,7 @@
                 @click="logout()"
                 
               >
-                CC {{ buttons[2].text }}
+                {{ buttons[2].text }}
               </v-btn>
             </v-row>
           </div>
