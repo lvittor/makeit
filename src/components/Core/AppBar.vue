@@ -15,7 +15,6 @@
 
     <v-btn
       href="https://github.com/vuetifyjs/vuetify/releases/latest"
-      target="_blank"
       text
       to="/profile"
     >

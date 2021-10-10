@@ -89,6 +89,8 @@ export default {
         Helper.setResult(e)
         alert(e)
       }
+      //si ingreso correctamente, hacer
+      //this.$router.push("/")
     },
   }
 };

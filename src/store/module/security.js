@@ -19,6 +19,7 @@ export default {
             state.user = user
         },
         setToken(state, token) {
+            alert('removetoken')
             state.token = token
         }
     },
@@ -37,6 +38,7 @@ export default {
             Api.token = token
         },
         removeToken({commit}) {
+            alert('removetoken')
             localStorage.removeItem(SECURITY_TOKEN_KEY)
             commit('setToken', null)
             Api.token = null
@@ -44,9 +46,9 @@ export default {
         async login({dispatch}, {credentials, rememberMe}) {
             const result = await UserApi.login(credentials)
             dispatch('updateToken', { token: result.token, rememberMe })
-            return result
         },
         async logout({dispatch}) {
+            alert('logout')
             await UserApi.logout()
             dispatch('removeToken')
         },
@@ -66,7 +68,7 @@ export default {
         async modifyUser({commit}, user) {
             const result = await UserApi.modify(user)
             commit('setUser', result)
-            return result
+            return result;
         },
     },
 }

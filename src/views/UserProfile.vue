@@ -141,10 +141,10 @@
                 outlined
                 color="primary"
                 x-large
-                :to="buttons[2].route"
                 @click="logout()"
+                
               >
-                {{ buttons[2].text }}
+                CC {{ buttons[2].text }}
               </v-btn>
             </v-row>
           </div>
@@ -254,8 +254,9 @@ export default {
     }),
 
     async logout() {
+      this.$router.push('/auth/signin')
       await this.$logout()
-      Helper.clearResult()
+      Helper.clearResult()  
     },
 
     setResult(result){

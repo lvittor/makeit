@@ -1,6 +1,7 @@
 import Vue from "vue";
 import VueRouter from "vue-router";
 import Home from "../views/Home.vue";
+import index from "@/store";
 
 Vue.use(VueRouter);
 
@@ -34,26 +35,45 @@ const routes = [
   {
     path: "/find-routine",
     name: "FindRoutine",
+    meta: { requiresAuth: true },
     component: () => import("../views/FindRoutine.vue"),
   },
   {
     path: "/profile",
     name: "UserProfile",
+    meta: { requiresAuth: true },
     component: () => import("../views/UserProfile.vue"),
   },
   {
-    path: "/profile-edit",
-    name: "UserProfileEdit",
-    component: () => import("../views/UserProfileEdit.vue"),
-  },
-  {
-    path: "*",
-    redirect: { name: "signin" },
+    path: "/notfound",
+    alias: "*",
+    name: "NotFound",
+    component: () =>
+      import(/* webpackChunkName: "NotFound" */ "@/views/NotFound.vue")
   },
 ];
 
 const router = new VueRouter({
   routes,
 });
+
+router.beforeEach((to, from, next) => {
+  if (to.matched.some(route => route.meta.requiresAuth)) {
+    alert(index.getters['security/isLoggedIn'])
+    if (!index.getters['security/isLoggedIn']) {
+      
+      next({ path: "/auth/signin", query: { redirect: to.fullPath } });
+    } else {
+      alert('auth')
+      next();
+    }
+  } else {
+    next();
+  }
+});
+
+
+
+
 
 export default router;
