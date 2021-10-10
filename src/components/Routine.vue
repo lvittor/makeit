@@ -56,10 +56,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    reviews: {
-      type: Number,
-      default: 0,
-    },
     namep: {
       type: String,
     },
