@@ -12,7 +12,10 @@
       </v-row>
       <v-row justify="center">
         <v-col md="2"
-          ><Routine namep="titulo rutina 1" desc="descripcion de la rutina 1" :reviews="20"
+          ><Routine
+            namep="titulo rutina 1"
+            desc="descripcion de la rutina 1"
+            :reviews="20"
         /></v-col>
         <v-col md="2"><Routine :reviews="22" /></v-col>
         <v-col md="2"><Routine /></v-col>
