@@ -55,7 +55,6 @@ const routes = [
     path: "*",
     redirect: { name: "signin" },
   },
-  
 ];
 
 const router = new VueRouter({

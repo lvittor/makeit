@@ -16,7 +16,6 @@ export default {
 };
 </script>
 
-
 <style scoped>
 .back {
   height: 100%;

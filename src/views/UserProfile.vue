@@ -1,104 +1,87 @@
 <template>
-  <div class="back primary lighten-5" >
+  <div class="back primary lighten-5">
     <v-container class="profile white">
       <v-row justify="center">
         <v-col cols="8">
-          
           <v-row justify="center">
             <v-hover>
-              <template v-slot:default="{ hover }"> 
-                <v-avatar class="mt-16 mb-5" size="300" >
-                  <img
-                      :src= user.avatarUrl
-                      :alt= user.username
-                  >
+              <template v-slot:default="{ hover }">
+                <v-avatar class="mt-16 mb-5" size="300">
+                  <img :src="user.avatarUrl" :alt="user.username" />
                   <v-fade-transition>
-                    <v-overlay
-                      v-if="hover"
-                      absolute
-                      color="#036358"
-                    >
-                      <v-btn
-                        :to="buttons[0].route"
-                      >
-                      {{buttons[0].text}}
+                    <v-overlay v-if="hover" absolute color="#036358">
+                      <v-btn :to="buttons[0].route">
+                        {{ buttons[0].text }}
                       </v-btn>
                     </v-overlay>
                   </v-fade-transition>
                 </v-avatar>
               </template>
-            </v-hover>    
-          </v-row>
-
-
-          <v-row justify="center">
-            <v-col>
-              <h3 class="font-weight-light" >{{textfields.firstName}}</h3>
-            </v-col>
-            <v-col>
-              <h3>{{user.firstName}}</h3>
-            </v-col> 
-          </v-row>
-          <v-row>
-            <v-divider/>
-          </v-row>
-          
-          <v-row justify="center">
-            <v-col>
-              <h3 class="font-weight-light" >{{textfields.lastName}}</h3>
-            </v-col>
-            <v-col>
-              <h3>{{user.lastName}}</h3>
-            </v-col> 
-          </v-row>
-          <v-row>
-            <v-divider/>
-          </v-row>
-          
-          <v-row justify="center">
-            <v-col>
-              <h3 class="font-weight-light" >{{textfields.username}}</h3>
-            </v-col>
-            <v-col>
-              <h3>{{user.username}}</h3>
-            </v-col> 
-          </v-row>
-          <v-row>
-            <v-divider/>
+            </v-hover>
           </v-row>
 
           <v-row justify="center">
             <v-col>
-              <h3 class="font-weight-light" >{{textfields.email}}</h3>
+              <h3 class="font-weight-light">{{ textfields.firstName }}</h3>
             </v-col>
             <v-col>
-              <h3>{{user.email}}</h3>
-            </v-col> 
+              <h3>{{ user.firstName }}</h3>
+            </v-col>
           </v-row>
           <v-row>
-            <v-divider/>
+            <v-divider />
+          </v-row>
+
+          <v-row justify="center">
+            <v-col>
+              <h3 class="font-weight-light">{{ textfields.lastName }}</h3>
+            </v-col>
+            <v-col>
+              <h3>{{ user.lastName }}</h3>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-divider />
+          </v-row>
+
+          <v-row justify="center">
+            <v-col>
+              <h3 class="font-weight-light">{{ textfields.username }}</h3>
+            </v-col>
+            <v-col>
+              <h3>{{ user.username }}</h3>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-divider />
+          </v-row>
+
+          <v-row justify="center">
+            <v-col>
+              <h3 class="font-weight-light">{{ textfields.email }}</h3>
+            </v-col>
+            <v-col>
+              <h3>{{ user.email }}</h3>
+            </v-col>
+          </v-row>
+          <v-row>
+            <v-divider />
           </v-row>
 
           <v-row align="center" justify="space-around" class="mt-10">
-              <v-btn
-                depressed
-                color="primary"
-                x-large
-                :to="buttons[1].route"
-              >
-                {{ buttons[1].text }}
-              </v-btn>   
-              <v-btn
-                depressed
-                outlined
-                color="primary"
-                x-large
-                :to="buttons[2].route"
-              >
-                {{ buttons[2].text }}
-              </v-btn>
+            <v-btn depressed color="primary" x-large :to="buttons[1].route">
+              {{ buttons[1].text }}
+            </v-btn>
+            <v-btn
+              depressed
+              outlined
+              color="primary"
+              x-large
+              :to="buttons[2].route"
+            >
+              {{ buttons[2].text }}
+            </v-btn>
           </v-row>
-
         </v-col>
       </v-row>
     </v-container>
@@ -107,58 +90,54 @@
 
 <script>
 export default {
-   
   name: "UserProfile",
-  components: {
-  },
+  components: {},
 
-  props: {
-  },
+  props: {},
 
-  data(){
-       return {
-            
-            user: {
-              id: 1,
-              username: "johndoe",
-              firstName: "John",
-              lastName: "Doe",
-              gender: "male",
-              birthdate: 284007600000,
-              email: "johndoe@email.com",
-              phone: "98295822",
-              avatarUrl: "https://cdn.vuetifyjs.com/images/john.jpg",
-              metadata: null,
-              date: 1602139940660,
-              lastActivity: 1602483829035,
-              verified: true,
-            },
+  data() {
+    return {
+      user: {
+        id: 1,
+        username: "johndoe",
+        firstName: "John",
+        lastName: "Doe",
+        gender: "male",
+        birthdate: 284007600000,
+        email: "johndoe@email.com",
+        phone: "98295822",
+        avatarUrl: "https://cdn.vuetifyjs.com/images/john.jpg",
+        metadata: null,
+        date: 1602139940660,
+        lastActivity: 1602483829035,
+        verified: true,
+      },
 
-            textfields: {
-              firstName: "Nombre",
-              lastName: "Apellido",
-              username: "Nombre de Usuario",
-              email: "Mail",
-            },
-            
-            buttons: [
-              { text: "Editar", route: "/" },
-              { text: "Editar perfil", route: "/profile-edit" },
-              { text: "Cerrar sesion", route: "/" },
-            ],
-            
-            overlay: false,
-       }
+      textfields: {
+        firstName: "Nombre",
+        lastName: "Apellido",
+        username: "Nombre de Usuario",
+        email: "Mail",
+      },
+
+      buttons: [
+        { text: "Editar", route: "/" },
+        { text: "Editar perfil", route: "/profile-edit" },
+        { text: "Cerrar sesion", route: "/" },
+      ],
+
+      overlay: false,
+    };
   },
 };
 </script>
 
 <style scoped>
-  .back {
-    height: 100%;
-  }
-  .profile {
-    width: 50%;
-    height: 100%;
-  }
+.back {
+  height: 100%;
+}
+.profile {
+  width: 50%;
+  height: 100%;
+}
 </style>

@@ -1,28 +1,16 @@
-export default {
-  state: {
-    identifier: "",
-    password: "",
-    loading: false,
-    disabled: false,
-  },
+import Vue from "vue";
+import Vuex from "vuex";
+import routine from "@/store/module/routine";
+import category from "@/store/module/category";
 
-  mutations: {
-    updateIdentifier(state, identifier) {
-      state.identifier = identifier;
-    },
+Vue.use(Vuex);
 
-    updatePassword(state, password) {
-      state.password = password;
-    },
-
-    setLoading(state, loading) {
-      state.loading = loading;
-    },
-
-    setDisabled(state, disabled) {
-      state.disabled = disabled;
-    },
-  },
+export default new Vuex.Store({
+  state: {},
+  mutations: {},
   actions: {},
-  modules: {},
-};
+  modules: {
+    routine,
+    category,
+  },
+});

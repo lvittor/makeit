@@ -2,41 +2,47 @@
   <v-container>
     <v-row justify="center">
       <v-col>
-        <v-card
-          class="grey lighten-2 pa-2"
-          tile
-          flat
-        >
-          <v-card
-            class="pa-3 mb-2"
-            tile
-          >
+        <v-card class="grey lighten-2 pa-2" tile flat>
+          <v-card class="pa-3 mb-2" tile>
             <v-container>
               <v-row>
                 <h5>Ordenar por</h5>
               </v-row>
-              <v-row class="mt-5" @click="setOrdenar(0)" justify="space-between">
+              <v-row
+                class="mt-5"
+                @click="setOrdenar(0)"
+                justify="space-between"
+              >
                 <h4>Fecha</h4>
                 <v-icon v-if="ordenar == 0"> mdi-check </v-icon>
               </v-row>
-              <v-row class="mt-5" @click="setOrdenar(1)" justify="space-between">
+              <v-row
+                class="mt-5"
+                @click="setOrdenar(1)"
+                justify="space-between"
+              >
                 <h4>Puntuacion</h4>
                 <v-icon v-if="ordenar == 1"> mdi-check </v-icon>
               </v-row>
-              <v-row class="mt-5" @click="setOrdenar(2)" justify="space-between">
+              <v-row
+                class="mt-5"
+                @click="setOrdenar(2)"
+                justify="space-between"
+              >
                 <h4>Intensidad</h4>
                 <v-icon v-if="ordenar == 2"> mdi-check </v-icon>
               </v-row>
-              <v-row class="mt-5" @click="setOrdenar(3)" justify="space-between">
+              <v-row
+                class="mt-5"
+                @click="setOrdenar(3)"
+                justify="space-between"
+              >
                 <h4>Categoria</h4>
                 <v-icon v-if="ordenar == 3"> mdi-check </v-icon>
               </v-row>
             </v-container>
           </v-card>
-          <v-card
-            class="pa-3 mb-2"
-            tile
-          > 
+          <v-card class="pa-3 mb-2" tile>
             <v-container>
               <v-row>
                 <h5>Filtro</h5>
@@ -47,7 +53,9 @@
                   color="orange"
                   background-color="grey"
                   empty-icon="mdi-star-outline"
+                  half-icon="mdi-star-half-full"
                   full-icon="mdi-star"
+                  half-increments
                   length="5"
                   size="20"
                   dense
@@ -71,10 +79,7 @@
               </v-row>
             </v-container>
           </v-card>
-          <v-card
-            class="pa-3"
-            tile
-          >
+          <v-card class="pa-3" tile>
             <v-container>
               <v-row>
                 <h5>Tipo</h5>
@@ -107,25 +112,25 @@ export default {
       tipo: 0,
       rating: 1,
       intensity: 1,
-    }
+    };
   },
   methods: {
     setOrdenar(n) {
       this.ordenar = n;
-      this.$root.$emit('orderable', n)
+      this.$root.$emit("orderable", n);
     },
-    setTipo(n){
+    setTipo(n) {
       this.tipo = n;
-      this.$root.$emit('filtertable', n);
+      this.$root.$emit("filtertable", n);
     },
     setRating(n) {
-      this.rating = n
-      this.$root.$emit('rating', n);
+      this.rating = n;
+      this.$root.$emit("rating", n);
     },
     setIntensity(n) {
-      this.intensity = n
-      this.$root.$emit('intensity', n);
-    }
-  }
-}
+      this.intensity = n;
+      this.$root.$emit("intensity", n);
+    },
+  },
+};
 </script>

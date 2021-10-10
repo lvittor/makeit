@@ -1,9 +1,7 @@
 <template>
   <v-container>
     <v-row justify="center">
-      <v-col
-        cols="6"
-      >
+      <v-col cols="6">
         <v-card>
           <v-data-table
             :headers="headers"
@@ -18,7 +16,9 @@
                 color="orange"
                 background-color="grey"
                 empty-icon="mdi-star-outline"
+                half-icon="mdi-star-half-full"
                 full-icon="mdi-star"
+                half-increments
                 length="5"
                 size="15"
                 dense
@@ -45,130 +45,142 @@
         </v-card>
       </v-col>
     </v-row>
-    <v-btn @click="get()"> HOLA </v-btn>
   </v-container>
 </template>
 
 <script>
+import { mapActions } from "vuex";
 
 export default {
   data() {
     return {
-      sort: 'fecha',
+      result: null,
+      controller: null,
+      sort: "fecha",
       desc: true,
       search: {
         type: String,
       },
       filterRating: 1,
-      filterIntensity: 1, 
+      filterIntensity: 1,
       headers: [
         {
-          text: 'Rutina',
-          align: 'start',
-          value: 'name',
+          text: "Rutina",
+          align: "start",
+          value: "name",
         },
         {
-          text: 'Creador',
-          value: 'creador',
+          text: "Creador",
+          value: "creador",
           filterable: false,
         },
         {
-          text: 'Categoria',
-          value: 'categoria',
+          text: "Categoria",
+          value: "categoria",
           filterable: false,
         },
         {
-          text: 'Intensidad',
-          value: 'intensidad',
+          text: "Intensidad",
+          value: "intensidad",
         },
         {
-          text: 'Puntuacion',
-          value: 'puntuacion',
+          text: "Puntuacion",
+          value: "puntuacion",
         },
         {
-          text: 'Fecha',
-          value: 'fecha',
+          text: "Fecha",
+          value: "fecha",
           filterable: false,
         },
       ],
-      routines: [
-        {
-          name: 'Rutina de Toro',
-          creador: 'Camila Di Toro',
-          categoria: 'Hiit',
-          intensidad: '5',
-          puntuacion: '4',
-          fecha: new Date('10-04-2021').toISOString().split('T')[0],
-        }, 
-        {
-          name: 'Picadillo de Carne',
-          creador: 'Maru Botana',
-          categoria: 'Cocina',
-          intensidad: '1',
-          puntuacion: '3',
-          fecha: new Date('02-30-2020').toISOString().split('T')[0],
-        }, 
-        {
-          name: 'Como conquistar menores',
-          creador: 'Ezequiel Rodriguez',
-          categoria: 'Violinista',
-          intensidad: '3',
-          puntuacion: '1',
-          fecha: new Date('05-02-2021').toISOString().split('T')[0],
-        }, 
-        {
-          name: 'Picante en 10 minutos',
-          creador: 'Kako',
-          categoria: 'Ashtex',
-          intensidad: '4',
-          puntuacion: '5',
-          fecha: new Date('04-15-2021').toISOString().split('T')[0],
-        }, 
-        {
-          name: 'Rutina de Toro',
-          creador: 'Camila Di Toro',
-          categoria: 'Hiit',
-          intensidad: '5',
-          puntuacion: '4',
-          fecha: new Date('02-09-2021').toISOString().split('T')[0],
-        }, 
-      ]
-    }
+      routines: [],
+    };
+  },
+
+  created() {
+    this.getAllRoutines();
   },
 
   methods: {
+    ...mapActions("routine", {
+      $getAllRoutines: "getAll",
+    }),
+
+    setRoutines() {
+      for (let i = 0; i < this.result.content.length; i++) {
+        const r = this.result.content[i];
+        this.routines.push({
+          name: r.name,
+          creador: r.user.username,
+          categoria: r.category.name,
+          intensidad: this.mapIntensity(r.difficulty),
+          puntuacion: this.mapScore(r.score),
+          fecha: new Date(r.date).toISOString().split("T")[0],
+        });
+      }
+    },
+
+    mapIntensity(intensity) {
+      switch (intensity) {
+        case "rookie":
+          return 1;
+        case "beginner":
+          return 2;
+        case "intermediate":
+          return 3;
+        case "advanced":
+          return 4;
+        case "expert":
+          return 5;
+      }
+    },
+
+    mapScore(score) {
+      return score / 2;
+    },
+
+    setResult(result) {
+      this.result = result;
+    },
+
     setFilterable(n) {
-      for (var i = 0; i < 3; i++){
-        if (i == n)
-          this.headers[i].filterable = true;
-        else
-          this.headers[i].filterable = false;
+      for (var i = 0; i < 3; i++) {
+        if (i == n) this.headers[i].filterable = true;
+        else this.headers[i].filterable = false;
       }
     },
 
     setOrder(n) {
-      switch(n) {
+      switch (n) {
         case 0:
-          this.sort = 'fecha';
+          this.sort = "fecha";
           this.desc = true;
           break;
         case 1:
-          this.sort = 'puntuacion';
+          this.sort = "puntuacion";
           this.desc = true;
           break;
         case 2:
-          this.sort = 'intensidad';
+          this.sort = "intensidad";
           this.desc = false;
           break;
         case 3:
-          this.sort = 'categoria';
+          this.sort = "categoria";
           this.desc = false;
           break;
       }
     },
 
-    get() {
-      alert(this.search);
+    async getAllRoutines() {
+      try {
+        this.controller = new AbortController();
+        const pickedRoutines = await this.$getAllRoutines(this.controller);
+        this.controller = null;
+        this.setResult(pickedRoutines);
+        this.setRoutines();
+      } catch (e) {
+        this.setResult(e);
+      }
     },
 
     setRating(n) {
@@ -182,36 +194,39 @@ export default {
     setSearch(text) {
       this.search = text;
     },
-  }, 
+  },
 
   beforeMount() {
     this.search = this.$route.params.value;
   },
 
   mounted() {
-    this.$root.$on('filtertable', (n) => {
+    this.$root.$on("filtertable", (n) => {
       this.setFilterable(n);
     }),
-    this.$root.$on('orderable', (n) => {
-      this.setOrder(n);
-    }),
-    this.$root.$on('rating', (n) => {
-      this.setRating(n);
-    }),
-    this.$root.$on('intensity', (n) => {
-      this.setIntensity(n);
-    }),
-    this.$root.$on('search', (text) => {
-      this.setSearch(text);
-    })
+      this.$root.$on("orderable", (n) => {
+        this.setOrder(n);
+      }),
+      this.$root.$on("rating", (n) => {
+        this.setRating(n);
+      }),
+      this.$root.$on("intensity", (n) => {
+        this.setIntensity(n);
+      }),
+      this.$root.$on("search", (text) => {
+        this.setSearch(text);
+      });
   },
 
   computed: {
     filteredItems() {
       return this.routines.filter((i) => {
-        return i.puntuacion >= this.filterRating && i.intensidad >= this.filterIntensity
-      })
-    }
-  }
-}
+        return (
+          i.puntuacion >= this.filterRating &&
+          i.intensidad >= this.filterIntensity
+        );
+      });
+    },
+  },
+};
 </script>

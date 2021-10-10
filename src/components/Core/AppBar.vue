@@ -11,7 +11,7 @@
       />
     </div>
 
-    <SearchBar class="d-flex align-self-stretch ml-16 pl-5"/>
+    <SearchBar class="d-flex align-self-stretch ml-16 pl-5" />
 
     <div class="d-flex justify-end">
       <v-btn
@@ -24,7 +24,7 @@
         <span class="mr-2">Nombre de usuario</span>
         <v-icon>mdi-account</v-icon>
       </v-btn>
-    </div>     
+    </div>
   </v-app-bar>
 </template>
 
@@ -35,7 +35,7 @@ export default {
   components: {
     SearchBar,
   },
-}
+};
 </script>
 
 <style scoped>
