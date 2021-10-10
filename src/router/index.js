@@ -39,6 +39,11 @@ const routes = [
     component: () => import("../views/FindRoutine.vue"),
   },
   {
+    path: "/all-your-routines-and-exercises",
+    name: "AllYourR&E",
+    component: () => import("../views/AllYourR&E.vue"),
+  },
+  {
     path: "/profile",
     name: "UserProfile",
     meta: { requiresAuth: true },
