@@ -10,7 +10,7 @@
               class="pa-0 grey lighten-2"
             >
               <v-text-field
-                label="Busca"
+                label="Buscar"
                 solo
                 @click.native.stop
                 @input="setSearch($event)"

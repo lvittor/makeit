@@ -110,7 +110,7 @@ export default {
     return {
       ordenar: 0,
       tipo: 0,
-      rating: 1,
+      rating: 0.5,
       intensity: 1,
     };
   },
