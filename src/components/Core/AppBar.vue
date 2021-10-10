@@ -1,5 +1,5 @@
 <template>
-  <v-app-bar app color="primary" dark>
+  <v-app-bar app color="primary">
     <div class="d-flex align-center">
       <v-img
         alt="MakeIt Logo"
@@ -11,15 +11,35 @@
       />
     </div>
 
-    <v-spacer></v-spacer>
+    <SearchBar class="d-flex align-self-stretch ml-16 pl-5" />
 
-    <v-btn
-      href="https://github.com/vuetifyjs/vuetify/releases/latest"
-      target="_blank"
-      text
-    >
-      <span class="mr-2">Nombre de usuario</span>
-      <v-icon>mdi-account</v-icon>
-    </v-btn>
+    <div class="d-flex justify-end">
+      <v-btn
+        href="https://github.com/vuetifyjs/vuetify/releases/latest"
+        target="_blank"
+        text
+        to="/profile"
+        color="white"
+      >
+        <span class="mr-2">Nombre de usuario</span>
+        <v-icon>mdi-account</v-icon>
+      </v-btn>
+    </div>
   </v-app-bar>
 </template>
+
+<script>
+import SearchBar from "../FilterSearch/SearchBar.vue";
+
+export default {
+  components: {
+    SearchBar,
+  },
+};
+</script>
+
+<style scoped>
+.fixeado {
+  position: fixed;
+}
+</style>

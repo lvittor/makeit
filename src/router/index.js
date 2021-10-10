@@ -22,7 +22,7 @@ const routes = [
       {
         path: "signin",
         component: () => import("@/views/Auth/Signin"),
-        name: "signin"
+        name: "signin",
       },
       {
         path: "signup",
@@ -32,10 +32,29 @@ const routes = [
     ],
   },
   {
+    path: "/find-routine",
+    name: "FindRoutine",
+    component: () => import("../views/FindRoutine.vue"),
+  },
+  {
+    path: "/profile",
+    name: "UserProfile",
+    component: () => import("../views/UserProfile.vue"),
+  },
+  {
+    path: "/profile-edit",
+    name: "UserProfileEdit",
+    component: () => import("../views/UserProfileEdit.vue"),
+  },
+  {
+    path: "/found",
+    name: "Found",
+    component: () => import("../views/Found.vue"),
+  },
+  {
     path: "*",
     redirect: { name: "signin" },
   },
-
 ];
 
 const router = new VueRouter({
