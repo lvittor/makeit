@@ -3,19 +3,14 @@
     dense
     color="primary"
   >
-    <v-btn icon
-      color="white"
-    >
-      <v-icon dark>
-        mdi-close
-      </v-icon>
-    </v-btn>
-
     <v-text-field
+      v-model="value"
       hide-details
       color="white"
       background-color="primary"
       dark
+      :readonly="readonly"
+      @change="sendText($event)"
     >
     </v-text-field>
 
@@ -33,9 +28,22 @@
 <script>
 
 export default {
+  props: {
+    value: {
+      type: String,
+    },
+    readonly: {
+      type: Boolean,
+    }
+  },
+
   methods: {
     caller() {
-      this.$root.$emit('routinestepper');
+      alert(this.value);
+    },
+
+    sendText(text) {
+      this.$root.$emit('updateTitle', text);
     }
   }
 }

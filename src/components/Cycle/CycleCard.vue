@@ -4,7 +4,7 @@
       <v-col
         class="pa-0"
       >
-        <Header />
+        <Header :value="title" :readonly="readonly"/>
       </v-col>
     </v-row>
     <v-row justify="center">
@@ -21,6 +21,7 @@
                 cols="2"
               >
                 <v-select
+                  v-model="series"
                   class="pa-0 ma-0"
                   :items="items"
                   hide-details="auto"
@@ -47,7 +48,7 @@
                   <template v-for="(exercise, index) in exercises">
                     <v-list-item class="pa-0" :key="index">
                       <v-list-item-content class="pa-0">
-                        <Exercise />
+                        <Exercise :id="exercise.id" :enabled1="exercise.enabled1" :enabled2="exercise.enabled2" :actual="exercise.actual" :reps="exercise.reps" :dur="exercise.dur"/>
                       </v-list-item-content>
                       <v-list-tile-action>
                         <v-btn color="red" icon @click="removeExercise(index)">
@@ -115,33 +116,118 @@
     data() {
       return {
         items: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-        exercises: [],
+        id: 0,
+      }
+    },
+
+    props: {
+      exercises: {
+        type: Array,
+        default() {
+          return [];
+        }
+      },
+      serie: {
+        type: Number,
+      },
+      title: {
+        type: String,
+      },
+      readonly: {
+        type: Boolean
+      },
+      cycle: {
+        type: Number,
       }
     },
 
     methods: {
       caller() {
+        alert(this.title)
+        this.$root.$emit('updatecycle', this.exercises, this.cycle, this.serie, this.title);
         this.$root.$emit('routinestepper');
       },
 
       addExercise(){
         this.exercises.push({
-          value: this.exercises.length
+          id: this.id++,
+          enabled1: false,
+          enabled2: false,
+          actual: '',
+          reps: '',
+          dur: '00:00:00',
         });
       },
 
-      showAlert(message){
-        alert(message)
-      },
-
       removeExercise(index){
-        this.showAlert(JSON.stringify(index))
-        this.showAlert(JSON.stringify(this.exercises))
         this.exercises.splice(index, 1);
-        this.showAlert(JSON.stringify(this.exercises))
       },
 
-      
+      updateText(text, id){
+        for (var i = 0; i < this.exercises.length; i++){
+          if (this.exercises[i].id == id) {
+            this.exercises[i].actual = text;
+            break;
+          }
+        }
+      },
+      updateReps(text, id){
+        for (var i = 0; i < this.exercises.length; i++){
+          if (this.exercises[i].id == id) {
+            this.exercises[i].reps = text;
+            break;
+          }
+        }
+      },
+      updateDur(text, id){
+        for (var i = 0; i < this.exercises.length; i++){
+          if (this.exercises[i].id == id) {
+            this.exercises[i].dur = text;
+            break;
+          }
+        }
+      },
+      updateEnable1(value, id){
+        for (var i = 0; i < this.exercises.length; i++){
+          if (this.exercises[i].id == id) {
+            this.exercises[i].enabled1 = value;
+            break;
+          }
+        }
+      },
+      updateEnable2(value, id){
+        for (var i = 0; i < this.exercises.length; i++){
+          if (this.exercises[i].id == id) {
+            this.exercises[i].enabled2 = value;
+            break;
+          }
+        }
+      },
+      updateTitle(text){
+        this.title = text;
+      }
+
+    },
+
+    mounted() {
+      this.$root.$on('updateText', (text, id) => {
+        this.updateText(text, id);
+      }),
+      this.$root.$on('updateReps', (text, id) => {
+        this.updateReps(text, id);
+      }),
+      this.$root.$on('updateDur', (text, id) => {
+        this.updateDur(text, id);
+      }),
+      this.$root.$on('updateEnable1', (value, id) => {
+        this.updateEnable1(value, id);
+      }),
+      this.$root.$on('updateEnable2', (value, id) => {
+        this.updateEnable2(value, id);
+      }),
+      this.$root.$on('updateTitle', (text) => {
+        this.updateTitle(text);
+      })
     },
 
     components: {

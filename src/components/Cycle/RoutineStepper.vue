@@ -4,7 +4,7 @@
       <v-card-text>
         <v-select
           v-model="steps"
-          :items="[2, 3, 4, 5, 6, 7, 8, 9, 10]"
+          :items="[3, 4, 5, 6, 7, 8, 9, 10]"
           label="Cantidad de ciclos"
         ></v-select>
       </v-card-text>
@@ -35,7 +35,7 @@
           :step="n"
           class="pa-0 mt-0"
         >
-          <CycleCard />
+          <CycleCard :exercises="cycles[n-1]" :series="series[n-1]" :title="getTitle()" :readonly="getReadonly()" :cycle="n"/>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -49,7 +49,10 @@
     data () {
       return {
         e1: 1,
-        steps: 2,
+        steps: 3,
+        cycles: [],
+        series: [],
+        titles: [],
       }
     },
 
@@ -62,17 +65,45 @@
     },
 
     methods: {
+      getTitle() {
+        switch(this.e1) {
+          case 1:
+            return "Calentamiento";
+          case this.steps:
+            return "Enfriamiento";
+          default:
+            return this.titles[this.e1-1];
+        }
+      },
+
+      getReadonly() {
+        if (this.e1 == 1 || this.e1 == this.steps )
+          return true;
+        return false;
+      },
+
       nextStep () {
         if (this.e1 === this.steps)
           this.e1 = 1;
         else
           this.e1++;
       },
+
+      updateCycles(object, cycle, serie, title) {
+        if (cycle == this.e1) {
+          this.cycles[cycle-1] = object;
+          this.series[cycle-1] = serie;
+          this.titles[cycle-1] = title;
+        }
+      }
     },
 
     mounted() {
       this.$root.$on('routinestepper', () => {
         this.nextStep();
+      }),
+      this.$root.$on('updatecycle', (object, cycle, serie, title) => {
+        this.updateCycles(object, cycle, serie, title);
       })
     },
 
