@@ -1,87 +1,176 @@
 <template>
-  <div class="back primary lighten-5">
+  <div class="back primary lighten-5" >
     <v-container class="profile white">
       <v-row justify="center">
         <v-col cols="8">
+          
           <v-row justify="center">
-            <v-hover>
-              <template v-slot:default="{ hover }">
-                <v-avatar class="mt-16 mb-5" size="300">
-                  <img :src="user.avatarUrl" :alt="user.username" />
-                  <v-fade-transition>
-                    <v-overlay v-if="hover" absolute color="#036358">
-                      <v-btn :to="buttons[0].route">
-                        {{ buttons[0].text }}
-                      </v-btn>
-                    </v-overlay>
-                  </v-fade-transition>
+            
+                <v-avatar class="mt-16 mb-5" size="280" color="secondary">
+                  <span class="white--text text-h1">{{this.$user.firstName.charAt(0).toUpperCase() + this.$user.lastName.charAt(0).toUpperCase()}}</span>
                 </v-avatar>
-              </template>
-            </v-hover>
+              
+               
+          </v-row>
+
+
+          <v-row justify="center">
+            <v-col>
+              <h3 class="font-weight-light" >{{textfields.firstName}}</h3>
+            </v-col>
+            <v-col>
+              <div v-if="!editionMode">
+                <h3>{{this.$user.firstName}}</h3>
+              </div>
+              <div v-else>
+                <v-text-field
+                    v-model="editedData.firstName"
+                    label="Empty"
+                    solo
+                    hide-details="auto"
+                ></v-text-field>
+              </div>
+            </v-col> 
+          </v-row>
+          <v-row>
+            <v-divider/>
+          </v-row>
+          
+          <v-row justify="center">
+            <v-col>
+              <h3 class="font-weight-light" >{{textfields.lastName}}</h3>
+            </v-col>
+            <v-col>
+              <div v-if="!editionMode">
+                <h3>{{this.$user.lastName}}</h3>
+              </div>
+              <div v-else>
+                <v-text-field
+                    v-model="editedData.lastName"
+                    label="Empty"
+                    solo
+                    hide-details="auto"
+                ></v-text-field>
+              </div>
+            </v-col> 
+          </v-row>
+          <v-row>
+            <v-divider/>
+          </v-row>
+          
+          <v-row justify="center" >
+            <v-col>
+              <h3 class="font-weight-light" >{{textfields.username}}</h3>
+            </v-col>
+            <v-col>
+              <div v-if="!editionMode">
+                <h3>{{this.$user.email.substr(0,this.$user.email.length - 10)}}</h3>
+              </div>
+              <div v-else>
+                <v-text-field
+                    :value="$user.email"
+                    label="Empty"
+                    solo
+                    disabled
+                    readonly
+                    hide-details="auto"
+                ></v-text-field>
+              </div>
+            </v-col> 
+          </v-row>
+          <v-row>
+            <v-divider/>
           </v-row>
 
           <v-row justify="center">
             <v-col>
-              <h3 class="font-weight-light">{{ textfields.firstName }}</h3>
+              <h3 class="font-weight-light" >{{textfields.email}}</h3>
             </v-col>
             <v-col>
-              <h3>{{ user.firstName }}</h3>
-            </v-col>
+              <div v-if="!editionMode">
+                <h3>{{this.$user.username}}</h3>
+              </div>
+              <div v-else>
+                <v-text-field
+                    :value="this.$user.username"
+                    label="Empty"
+                    solo
+                    disabled
+                    readonly
+                    hide-details="auto"
+                ></v-text-field>
+                </div>
+            </v-col> 
           </v-row>
           <v-row>
-            <v-divider />
+            <v-divider/>
           </v-row>
-
+          <!-- <div v-if="editionMode">
           <v-row justify="center">
             <v-col>
-              <h3 class="font-weight-light">{{ textfields.lastName }}</h3>
+              <h3 class="font-weight-light" >Contraseña</h3>
             </v-col>
             <v-col>
-              <h3>{{ user.lastName }}</h3>
-            </v-col>
+              
+                <PasswordTF
+                label="Nueva contraseña"
+                :password.sync="editedData.password"
+                />
+                
+            </v-col> 
+            <h1> {{ editedData.password }} </h1>
           </v-row>
+          </div>
           <v-row>
-            <v-divider />
-          </v-row>
+            <v-divider/>
+          </v-row> -->
 
-          <v-row justify="center">
-            <v-col>
-              <h3 class="font-weight-light">{{ textfields.username }}</h3>
-            </v-col>
-            <v-col>
-              <h3>{{ user.username }}</h3>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-divider />
-          </v-row>
+          <div v-if="!editionMode">
+            <v-row align="center" justify="space-around" class="mt-10">
+              <v-btn
+                depressed
+                color="primary"
+                x-large
+                @click="editionMode = true"
+              >
+                {{ buttons[1].text }}
+              </v-btn>   
+              
+              <v-btn
+                depressed
+                outlined
+                color="primary"
+                x-large
+                @click="logout()"
+                
+              >
+                {{ buttons[2].text }}
+              </v-btn>
+            </v-row>
+          </div>
+          <div v-else>
+           <v-row align="center" justify="space-around" class="mt-10">
+              <v-btn
+                depressed
+                color="primary"
+                x-large
+                @click="cancelEdition()"
+              >
+                {{ buttons[3].text }}
+              </v-btn>
+              <v-btn
+                depressed
+                outlined
+                color="primary"
+                x-large
+                @click="changeUserData()"
+              >
+                {{ buttons[4].text }}
+              </v-btn>
+            </v-row>
+          </div>
+          
 
-          <v-row justify="center">
-            <v-col>
-              <h3 class="font-weight-light">{{ textfields.email }}</h3>
-            </v-col>
-            <v-col>
-              <h3>{{ user.email }}</h3>
-            </v-col>
-          </v-row>
-          <v-row>
-            <v-divider />
-          </v-row>
-
-          <v-row align="center" justify="space-around" class="mt-10">
-            <v-btn depressed color="primary" x-large :to="buttons[1].route">
-              {{ buttons[1].text }}
-            </v-btn>
-            <v-btn
-              depressed
-              outlined
-              color="primary"
-              x-large
-              :to="buttons[2].route"
-            >
-              {{ buttons[2].text }}
-            </v-btn>
-          </v-row>
         </v-col>
       </v-row>
     </v-container>
@@ -89,55 +178,127 @@
 </template>
 
 <script>
+
+import {mapState, mapGetters, mapActions} from 'vuex'
+import { Helper } from "@/helpers.js";
+import { User } from "@/../api/user";
+
 export default {
+   
   name: "UserProfile",
-  components: {},
-
-  props: {},
-
-  data() {
-    return {
-      user: {
-        id: 1,
-        username: "johndoe",
-        firstName: "John",
-        lastName: "Doe",
-        gender: "male",
-        birthdate: 284007600000,
-        email: "johndoe@email.com",
-        phone: "98295822",
-        avatarUrl: "https://cdn.vuetifyjs.com/images/john.jpg",
-        metadata: null,
-        date: 1602139940660,
-        lastActivity: 1602483829035,
-        verified: true,
-      },
-
-      textfields: {
-        firstName: "Nombre",
-        lastName: "Apellido",
-        username: "Nombre de Usuario",
-        email: "Mail",
-      },
-
-      buttons: [
-        { text: "Editar", route: "/" },
-        { text: "Editar perfil", route: "/profile-edit" },
-        { text: "Cerrar sesion", route: "/" },
-      ],
-
-      overlay: false,
-    };
+  components: {
+    //PasswordTF: () => import("@/components/TextFields/Password"),
   },
+
+  props: {
+  },
+
+  data(){
+       return {
+            editionMode: false,
+            waitData: null,
+            currUser:" null",
+            
+            editedData: {
+              firstName: '',
+              lastName: '',
+              // password: '',
+              // confirmpassword: '',
+              avatarUrl: '',
+            },
+
+            textfields: {
+              firstName: "Nombre",
+              lastName: "Apellido",
+              username: "Nombre de Usuario",
+              email: "Mail",
+            },
+            
+            buttons: [
+              { text: "Editar", route: "/" },
+              { text: "Editar perfil", route: "/profile" },
+              { text: "Cerrar sesion", route: "/auth/signin" },
+              { text: "Cancelar", route: "/" },
+              { text: "Guardar cambios", route: "/" },
+            ],
+            
+            overlay: false,
+       } 
+  },
+
+  
+
+  computed: {
+    ...mapState('security', {
+      $user: state => state.user,
+    }),
+    ...mapGetters('security', {
+      $isLoggedIn: 'isLoggedIn',
+    }),
+  },
+
+  created() {
+    this.getCurrentUser().then(
+      ()=>{    
+          this.cleanEditedData()
+      }
+    )
+    
+  },
+
+  methods: {
+    ...mapActions('security', {
+      $getCurrentUser: 'getCurrentUser',
+      $logout: 'logout',
+      $modifyUser: 'modifyUser'
+    }),
+
+    async logout() {
+      this.$router.push('/auth/signin')
+      await this.$logout()
+      Helper.clearResult()  
+    },
+
+    setResult(result){
+      this.result = JSON.stringify(result, null, 2)
+    },
+
+    cleanEditedData(){
+      this.editedData.firstName = this.$user.firstName
+      this.editedData.lastName = this.$user.lastName
+      this.editedData.avatarUrl = this.$user.avatarUrl
+    },
+
+    cancelEdition(){
+      this.editionMode = false
+      this.cleanEditedData()
+    },
+
+    async getCurrentUser() {
+      await this.$getCurrentUser()
+      this.setResult(this.$user)
+    },
+
+    async changeUserData() {
+      const modified = new User(this.$user.email, this.editedData.password, this.editedData.firstName, this.editedData.lastName, this.$user.username);
+      await this.$modifyUser(modified)
+      this.setResult(this.$user)
+      this.cleanEditedData()
+      this.editionMode = false
+    }
+
+  },
+
+  
 };
 </script>
 
 <style scoped>
-.back {
-  height: 100%;
-}
-.profile {
-  width: 50%;
-  height: 100%;
-}
+  .back {
+    height: 100%;
+  }
+  .profile {
+    width: 50%;
+    height: 100%;
+  }
 </style>
