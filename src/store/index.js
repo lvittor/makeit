@@ -1,28 +1,19 @@
-export default {
+import Vue from 'vue'
+import Vuex from 'vuex'
+import security from '@/store/module/security';
+import sport from '@/store/module/sport';
+
+Vue.use(Vuex)
+
+export default new Vuex.Store({
   state: {
-    identifier: "",
-    password: "",
-    loading: false,
-    disabled: false,
   },
-
   mutations: {
-    updateIdentifier(state, identifier) {
-      state.identifier = identifier;
-    },
-
-    updatePassword(state, password) {
-      state.password = password;
-    },
-
-    setLoading(state, loading) {
-      state.loading = loading;
-    },
-
-    setDisabled(state, disabled) {
-      state.disabled = disabled;
-    },
   },
-  actions: {},
-  modules: {},
-};
+  actions: {
+  },
+  modules: {
+    security,
+    sport
+  }
+})

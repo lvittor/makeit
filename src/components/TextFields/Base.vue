@@ -6,6 +6,7 @@
     type="text"
     hide-details="auto"
     outlined
+    v-model="computedName"
     :error-messages="error"
     dense
   />
@@ -17,6 +18,16 @@ export default {
     label: {
       type: String,
     },
+    name:{
+      type: String,
+    }
   },
+
+  computed: {
+    computedName: {
+      get() { return this.name },
+      set(value){ this.$emit('update:name', value) },
+    }
+  }
 };
 </script>
