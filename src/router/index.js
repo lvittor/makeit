@@ -37,9 +37,9 @@ const routes = [
     component: () => import("../views/FindRoutine.vue"),
   },
   {
-    path: "/all-your-exercises",
-    name: "AllYourExercises",
-    component: () => import("../views/AllYourExercises.vue"),
+    path: "/all-your-routines-and-exercises",
+    name: "AllYourR&E",
+    component: () => import("../views/AllYourR&E.vue"),
   },
   {
     path: "*",
