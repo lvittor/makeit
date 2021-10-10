@@ -1,14 +1,16 @@
 <template>
   <v-hover>
     <!-- <template v-slot:default="{ hover }"> -->
-      <template>
+    <template>
       <v-card class="mx-auto" max-width="344">
         <v-img
           src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"
         ></v-img>
 
         <v-card-text>
-          <slot><h2 class="primary--text h-6">{{ namep }}</h2></slot>
+          <slot
+            ><h2 class="primary--text h-6">{{ namep }}</h2></slot
+          >
           <slot>{{ desc }}</slot>
         </v-card-text>
 
