@@ -1,9 +1,7 @@
 <template>
-  <v-container>
-    <v-row justify="center">
-      <v-col cols="6" class="pa-0 mt-1">
+  
         <v-expansion-panels>
-          <v-expansion-panel>
+          <v-expansion-panel >
             <v-expansion-panel-header
               expand-icon="mdi-filter"
               disable-icon-rotate
@@ -24,9 +22,7 @@
             </v-expansion-panel-content>
           </v-expansion-panel>
         </v-expansion-panels>
-      </v-col>
-    </v-row>
-  </v-container>
+      
 </template>
 
 <script>
@@ -58,3 +54,4 @@ export default {
   },
 };
 </script>
+

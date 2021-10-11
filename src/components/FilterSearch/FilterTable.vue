@@ -61,7 +61,7 @@ export default {
       search: {
         type: String,
       },
-      filterRating: 1,
+      filterRating: 0,
       filterIntensity: 1,
       headers: [
         {
