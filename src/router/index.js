@@ -67,6 +67,11 @@ const routes = [
     name: "CreateRoutine",
     component: () => import("../views/CreateRoutine.vue"),
   },
+  {
+    path: "/find-all-routines",
+    name: "FindAllRoutines",
+    component: () => import("../views/FindAllRoutines.vue"),
+  },
 ];
 
 const router = new VueRouter({
