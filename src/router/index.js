@@ -47,6 +47,7 @@ const routes = [
   {
     path: "/found",
     name: "Found",
+    meta: { requiresAuth: true },
     component: () => import("../views/Found.vue"),
   },
   {

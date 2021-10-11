@@ -59,6 +59,7 @@
                   length="5"
                   size="20"
                   dense
+                  clearable
                   :value="rating"
                   @input="setRating($event)"
                 ></v-rating>
@@ -73,6 +74,7 @@
                   length="5"
                   size="20"
                   dense
+                  clearable
                   :value="intensity"
                   @input="setIntensity($event)"
                 ></v-rating>
@@ -110,7 +112,7 @@ export default {
     return {
       ordenar: 0,
       tipo: 0,
-      rating: 0.5,
+      rating: 0,
       intensity: 1,
     };
   },

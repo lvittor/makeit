@@ -1,5 +1,5 @@
 <template>
-  <v-footer color="primary" padless>
+  <v-footer color="primary" padless :value="['signin', 'signup'].indexOf($route.name) <= -1">
     <v-row justify="center" no-gutters>
       <v-btn
         v-for="link in links"

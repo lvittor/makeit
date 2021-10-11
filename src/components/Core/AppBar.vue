@@ -1,32 +1,47 @@
 <template>
-  <v-app-bar app color="primary">
-    <div class="d-flex align-center">
-      <v-img
-        alt="MakeIt Logo"
-        class="shrink mr-2"
-        contain
-        src="../../assets/M.svg"
-        transition="scale-transition"
-        width="120"
-      />
-    </div>
-
-    <SearchBar class="d-flex align-self-stretch ml-16 pl-5" />
-
-    <v-btn
-      href="https://github.com/vuetifyjs/vuetify/releases/latest"
-      text
-      to="/profile"
-    >
-      <span class="mr-2">{{ user }}</span>
-      <v-icon>mdi-account</v-icon>
-    </v-btn>
+  <v-app-bar app color="primary" :value="['signin', 'signup'].indexOf($route.name) <= -1" height="75px">
+    <v-container class="dim d-flex align-self-stretch" fluid>
+      <v-row justify="space-between">
+        <v-col md="2">
+            <div class="d-flex align-center dim" >
+                  <v-img
+                    alt="MakeIt Logo"
+                    class="shrink mr-2"
+                    contain
+                    src="../../assets/M.svg"
+                    transition="scale-transition"
+                    width="110"
+                  />
+            </div>
+        </v-col>
+        <v-col md="5">
+          <div v-if="$isLoggedIn">
+            <SearchBar  class="dim d-flex align-self-stretch"/>
+          </div>
+        </v-col>
+        <v-col md="2">
+          <v-btn
+            text
+            absolute
+            right
+            dark
+            to="/profile"
+          >
+            <span class="mr-2 ">{{ user }}</span>
+            <v-icon>mdi-account</v-icon>
+          </v-btn>
+        </v-col>
+      </v-row>
+    </v-container>
+    
   </v-app-bar>
 </template>
 
 <script>
 import SearchBar from "../FilterSearch/SearchBar.vue";
 import {mapState, mapGetters, mapActions} from 'vuex'
+
+
 
 export default {
   data: () => {
@@ -36,6 +51,11 @@ export default {
       user: '',
     }
   },
+
+  created(){
+    this.getFirstAndLastName()
+  },
+
   components: {
     SearchBar,
   },
@@ -53,10 +73,14 @@ export default {
     }),
     async getFirstAndLastName(){
       if (this.$isLoggedIn){
-        let currUser = await this.$getCurrentUser();
-        this.user = currUser.firstName + ' ' + currUser.lastName;
+        
+        
+        await this.$getCurrentUser()
+        this.user = this.$user.firstName + ' ' + this.$user.lastName
+        
+      }else{
+        this.user = ''
       }
-      this.user = ''
     }
   }
 
@@ -67,5 +91,9 @@ export default {
 <style scoped>
 .fixeado {
   position: fixed;
+}
+
+.dim{
+  height: 50px;
 }
 </style>
