@@ -40,11 +40,14 @@
 
         <v-fade-transition>
           <v-overlay v-if="hover" absolute color="#036358">
-            <div class="pa-2">
-                <v-btn>Ver rutina</v-btn>
+            <div class="pa-2" align="center">
+              <v-btn>Ver</v-btn>
             </div>
-            <div> <!-- @click="getEditableRoutine(/*id de la rutina*/1)" -->
-                <v-btn>Editar Rutina</v-btn>
+            <div class="pa-2" align="center"> <!-- @click="getEditableRoutine(/*id de la rutina*/1)" -->
+              <v-btn>Editar</v-btn>
+            </div>
+            <div class="pa-2" align="center">
+              <v-btn>Eliminar</v-btn>
             </div>
           </v-overlay>
         </v-fade-transition>

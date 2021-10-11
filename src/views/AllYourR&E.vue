@@ -1,56 +1,3 @@
-
-<!-- 
-
-<div>
-    <v-container v-for="cat in categories2" v-bind:key="cat" fluid>
-
-
-      <v-container class="primary lighten-5" fluid>
-        <v-row align="end">
-          <v-col md="2" />
-          <v-col md="6" class="left">
-            <tit class="titulazos">Tus rutinas</tit>
-          </v-col>
-          <v-col md="4">
-            <v-btn
-              text
-              color="primary"
-              x-large
-              append
-              @click="routerPush(cat.name)"
-              ><h3>Agregar nueva rutina</h3></v-btn
-            >
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col
-            md="2"
-            v-for="eachroutine in categories"
-            v-bind:key="eachroutine"
-          >
-            <div
-              :to='' redirecciono a la página de kako
-            >
-              <Routine
-                :namep="eachroutine.title"
-                :desc="eachroutine.desc"
-                :reviews="20"
-                :difficulty="getDifficulty(eachroutine.diff)"
-                :score="normalizeScore(eachroutine.score)"
-              />
-            </div>
-          </v-col>
-        </v-row>
-      </v-container>
-
-
-    </v-container>
-    <h1>{{ routiness[0] }}</h1> 
-    <NavDrawer ref="nav" />
-    <v-btn>HolaHola</v-btn>
-  </div>
--->
-
 <template>
   <div>
     <v-container class="primary lighten-5" fluid>
@@ -77,13 +24,12 @@
             <v-col md="8">
               <v-container>
                 <v-row>
-                  <v-col md="3" v-for="(exc, index) in excercises" v-bind:key="index">
+                  <v-col md="3" v-for="(r, index) in userRoutines" v-bind:key="index">
                     <EditRoutine 
-                      namep="Piola"
-                      desc="Nashe"
-                      :reviews="20"
-                      :difficulty="5"
-                      :score="10"
+                      :namep="r.name"
+                      :desc="r.detail"
+                      :difficulty="r.intensity"
+                      :score="r.score"
                     />
                   </v-col>
                 </v-row>
@@ -93,7 +39,7 @@
         </v-container>
       </v-row>
     </v-container>
-    <v-container>
+    
 
 
       <v-row align="end">
@@ -128,7 +74,7 @@
           </v-row>
         </v-container>
       </v-row>
-    </v-container>
+    
   </div>
 </template>
 
@@ -150,24 +96,85 @@ import EditRoutine from "../components/EditRoutine.vue";
 import NewExercise from "../components/NewExercise.vue";
 import ExerciseCard from "../components/ExerciseCard.vue";
 
+import { mapActions } from "vuex";
+
 export default {
   name: "AllYourR&E",
 
   data: () => ({
-    excercises: [1,2,3,4,5,6,7,8,8,8,8,8]
-    // routines: [{}, {}]
+    excercises: [1,2,3,4,5,6,7,8,8,8,8,8],
+    result: null, 
+    controller: null, 
+    userRoutines: [],
   }),
-  methods: {
-      routerPush() {
-      this.$router.push({
-        name: "Home",
-      });
-    },
-  },
   components: {
     NewExercise,
     ExerciseCard,
     EditRoutine
   },
+
+  created() {
+    this.getUserRoutines();
+  },
+
+  methods: {
+    ...mapActions('routine', {
+      $getUserRoutines: 'getUserRoutines'
+    }),
+
+    setResult(result){
+      this.result = result;
+    },
+
+    mapIntensity(intensity) {
+      switch (intensity) {
+        case "rookie":
+          return 1;
+        case "beginner":
+          return 2;
+        case "intermediate":
+          return 3;
+        case "advanced":
+          return 4;
+        case "expert":
+          return 5;
+      }
+    },
+
+    mapScore(score) {
+      return score / 2;
+    },
+
+    setRoutines() {
+      for (let i = 0; i < this.result.content.length; i++) {
+        const r = this.result.content[i];
+        this.userRoutines.push({
+          name: r.name,
+          detail: r.detail,
+          intensity: this.mapIntensity(r.difficulty),
+          score: this.mapScore(r.score),
+        });
+      }
+    },
+
+    async getUserRoutines(){
+      try{
+        //this.controller = new AbortController();
+        const userRoutines = await this.$getUserRoutines(this.controller);
+        //this.controller = null;
+        this.setResult(userRoutines);
+        this.setRoutines();
+      } catch (e) {
+        this.setResult(e);
+      }
+    },
+
+    routerPush() {
+      this.$router.push({
+        name: "Home",
+      });
+    },
+  },
+
 };
 </script>

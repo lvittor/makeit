@@ -61,11 +61,15 @@ export default {
             commit('setUser', result)
             return result
         },
-
         async modifyUser({commit}, user) {
             const result = await UserApi.modify(user)
             commit('setUser', result)
             return result;
         },
+        /* async getUserRoutines({commit}, controller){
+            const result = await UserApi.getCurrentRoutines(controller);
+            commit("replaceAll", result);
+            return result
+        }, */
     },
 }

@@ -1,5 +1,6 @@
 //import { getOwnPropertyNames } from "core-js/core/object";
 import { RoutineApi } from "../../../api/routine";
+import { UserApi } from "../../../api/user";
 //import category from "../../../api/category";
 
 export default {
@@ -78,6 +79,11 @@ export default {
       );
       commit("replaceAll", result);
       return result;
+    },
+    async getUserRoutines({commit}, controller){
+      const result = await UserApi.getCurrentRoutines(controller);
+      commit("replaceAll", result);
+      return result
     },
   },
 };
