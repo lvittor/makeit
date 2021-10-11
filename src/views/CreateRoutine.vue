@@ -1,6 +1,6 @@
 <template>
   <v-container class="grey lighten-5" fluid>
-    <v-row justify="center" class="mb-10">
+    <v-row justify="center" class="mb-10" align="center">
       <v-col
         cols="3"
         sm="2"
@@ -32,8 +32,22 @@
           hide-details="auto"
           class="pb-4"
           background-color="white"
+          rows="3"
         ></v-textarea>
+        <v-autocomplete
+          v-model="selected"
+          class="pb-4"
+          :items="categories"
+          hide-details
+          hide-selected
+          label="Seleccione una categoria..."
+          solo
+          outlined
+          flat
+        >
+        </v-autocomplete>
         <v-text-field
+          class="pb-4"
           background-color="white"
           outlined
           type="time"
@@ -42,21 +56,18 @@
           value="00:00"
           hide-details="auto"
         />
-        <v-container class="pt-6 pa-0">
-          <v-row
-            align="center"
-          >
-            <v-col
-              cols="7"
-              md="7"
-            >
-              ¿La rutina requiere equipamiento?
-            </v-col>
-            <v-col
-              cols="5"
-              md="5"
-              sm="4"
-            >
+        <v-card class="mb-4">
+          <v-container>
+            <v-row align="center">
+              <v-col
+                cols="8"
+              >
+                ¿La rutina requiere equipamiento?
+              </v-col>
+              <v-col
+                class="pa-0"
+                cols="4"
+              >
               <div class="d-flex justify-end">
                 <v-switch
                   class="pa-0 ma-0"
@@ -65,34 +76,37 @@
                   hide-details="auto"
                 ></v-switch>
               </div>
-            </v-col>
-          </v-row>
-          <v-row align="center">
-            <v-col
-              cols="7"
-              md="7"
-            >
-              ¿Cuál es la intensidad de tu rutina?
-            </v-col>
-            <v-col
-              cols="5"
-              md="5"
-            >
-              <div class="justify-end">
+                
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>  
+        <v-card>
+          <v-container>
+            <v-row align="center">
+              <v-col
+                cols="8"
+              >
+                ¿Cuál es la intensidad de tu rutina?
+              </v-col>
+              <v-col
+                class="pa-0"
+                cols="4"
+              >
                 <v-rating
                   color="red"
                   background-color="grey"
                   empty-icon="mdi-fire"
                   full-icon="mdi-fire"
                   length="5"
-                  size="32"
+                  size="25"
                   dense
                   value="1"
                 ></v-rating>
-              </div>
-            </v-col>
-          </v-row>
-        </v-container>
+              </v-col>
+            </v-row>
+          </v-container>
+        </v-card>
       </v-col>
     </v-row>
     <v-row justify="center">
@@ -121,17 +135,72 @@
 </template>
 
 <script>
-  import RoutineStepper from "../components/Cycle/RoutineStepper.vue"
+import { mapActions } from 'vuex'
+import RoutineStepper from "../components/Cycle/RoutineStepper.vue"
 
-  export default {
-    data () {
-      return {
-        switch1: true,
+export default {
+  data () {
+    return {
+      controller: null,
+      result: null,
+      selected: '',
+      categories: [],
+      switch1: false,
+    }
+  },
+
+  created() {
+    this.getAllCategories();
+    this.getAllExercises();
+  },
+
+  methods: {
+    ...mapActions('category', {
+      $getAllCategories: "getAll"
+    }),
+
+    ...mapActions('exercise', {
+      $getAllExercises: 'getAll',
+    }), 
+
+    async getAllExercises() {
+      try {
+        this.controller = new AbortController();
+        const pickedExercises = await this.$getAllExercises(this.controller);
+        this.controller = null;
+        this.setResult(pickedExercises);
+      } catch(e) {
+        this.setResult(e);
       }
     },
 
-    components: {
-      RoutineStepper,
+    async getAllCategories() {
+      try {
+        this.controller = new AbortController();
+        const pickedCategories = await this.$getAllCategories(this.controller);
+        this.controller = null;
+        this.setResult(pickedCategories);
+        this.setCategories()
+      } catch(e){
+        this.setResult(e);
+      }
     },
-  }
+
+    setResult(result) {
+      this.result = result;
+    },
+
+    setCategories() {
+      for (let i = 0; i < this.result.content.length; i++){
+        this.categories.push(this.result.content[i].name);
+      }
+    },
+
+    
+  },
+
+  components: {
+    RoutineStepper,
+  },
+}
 </script>

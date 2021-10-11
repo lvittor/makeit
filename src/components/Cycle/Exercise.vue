@@ -12,7 +12,7 @@
           <v-container>
             <v-row align="center"> 
               <v-col>
-                <SearchExercise :actual="actual" :id="id"/>
+                <SearchExercise :actual="actual" :id="id" :cycle="cycle"/>
               </v-col>
             </v-row>
             <v-row align="center" justify-md="center">
@@ -28,7 +28,7 @@
               </v-col>
               <v-col>
                 <v-select
-                  :v-model="reps"
+                  v-model="reps"
                   :items="items"
                   label="Repeticiones"
                   hide-details
@@ -83,6 +83,9 @@
       id: {
         type: Number,
       },
+      cycle: {
+        type: Number,
+      },
       enabled1: {
         type: Boolean,
         default: false,
@@ -104,34 +107,32 @@
     },
 
     methods: {
-      setActual(text, id) {
-        if (this.id == id){
-          this.actual = text;
-          this.$root.$emit('updateText', text, this.id);
+      setActual(text, id, cycle) {
+        if (this.id == id && this.cycle == cycle){
+          this.$root.$emit('updateText', text, this.id, this.cycle);
         }
-        
       },
       setReps(text) {
         this.reps = text;
-        this.$root.$emit('updateReps', text, this.id);
+        this.$root.$emit('updateReps', text, this.id, this.cycle);
       },
       setDur(text) {
         this.dur = text;
-        this.$root.$emit('updateDur', text, this.id);
+        this.$root.$emit('updateDur', text, this.id, this.cycle);
       },
       setEnabled1(value){
         this.enabled1 = value;
-        this.$root.$emit('updateEnable1', value, this.id);
+        this.$root.$emit('updateEnable1', value, this.id, this.cycle);
       },
       setEnabled2(value){
         this.enabled2 = value;
-        this.$root.$emit('updateEnable2', value, this.id);
+        this.$root.$emit('updateEnable2', value, this.id, this.cycle);
       },
     },
 
     mounted() {
-      this.$root.$on('setter', (text, id) => {
-        this.setActual(text, id);
+      this.$root.$on('setter', (text, id, cycle) => {
+        this.setActual(text, id, cycle);
       })
     },
 
