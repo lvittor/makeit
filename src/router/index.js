@@ -39,6 +39,11 @@ const routes = [
     component: () => import("../views/FindRoutine.vue"),
   },
   {
+    path: "/all-your-routines-and-exercises",
+    name: "AllYourR&E",
+    component: () => import("../views/AllYourR&E.vue"),
+  },
+  {
     path: "/profile",
     name: "UserProfile",
     meta: { requiresAuth: true },
@@ -56,6 +61,11 @@ const routes = [
     name: "NotFound",
     component: () =>
       import(/* webpackChunkName: "NotFound" */ "@/views/NotFound.vue")
+  },
+  {
+    path: "/create-routine",
+    name: "CreateRoutine",
+    component: () => import("../views/CreateRoutine.vue"),
   },
 ];
 
