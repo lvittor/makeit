@@ -6,8 +6,7 @@ export {RoutineApi, Routine}
 class RoutineApi {
     static getUrl(slug) {
         return `${Api.baseUrl}/routines${ slug ? `/${slug}` : ''}`
-      }
-
+    }
 
     static async createRoutine(routine, controller) {
         return await Api.post(RoutineApi.getUrl(), true, routine, controller).catch(err => {
@@ -43,36 +42,6 @@ class RoutineApi {
             throw err;
         })
     }
-
-    /*
-    static async getAllRoutinesBy(rutina, controller) {
-        switch (rutina) {
-            case 'Favoritas':
-                return await Api.get(`${Api.baseUrl}/user/current/routines/favourites`, true, controller).catch(err => {
-                    throw err;
-                })
-            case 'misRutinas':
-                return await UserApi.getCurrentUserFavourites()
-            case 'misEjercicios':
-                return await Store.getMyExercisesAll(controller);
-            case 'explorar':
-                return await Api.get(`${RoutinesApi.url}`, true, controller).catch(err => {
-                    throw err;
-                })
-        }
-    }
-
-    static async updateRoutine(updatedRoutine, id, controller) {
-        return await Api.put(`${RoutinesApi.url}/` + id, true, updatedRoutine, controller)
-    }
-
-    static async deleteRoutine(routineID, controller) {
-        return await Api.delete(`${RoutinesApi.url}/${routineID}`, true, controller)
-            .catch(err => {
-                throw err
-            })
-    }
-    */
 }
 
 class Routine {

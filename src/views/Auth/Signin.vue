@@ -12,13 +12,15 @@
           <EmailTF
             class="mb-3"
             :label="$vuetify.lang.t('$vuetify.auth.sign-up.email')"
+            :email.sync="email"
           />
           <PasswordTF
             :label="$vuetify.lang.t('$vuetify.auth.sign-up.password')"
+            :password.sync="password"
           />
           <div class="d-flex justify-end">
-            <a class="pa-0 text-none" text color="primary" max-height="19">
-              {{ $vuetify.lang.t("$vuetify.auth.sign-in.forgotpassword") }}
+            <a class="pa-0 text-none red--text" text color="red" max-height="19">
+              {{ errMessage }}
             </a>
           </div>
         </v-container>
@@ -30,10 +32,12 @@
             style="min-width: 88px"
             color="primary"
             depressed
-            @click="wip"
+            @click="login(email, password)"
+            :disabled="$isLoggedIn"
           >
             {{ $vuetify.lang.t("$vuetify.auth.sign-in.signin") }}
           </v-btn>
+          
         </div>
       </div>
     </v-container>
@@ -41,16 +45,54 @@
 </template>
 
 <script>
-import { wip } from "@/helpers.js";
+import {mapState, mapGetters, mapActions} from 'vuex'
+import {Credentials} from "@/../api/user.js";
+
 
 export default {
   components: {
     PasswordTF: () => import("../../components/TextFields/Password"),
     EmailTF: () => import("../../components/TextFields/Email"),
   },
-
-  methods: {
-    wip,
+  data() {
+    return {
+      email: '',
+      password: '',
+      result: null,
+      controller: null,
+      errMessage: '',
+    }
   },
+  computed: {
+    ...mapState('security', {
+      $user: state => state.user,
+    }),
+    ...mapGetters('security', {
+      $isLoggedIn: 'isLoggedIn'
+    }),
+    canAbort() {
+      return this.$isLoggedIn && this.controller
+    }
+  },
+  methods: {
+     ...mapActions('security', {
+      $getCurrentUser: 'getCurrentUser',
+      $login: 'login',
+      $logout: 'logout',
+    }),
+    async login(username, password) {
+      try {
+        const credentials = new Credentials(username, password)
+        await this.$login({credentials, rememberMe: true })
+        this.$router.push({
+          name: "Home",
+        });
+      } catch (e) {
+        if(e.code == 4){
+          this.errMessage = "Contraseña o usuario inválidos"
+        }
+      }
+    },
+  }
 };
 </script>
