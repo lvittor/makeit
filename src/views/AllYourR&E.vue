@@ -24,13 +24,26 @@
             <v-col md="8">
               <v-container>
                 <v-row>
-                  <v-col md="3" v-for="(r, index) in userRoutines" v-bind:key="index">
-                    <EditRoutine 
-                      :namep="r.name"
-                      :desc="r.detail"
-                      :difficulty="r.intensity"
-                      :score="r.score"
-                    />
+                  <v-col md="3" v-for="r in userRoutines" v-bind:key="r.id">
+                    <div
+                      @click="
+                        $refs.nav.toggleDrawer(
+                          r.id,
+                          r.intensity,
+                          r.score,
+                          r.name,
+                          r.detail
+                        )
+                      "
+                    >
+                      <Routine 
+                        :id="r.id"
+                        :namep="r.name"
+                        :desc="r.detail"
+                        :difficulty="r.intensity"
+                        :score="r.score"
+                      />
+                    </div>
                   </v-col>
                 </v-row>
               </v-container>
@@ -74,7 +87,7 @@
           </v-row>
         </v-container>
       </v-row>
-    
+    <ModifyNavDrawer ref="nav" style="navigate"/>
   </div>
 </template>
 
@@ -83,7 +96,12 @@
   font-size: 80px;
   vertical-align: bottom;
 }
-
+.navigate{
+  position:fixed; 
+  top:0; 
+  right:0; 
+  overflow-y:scroll;
+}
 .view-more {
   font-size: 25px;
   color: #6200ee;
@@ -92,9 +110,10 @@
 </style>
 
 <script>
-import EditRoutine from "../components/EditRoutine.vue";
+import Routine from "../components/Routine.vue";
 import NewExercise from "../components/NewExercise.vue";
 import ExerciseCard from "../components/ExerciseCard.vue";
+import ModifyNavDrawer from "../components/ModifyNavDrawer.vue";
 
 import { mapActions } from "vuex";
 
@@ -110,7 +129,8 @@ export default {
   components: {
     NewExercise,
     ExerciseCard,
-    EditRoutine
+    Routine,
+    ModifyNavDrawer
   },
 
   created() {
@@ -149,6 +169,7 @@ export default {
       for (let i = 0; i < this.result.content.length; i++) {
         const r = this.result.content[i];
         this.userRoutines.push({
+          id: r.id,
           name: r.name,
           detail: r.detail,
           intensity: this.mapIntensity(r.difficulty),

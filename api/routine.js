@@ -20,6 +20,12 @@ class RoutineApi {
         })
     }
 
+    static async deleteRoutine(routineID, controller){
+        return await Api.delete(RoutineApi.getUrl(routineID), true, controller).catch(err => {
+            throw err;
+        })
+    }
+
     static async getAllRoutines(controller) {
         return await Api.get(RoutineApi.getUrl(), true, controller).catch(err => {
             throw err;

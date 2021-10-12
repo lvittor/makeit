@@ -41,13 +41,7 @@
         <v-fade-transition>
           <v-overlay v-if="hover" absolute color="#036358">
             <div class="pa-2" align="center">
-              <v-btn>Ver</v-btn>
-            </div>
-            <div class="pa-2" align="center"> <!-- @click="getEditableRoutine(/*id de la rutina*/1)" -->
-              <v-btn>Editar</v-btn>
-            </div>
-            <div class="pa-2" align="center">
-              <v-btn>Eliminar</v-btn>
+              <v-btn>Ver más</v-btn>
             </div>
           </v-overlay>
         </v-fade-transition>
@@ -63,10 +57,6 @@ export default {
       type: Boolean,
       default: false,
     },
-    reviews: {
-      type: Number,
-      default: 0,
-    },
     namep: {
       type: String,
     },
@@ -81,6 +71,9 @@ export default {
       type: Number,
       default: 0,
     },
+    id: {
+      type: Number
+    }
   },
   data: () => ({
     //

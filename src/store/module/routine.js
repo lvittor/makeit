@@ -10,8 +10,8 @@ export default {
   },
   getters: {
     findIndex(state) {
-      return (category) => {
-        return state.items.findIndex((item) => item.id === category.id);
+      return (routine) => {
+        return state.items.findIndex((item) => item.id === routine.id);
       };
     },
     findCategory(state) {
