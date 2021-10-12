@@ -33,7 +33,17 @@ class RoutineApi {
     }
 
     static async getFourRoutinesBy(category, controller){
-        const aux = `?categoryId=${category}&page=0&size=4&orderBy=date&direction=asc`
+        return this.getRoutinesByCat(category, 0, 4, controller)
+    }
+
+    static async getRoutinesByCat(category, page, size, controller){
+        if(page == null){
+            page = 0
+        }
+        if(size == null){
+            size = 12
+        }
+        const aux = `?categoryId=${category}&page=${page}&size=${size}&orderBy=date&direction=asc`
         return await Api.get(RoutineApi.getUrl(aux), true, controller).catch(err => {
             throw err;
         })
