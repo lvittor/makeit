@@ -1,12 +1,11 @@
-//import { getOwnPropertyNames } from "core-js/core/object";
 import { RoutineApi } from "../../../api/routine";
 import { UserApi } from "../../../api/user";
-//import category from "../../../api/category";
 
 export default {
   namespaced: true,
   state: {
     items: [],
+    cycles: [],
   },
   getters: {
     findIndex(state) {
@@ -35,12 +34,20 @@ export default {
     replaceAll(state, routine) {
       state.items = routine;
     },
+    replaceCycle(state, cycle) {
+      state.cycles = cycle;
+    }
   },
   actions: {
     async create({ getters, commit }, routine) {
       const result = await RoutineApi.createRoutine(routine); //add(routine);
       if (!getters.findIndex(result)) commit("push", result);
       return result;
+    },
+    async createCycle({ commit }, req) {
+      const result = await RoutineApi.createCycle(req.id, req.cycle);
+      commit('replaceCycle', result)
+      return result
     },
     async modify({ getters, commit }, routine) {
       const result = await RoutineApi.modifyRoutine(routine);
