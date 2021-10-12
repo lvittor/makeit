@@ -77,12 +77,13 @@ export default {
       return result;
     },
     async getFour({ commit }, cat) {
-      alert("Cargo 4 rutinas de una categoria");
       const result = await RoutineApi.getFourRoutinesBy(cat);
-      alert(
-        "El llamado a la api de las 4 rutinas me devuelve " +
-          JSON.stringify(result)
-      );
+      commit("replaceAll", result);
+      return result;
+    },
+
+    async getPageByCat({ commit }, {cat,page}) {
+      const result = await RoutineApi.getRoutinesByCat(cat,page,12);
       commit("replaceAll", result);
       return result;
     },

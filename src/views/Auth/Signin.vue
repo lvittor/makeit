@@ -19,8 +19,8 @@
             :password.sync="password"
           />
           <div class="d-flex justify-end">
-            <a class="pa-0 text-none" text color="primary" max-height="19">
-              {{ $vuetify.lang.t("$vuetify.auth.sign-in.forgotpassword") }}
+            <a class="pa-0 text-none red--text" text color="red" max-height="19">
+              {{ errMessage }}
             </a>
           </div>
         </v-container>
@@ -45,7 +45,6 @@
 </template>
 
 <script>
-import { Helper } from "@/helpers.js";
 import {mapState, mapGetters, mapActions} from 'vuex'
 import {Credentials} from "@/../api/user.js";
 
@@ -60,7 +59,8 @@ export default {
       email: '',
       password: '',
       result: null,
-      controller: null
+      controller: null,
+      errMessage: '',
     }
   },
   computed: {
@@ -84,13 +84,14 @@ export default {
       try {
         const credentials = new Credentials(username, password)
         await this.$login({credentials, rememberMe: true })
-        Helper.clearResult()
+        this.$router.push({
+          name: "Home",
+        });
       } catch (e) {
-        Helper.setResult(e)
-        alert(e)
+        if(e.code == 4){
+          this.errMessage = "Contraseña o usuario inválidos"
+        }
       }
-      //si ingreso correctamente, hacer
-      //this.$router.push("/")
     },
   }
 };

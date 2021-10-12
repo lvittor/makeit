@@ -1,4 +1,5 @@
 import {Credentials} from "../api/user";
+
 export default class Helper{
   static wip() {
     alert("Ooops, this feature isn't available yet...");
@@ -20,8 +21,4 @@ export default class Helper{
       this.setResult(e)
     }
   }
-
-  
-
-  
 }

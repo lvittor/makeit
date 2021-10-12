@@ -1,7 +1,7 @@
 <template>
   <v-hover>
-    <!-- <template v-slot:default="{ hover }"> -->
-    <template>
+    <template v-slot:default="{ hover }">
+      <!-- <template> -->
       <v-card class="mx-auto" max-width="344">
         <v-img
           src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"
@@ -16,30 +16,34 @@
 
         <v-card-title>
           <v-rating
-            :value="4"
+            :value="difficulty"
             dense
             color="red"
-            background-color="red"
+            background-color="grey"
+            empty-icon="mdi-fire"
+            full-icon="mdi-fire"
             hover
+            readonly
             class="mr-2"
           ></v-rating>
           <span class="primary--text text-subtitle-2">Dificultad</span>
           <v-rating
-            :value="4"
+            :value="score"
             dense
             color="orange"
-            background-color="orange"
+            background-color="grey"
             hover
             class="mr-2"
+            readonly
           ></v-rating>
-          <span class="primary--text text-subtitle-2">{{ reviews }} votos</span>
+          <span class="primary--text text-subtitle-2">Puntuación</span>
         </v-card-title>
 
-        <!-- <v-fade-transition>
+        <v-fade-transition>
           <v-overlay v-if="hover" absolute color="#036358">
             <v-btn>Ver mas</v-btn>
           </v-overlay>
-        </v-fade-transition> -->
+        </v-fade-transition>
       </v-card>
     </template>
   </v-hover>
@@ -52,15 +56,19 @@ export default {
       type: Boolean,
       default: false,
     },
-    reviews: {
-      type: Number,
-      default: 0,
-    },
     namep: {
       type: String,
     },
     desc: {
       type: String,
+    },
+    score: {
+      type: Number,
+      default: 0,
+    },
+    difficulty: {
+      type: Number,
+      default: 0,
     },
   },
   data: () => ({

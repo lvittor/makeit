@@ -52,6 +52,7 @@ const routes = [
   {
     path: "/found",
     name: "Found",
+    meta: { requiresAuth: true },
     component: () => import("../views/Found.vue"),
   },
   {
@@ -65,6 +66,11 @@ const routes = [
     path: "/create-routine",
     name: "CreateRoutine",
     component: () => import("../views/CreateRoutine.vue"),
+  },
+  {
+    path: "/find-all-routines",
+    name: "FindAllRoutines",
+    component: () => import("../views/FindAllRoutines.vue"),
   },
 ];
 
