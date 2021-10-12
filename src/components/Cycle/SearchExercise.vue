@@ -1,7 +1,7 @@
 <template>
   <v-autocomplete
     v-model="actual"
-    :items="items"
+    :items="exercises"
     hide-details
     hide-selected
     label="Busca un ejercicio..."
@@ -14,25 +14,55 @@
 </template>
 
 <script>
-  export default {
-    data: () => ({
-      items: ['Jumping Jacks', 'Abs', 'Papafrita', 'Zaramamba', 'FIUUUUUUUMBA'],
-    }),
+import { mapState } from 'vuex'
 
-    props: {
-      actual: {
-        type: String,
-      },
-      id: {
-        type: Number,
+export default {
+  data: () => ({
+    controller: null,
+    result: null,
+    exercises: [],
+  }),
+
+  props: {
+    actual: {
+      type: String,
+    },
+    id: {
+      type: Number,
+    },
+    cycle: {
+      type: Number,
+    }
+  },
+
+  computed: {
+    ...mapState('exercise', {
+      $exercises: state => state.items,
+    }),
+  },
+
+  created() {
+    this.setExercises()
+  },
+
+  methods: {    
+
+    setResult(result){
+      this.result = result;
+    },
+
+    setExercises(){
+      const pickedExercises = this.$exercises
+      this.setResult(pickedExercises);
+      for (let i = 0; i < this.result.content.length; i++){
+        this.exercises.push(this.result.content[i].name)
       }
     },
 
-    methods: {
-      changeActual(text) {
-        this.actual = text;
-        this.$root.$emit('setter', text, this.id);
-      }
+    changeActual(text) {
+      this.actual = text;
+      this.$root.$emit('setter', text, this.id, this.cycle);
     }
   }
+}
 </script>
