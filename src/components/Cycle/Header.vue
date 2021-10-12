@@ -3,9 +3,15 @@
     dense
     color="primary"
   >
+    <v-btn icon color="white" @click="prevStep()">
+      <v-icon> mdi-arrow-left </v-icon>
+    </v-btn>
     <v-text-field
       v-model="value"
       hide-details
+      solo
+      label="Nombre del ciclo"
+      outlined
       color="white"
       background-color="primary"
       dark
@@ -13,15 +19,6 @@
       @change="sendText($event)"
     >
     </v-text-field>
-
-    <v-btn icon
-      color="white"
-      @click="caller()"
-    >
-      <v-icon dark>
-        mdi-check
-      </v-icon>
-    </v-btn>
   </v-toolbar>
 </template>
 
@@ -34,17 +31,20 @@ export default {
     },
     readonly: {
       type: Boolean,
+    },
+    cycle: {
+      type: Number,
     }
   },
 
   methods: {
-    caller() {
-      alert(this.value);
+    sendText(text) {
+      this.$root.$emit('updateTitle', text, this.cycle);
     },
 
-    sendText(text) {
-      this.$root.$emit('updateTitle', text);
-    }
+    prevStep(){
+      this.$root.$emit('routineprevstepper');
+    },
   }
 }
 </script>

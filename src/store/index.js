@@ -3,7 +3,9 @@ import Vuex from "vuex";
 import routine from "@/store/module/routine";
 import category from "@/store/module/category";
 import security from '@/store/module/security';
-import sport from '@/store/module/sport';
+import sport from '@/store/module/sport'; // TODO: remove sport
+import exercise from "@/store/module/exercise";
+import cycleexercise from "@/store/module/cycleexercise"
 
 Vue.use(Vuex);
 
@@ -15,6 +17,8 @@ export default new Vuex.Store({
     routine,
     category,
     security,
-    sport
+    sport,
+    exercise,
+    cycleexercise,
   },
 });
