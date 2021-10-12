@@ -18,7 +18,6 @@
             :key="`${n}-step`"
             :complete="e1 > n"
             :step="n"
-            :rules="[() => getStatus(n-1)]"
           >
           </v-stepper-step>
 
@@ -40,10 +39,6 @@
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
-
-    <v-btn @click="printealo()">
-      HOLIS
-    </v-btn>
   </div>
 </template>
 
@@ -58,7 +53,13 @@ export default {
       cycles: [],
       series: [],
       titles: [],
-      status: [true, true, true, true, true, true, true, true, true, true],
+      finished: false,
+    }
+  },
+
+  props: {
+    id: {
+      type: Number,
     }
   },
 
@@ -71,12 +72,6 @@ export default {
   },
 
   methods: {
-    printealo(){
-      alert('CICLOS: ' + JSON.stringify(this.cycles))
-      alert('TITULOS: ' + JSON.stringify(this.titles))
-      alert('SERIES: ' + JSON.stringify(this.series))
-    },
-
     getTitle() {
       switch(this.e1) {
         case 1:
@@ -94,8 +89,16 @@ export default {
       return false;
     },
 
-    nextStep () {
-        this.e1++;
+    nextStep() {
+      this.e1++;
+      if (this.e1 > this.steps && this.finished == false) {
+        this.sendCycles(this.finished);
+        this.finished = true;
+      }
+    },
+
+    sendCycles(finished) {
+      this.$root.$emit('getCycles', this.cycles, this.series, this.titles, finished);
     },
 
     prevStep () {
