@@ -56,6 +56,10 @@ export default {
     this.getFirstAndLastName()
   },
 
+  updated(){
+    this.getFirstAndLastName()
+  },
+
   components: {
     SearchBar,
   },
