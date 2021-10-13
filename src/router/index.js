@@ -10,6 +10,7 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: { requiresAuth: true }
   },
   {
     path: "/about",
@@ -41,6 +42,7 @@ const routes = [
   {
     path: "/all-your-routines-and-exercises",
     name: "AllYourR&E",
+    meta: { requiresAuth: true },
     component: () => import("../views/AllYourR&E.vue"),
   },
   {
@@ -65,11 +67,13 @@ const routes = [
   {
     path: "/create-routine",
     name: "CreateRoutine",
+    meta: { requiresAuth: true },
     component: () => import("../views/CreateRoutine.vue"),
   },
   {
     path: "/find-all-routines",
     name: "FindAllRoutines",
+    meta: { requiresAuth: true },
     component: () => import("../views/FindAllRoutines.vue"),
   },
 ];

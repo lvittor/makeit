@@ -83,10 +83,12 @@ export default {
     async login(username, password) {
       try {
         const credentials = new Credentials(username, password)
+        this.$root.$emit("updateAppbar")
         await this.$login({credentials, rememberMe: true })
         this.$router.push({
           name: "Home",
         });
+        this.$emit("updateAppbar")
       } catch (e) {
         if(e.code == 4){
           this.errMessage = "Contraseña o usuario inválidos"
