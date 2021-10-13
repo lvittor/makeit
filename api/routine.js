@@ -53,6 +53,18 @@ class RoutineApi {
             throw err;
         })
     }
+    static async getPage(page, size, controller){
+        if(page == null){
+            page = 0
+        }
+        if(size == null){
+            size = 12
+        }
+        const aux = `?page=${page}&size=${size}&orderBy=date&direction=asc`
+        return await Api.get(RoutineApi.getUrl(aux), true, controller).catch(err => {
+            throw err;
+        })
+    }
 }
 
 class Routine {

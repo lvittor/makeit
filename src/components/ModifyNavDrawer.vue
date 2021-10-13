@@ -44,7 +44,7 @@
         </v-col>
       </v-row>
       <v-row>
-          <FavIconB/>
+          <FavIconB :routineID="this.id" ref="fav"/>
           <EditIconB/>
           <RemoveIconB :routineID="this.id" />
       </v-row>
@@ -84,7 +84,15 @@ export default {
     EditIconB,
     RemoveIconB
   },
+
+  mounted(){
+    this.$root.$on('update', () => {
+      this.drawer = false
+    })
+  },
+
   methods: {
+    
     toggleDrawer(id, diff, score, title, desc) {
       this.drawer = !this.drawer;
       this.score = score;
@@ -92,6 +100,7 @@ export default {
       this.title = title;
       this.desc = desc;
       this.id = id;
+      this.$refs.fav.isRoutineFavourite(this.id)
     },
   },
 };

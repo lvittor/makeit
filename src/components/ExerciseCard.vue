@@ -22,12 +22,58 @@
           </v-row>
         </v-container>
         <v-fade-transition>
-          <v-overlay v-if="hover" absolute color="#036358">
+          <v-overlay v-show="hover" absolute color="#036358">
             <div class="pa-2" align="center"> <!-- @click="getEditableRoutine(/*id de la rutina*/1)" -->
               <v-btn>Editar</v-btn>
             </div>
-            <div class="pa-2" align="center">
-              <v-btn>Eliminar</v-btn>
+            <!-- 
+
+            <div class="pa-2" align="center" >
+              <v-btn @click="showMessage()">Eliminar</v-btn>
+            </div>
+
+            -->
+
+            <div class="pa-2 d-flex justify-center" align="center">
+              <v-dialog
+                transition="dialog-bottom-transition"
+                max-width="600"
+              >
+                <template v-slot:activator="{ on, attrs }">
+                  <v-btn 
+                    v-bind="attrs"
+                    v-on="on"
+                  >Eliminar</v-btn>
+                </template>
+                <template v-slot:default="dialog">
+                  <v-alert
+                    type="info"
+                    icon="mdi-information-outline"
+                    class="ma-0"
+                    color="secondary"
+                    prominent
+                    border="left"
+                  >
+                    ¿Estás seguro desea eliminar el ejercicio?
+                  </v-alert>
+                  <v-row class="ma-0">
+                    <v-col
+                      class="pa-0"
+                    >
+                      <v-btn color="black" class="white--text" block @click="dialog.value = false">
+                        CANCELAR
+                      </v-btn>
+                    </v-col>
+                    <v-col
+                      class="pa-0"
+                    >
+                      <v-btn color="black" class="white--text" block @click="removeExercise(id), dialog.value = false">
+                        CONFIRMAR
+                      </v-btn>
+                    </v-col>
+                  </v-row>
+                </template>
+              </v-dialog>
             </div>
           </v-overlay>
         </v-fade-transition>
@@ -45,8 +91,13 @@
 </style>
 
 <script>
+import { mapActions } from "vuex";
+
 export default {
   props: {
+    id: {
+      type: Number,
+    },
     overlay: {
       type: Boolean,
       default: false,
@@ -63,11 +114,21 @@ export default {
       default: "",
     },
   },
+
   data: () => ({
-    
+    message: false,
   }),
   methods: {
-    
+    ...mapActions('exercise', {
+      $removeExercise: 'delete',
+    }),
+    showMessage(){
+      this.message = !this.message
+    },
+    async removeExercise(exerciseID){
+      await this.$removeExercise({id: exerciseID});
+      this.$root.$emit("exerciseDeleted");
+    }
   }
 };
 </script>

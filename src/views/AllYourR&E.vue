@@ -13,11 +13,11 @@
               x-large
               append
               @click="routerPush()"
-              ><h3>Agregar nueva rutina</h3></v-btn
+              >
+              <h3>Agregar nueva rutina</h3></v-btn
             >
           </v-col>
         </v-row>
-
         <v-row justify="center">
         <v-container>
           <v-row justify="center">
@@ -51,6 +51,15 @@
           </v-row>
         </v-container>
       </v-row>
+      <div class="text-center">
+        <v-pagination
+          v-model="routinepage"
+          :length="routinetotalPages"
+          :total-visible="7"
+          class="my-4"
+          @input="changeRoutinePage()"
+        ></v-pagination>
+      </div>
     </v-container>
     
 
@@ -78,8 +87,8 @@
             <v-col md="8">
               <v-container>
                 <v-row>
-                  <v-col md="3" v-for="(exc, index) in excercises" v-bind:key="index">
-                    <ExerciseCard namep="Estocadas" desc="fortalecimiento"/>
+                  <v-col md="3" v-for="exc in userExercises" v-bind:key="exc.id">
+                    <ExerciseCard :id="exc.id" :namep="exc.name" :desc="exc.detail"/>
                   </v-col>
                 </v-row>
               </v-container>
@@ -87,6 +96,15 @@
           </v-row>
         </v-container>
       </v-row>
+      <div class="text-center">
+        <v-pagination
+          v-model="page"
+          :length="totalPages"
+          :total-visible="7"
+          class="my-4"
+          @input="changeExercisePage()"
+        ></v-pagination>
+      </div>
     <ModifyNavDrawer ref="nav" style="navigate"/>
   </div>
 </template>
@@ -121,10 +139,15 @@ export default {
   name: "AllYourR&E",
 
   data: () => ({
-    excercises: [1,2,3,4,5,6,7,8,8,8,8,8],
+    routinepage: 1,
+    routinetotalPages: 2,
+    page: 1,
+    totalPages: 2,
     result: null, 
     controller: null, 
     userRoutines: [],
+    userExercises: [],
+    creationEx: 0,
   }),
   components: {
     NewExercise,
@@ -134,18 +157,78 @@ export default {
   },
 
   created() {
-    this.getUserRoutines();
+
+    this.loadRoutineData();
+    //this.getUserRoutines();
+    //this.getAllUserExercises();
+    this.loadExerciseData()
+  },
+
+  mounted(){
+    this.$root.$on('update', () => {
+       if (this.userRoutines.length == 1 && this.routinepage!=0){
+        this.routinepage = this.routinepage-1
+      }
+      this.loadRoutineData();
+    })
+    this.$root.$on('exerciseCreated', () => {
+      this.loadExerciseData();
+    })
+    this.$root.$on('exerciseDeleted', ()=> {
+      if (this.userExercises.length == 0 && this.page!=0){
+        this.page = this.page-1
+      }
+      this.loadExerciseData();
+      
+    })
   },
 
   methods: {
     ...mapActions('routine', {
-      $getUserRoutines: 'getUserRoutines'
+      $getRoutinePage: 'getRoutinePage',
     }),
+    ...mapActions('exercise', {
+      $getAllUserExercises: 'getAll',
+      $getExercisePage: 'getExercisesPage'
+    }),
+
+    async loadExerciseData(){
+      this.userExercises = await this.getExercisePage(this.page-1)
+      this.totalPages = Math.ceil((this.userExercises.totalCount)/12)
+      this.userExercises = this.userExercises.content
+    },
+
+    async loadRoutineData(){
+      const userRoutines = await this.$getRoutinePage(this.routinepage-1);
+      this.routinetotalPages = Math.ceil((userRoutines.totalCount)/12)
+      this.setResult(userRoutines)
+      this.setRoutines();
+    },
 
     setResult(result){
       this.result = result;
     },
+    async changeExercisePage(){
+      this.userExercises = await this.getExercisePage(this.page-1)
+      this.userExercises = this.userExercises.content
+    },
 
+    async changeRoutinePage(){
+      const userRoutines = await this.$getRoutinePage(this.routinepage-1);
+      this.setResult(userRoutines)
+      this.setRoutines();
+    },
+
+
+    async getExercisePage(page) {
+      try {
+        const exercises = await this.$getExercisePage(page);
+        return exercises 
+      } catch (e) {
+        alert("ERROR")
+        this.setResult(e);
+      }
+    },
     mapIntensity(intensity) {
       switch (intensity) {
         case "rookie":
@@ -166,6 +249,7 @@ export default {
     },
 
     setRoutines() {
+      this.userRoutines = []
       for (let i = 0; i < this.result.content.length; i++) {
         const r = this.result.content[i];
         this.userRoutines.push({
@@ -180,19 +264,31 @@ export default {
 
     async getUserRoutines(){
       try{
-        //this.controller = new AbortController();
         const userRoutines = await this.$getUserRoutines(this.controller);
-        //this.controller = null;
         this.setResult(userRoutines);
         this.setRoutines();
       } catch (e) {
+        alert("ERROR getUserRoutines");
         this.setResult(e);
       }
     },
 
+    setExercises(exercises){
+      this.userExercises = exercises.content;
+    },
+
+    async getAllUserExercises(){
+      try{
+        const exercises = await this.$getAllUserExercises(this.controller);
+        this.setExercises(exercises);
+      } catch(e){
+        alert("ERROR getAllUserExercises");
+        this.setResult(e)
+      }
+    },
     routerPush() {
       this.$router.push({
-        name: "Home",
+        name: "CreateRoutine",
       });
     },
   },
