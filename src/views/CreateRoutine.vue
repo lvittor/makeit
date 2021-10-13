@@ -117,7 +117,7 @@
           <v-btn 
             x-large
             color="primary"
-            @click="createRoutine()"
+            @click="method()"
             :disabled="!validate()"
           >
             Guardar rutina
@@ -139,13 +139,14 @@ import { CycleExercise } from "../../api/cycleexercise"
 export default {
   data () {
     return {
-      editar: true,
+      edit: true,
       controller: null,
       routineData: [], // TIPO ROUTINETEST
       cycles: [], // TIPO CYCLESTEST
       exercises: [], // TIPO EXCERCISES TEST
       series: [],
       titles: [],
+      routineid: 1,
 
       cyclesToSend: [],
       routine: [], // ESTO SERIAN LOS CICLOS QUE LLEGAN AL CREAR
@@ -163,7 +164,7 @@ export default {
   },
 
   created() {
-    if (this.editar){
+    if (this.edit){
       this.loadAll()
     }
     this.getAllCategories();
@@ -182,17 +183,22 @@ export default {
     ...mapActions('routine', {
       $getRoutine: 'getRoutine',
       $createRoutine: 'create',
+      $putRoutine: 'modify',
       $createCycle: 'createCycle',
+      $putCycle: 'modifyCycle',
+      $deleteCycle: 'deleteCycle',
       $getAllCycles: 'getAllCycles',
     }),
 
     ...mapActions('cycleexercise', {
       $createCycleExercise: 'create',
       $getAllCycleExercises: 'get',
+      $deleteExercise: 'delete',
+      $putExercise: 'modify',
     }),
 
     async loadAll() {
-      await this.getRoutine(1) // deberia hacer el GET de la rutina. Ahora uso routineTest como ejemplo de lo que devuelve
+      await this.getRoutine(this.routineid) // deberia hacer el GET de la rutina. Ahora uso routineTest como ejemplo de lo que devuelve
       this.name = this.routineData.name;
       this.desc = this.routineData.detail;
       this.intensity = this.reverseMapDifficulty(this.routineData.difficulty);
@@ -218,13 +224,13 @@ export default {
         const pickedCycles = await this.$getAllCycles(routineid)
         this.controller = null
         this.cycles = pickedCycles.content
-        await this.getExcercises(this.cycles)
+        await this.getExercises(this.cycles)
       } catch(e) {
         alert(e)
       }
     },
 
-    async getExcercises(cycles) {
+    async getExercises(cycles) {
       try {
         for (let i = 0; i < cycles.length; i++) {
           this.controller = new AbortController()
@@ -336,6 +342,49 @@ export default {
       }
     },
 
+    method(){
+      if (this.edit){
+        alert('PUT PUT')
+        this.putRoutine()
+      } else {
+        this.createRoutine()
+      }
+    },
+
+    needEditRoutine() {
+      const data = this.routineData
+      if (data.name !== this.name || data.detail !== this.desc || data.difficulty !== this.mapDifficulty(this.intensity) || data.category.name !== this.selected)
+        return true
+      return false
+    },
+
+    async putRoutine() {
+      if (this.needEditRoutine()){
+        alert('NECESITO EDITAR LA RUTINA EE')
+        const id = this.getId(this.selected);
+        const category = new Category(id, this.categories[id - 1].name, this.categories[id - 1].name);
+        const routine = new Routine(null, this.name, this.desc, true, category, this.mapDifficulty(this.intensity))
+        const req = {routineid: this.routineid, routine: routine}
+        alert('VOY A PEDIR EDITAR LA RUTINA ASI: ' + JSON.stringify(req))
+        try {
+          this.created = await this.$putRoutine(req)
+          alert('EDITAR LA RUTINA ME DIO ESTO: ' + JSON.stringify(this.created))
+          await this.putCycles()
+        } catch(e) {
+          alert(e)
+        } 
+      } else {
+        try {
+          alert('NO NECESITO EDITARLA')
+          await this.putCycles()
+        } catch(e) {
+          alert(e)
+        }
+      }
+      alert('SU RUTINA HA SIDO GUARDADA!')
+      this.$router.push('/');
+    },
+
     async createRoutine() {
       const id = this.getId(this.selected);
       const category = new Category(id, this.categories[id - 1].name, this.categories[id - 1].name);
@@ -348,6 +397,198 @@ export default {
       }
       alert('Su rutina ha sido creada!')
       this.$router.push('/');
+    },
+
+    needEditCycle(cycle, idx) {
+      const oldCycle = this.cycles[idx]
+      if (oldCycle.name != cycle.name || oldCycle.repetitions != cycle.repetitions || oldCycle.metadata != cycle.amount)
+        return true
+      return false
+    },
+
+    async putCycles() {
+      const newCycles = this.routine.length
+      const oldCycles = this.cycles.length
+      let limit = oldCycles - newCycles
+      const sub = limit < 0 ? -limit : 0
+      let now = 0
+      let createdCycle = null
+      alert('OLD CYCLES: ' + oldCycles + ' NEW CYCLES: ' + newCycles + ' ENTONCES SUB: ' + sub)
+      for (; now < (newCycles - sub); now++) {
+        if (this.needEditCycle({name: this.routine[now].title, repetitions: this.routine[now].serie, amount: this.routine[now].cycle.length}, now)) {
+          alert('EL CICLO ' + now + ' NECESITA EDIT')
+          const cycle = new Cycle(null, this.routine[now].title, "", this.getType(now), now + 1, parseInt(this.routine[now].serie, 10), this.routine[now].cycle.length)
+          try {
+            const req = {routineid: this.routineid, cycle: {id: this.cycles[now].id, cycle: cycle}}
+            alert('VOY A PEDIR EDITAR EL CICLO ASI: ' + JSON.stringify(req))
+            createdCycle = await this.$putCycle(req)
+            alert('EDITAR EL CICLO ME DIO ESTO: ' + JSON.stringify(createdCycle))
+            await this.putExercises(createdCycle.id, now)
+          } catch(e) {
+            alert(e)
+          }
+        } else {
+          alert('EL CICLO ' + now + ' NO NECESITA EDIT')
+          try {
+            await this.putExercises(this.cycles[now].id, now)
+          } catch(e) {
+            alert(e)
+          }
+        }
+      }
+      if (limit > 0) {
+        alert('ANTES TENIA ' + limit + ' CICLOS MAS, LOS VOY A BORRAR')
+        for (; limit > 0; limit--) {
+          try {
+            const req = {routineid: this.routineid, cycleid: this.cycles[now].id}
+            alert('BORRO ESTE CICLO: ' + JSON.stringify(req))
+            await this.$deleteCycle(req)
+            now++
+          } catch(e) {
+            alert(e)
+          }
+        }
+      } else {
+        limit *= -1
+        alert('ANTES TENIA ' + limit + ' CICLOS MENOS, LOS VOY A CREAR')
+        for (; limit > 0; limit--){
+          const cycle = new Cycle(null, this.routine[now].title, "", this.getType(now), now + 1, parseInt(this.routine[now].serie, 10), this.routine[now].cycle.length)
+          try {
+            const req = {cycle: cycle, id: this.routineid}
+            alert('VOY A CREAR ESTE CICLO: ' + JSON.stringify(req))
+            const createdCycle = await this.$createCycle(req)
+            alert('CREAR ESE CICLO ME DIO: ' + JSON.stringify(createdCycle))
+            await this.createExcercises(createdCycle.id, now)
+          } catch(e) {
+            alert(e)
+          }
+          now++
+        }
+      }
+    },
+
+    async notSameExercise(cycleid, cycleidx, idx, exid, available) {
+      const otherex = this.exercises[cycleidx][idx]
+      alert('ABER SI SON IGUALES LOS EXS, VIEJO: ' + otherex.exercise.id + ' NUEVO: ' + exid)
+      if (otherex.exercise.id != exid) {
+        if (!available.includes(idx)) {
+          alert('NO ESTA EN LA LISTA DE HABILITADOS')
+          try {
+            alert('VOY A BORRAR EL EJERCICIO EXID: ' + otherex.exercise.id + ' CYCLEID: ' + cycleid)
+            await this.$deleteExercise({cycleid: cycleid, exerciseid: otherex.exercise.id})
+          } catch(e) {
+            alert(e)
+          }
+          return true
+        } 
+        alert('ESTA EN LA LISTA DE HABILITADOS')
+        return true
+      }
+      alert('ES IGUAL')
+      return false
+    },
+
+    needEditExercise(cycleidx, idx, exid) {
+      for (let i = idx; i < this.exercises[cycleidx].length; i++) {
+        if (this.exercises[cycleidx][i].exercise.id == exid){
+          return i
+        }
+      }
+      return -1
+    },
+
+    async putExercises(cycleid, index) {
+      alert('HORA DE EDITAR EJERCICIOS')
+      let put = []
+      let available = []
+      const actualCycle = this.routine[index].cycle
+      const actualLen = actualCycle.length
+      const oldLen = this.exercises[index].length
+      let limit = oldLen - actualLen
+      const sub = limit < 0 ? -limit : 0
+      let now = 0
+      alert('OLD EX: ' + oldLen + ' NEW EX: ' + actualLen + ' ENTONCES SUB: ' + sub)
+      for (; now < (actualLen - sub); now++) {
+        const exid = this.getExercise(actualCycle[now].actual)
+        alert('AGARRE EX ID: ' + exid)
+        const reqs = {order: now + 1, duration: actualCycle[now].enabled2 ? this.getDuration(actualCycle[now].dur):0, repetitions: actualCycle[now].enabled1 ? parseInt(actualCycle[now].reps, 10) : 0}
+        const req = new CycleExercise(null, cycleid, exid, reqs)
+        try {
+          if (await this.notSameExercise(cycleid, index, now, exid, available)) {
+            let ans = this.needEditExercise(index, now + 1, exid)
+            alert('NO ES IGUAL, ANS ES: ' + ans)
+            if (ans > 0) {
+              available.push(ans)
+              put.push(exid)
+              await this.$putExercise(req)
+            } else {
+              const ret = await this.$createCycleExercise(req) // NO ESTA EN LA LISTA VIEJA, PUSH Y AL PINGO
+              alert('CREAR EL EJ ME DIO ESTO: ' + JSON.stringify(ret))
+            }
+          } else {
+            alert('ES IGUAL, ENTONCES VEO SI LO TENGO QUE EDITAR O LO DEJO')
+            if (this.exercises[index][now].duration != req.reqs.duration || this.exercises[index][now].repetitions != req.reqs.repetitions) { // VER SI HAY Q HACER PUT O DEJARLO
+              alert('LO EDITO')
+              alert('LE VOY A MANDAR: ' + JSON.stringify(req))
+              try {
+                const returned = await this.$putExercise(req)
+                alert('RETURNED: ' + JSON.stringify(returned))
+              } catch(e) {
+                alert(e)
+              }
+            } else {
+              alert('NO LO EDITO')
+            }
+          }
+        } catch(e) { 
+          alert(e)
+        }
+        
+      }
+      if (limit > 0) {
+        alert('ANTES TENIA ' + limit + 'EXS MAS, ENTONCES BORRO LOS VIEJOS')
+        for (; now < oldLen; now++) {
+          const exid = this.exercises[index][now].exercise.id
+          if (!put.includes(exid)) {
+            alert('LO SACO YO, CYCLE ID: ' + cycleid + ' EXID: ' + exid)
+            try {
+              await this.$deleteExercise({cycleid: cycleid, exerciseid: exid})
+            } catch(e) {
+              alert(e)
+            }
+          }
+          alert('YA ME LO SACARON') 
+        }
+      } else {
+        limit *= -1
+        alert('ANTES TENIA ' + limit + 'EXS MENOS, ENTONCES CREO NUEVOS')
+        for (; now < actualLen; now++) {
+          const exid = this.getExercise(actualCycle[now].actual)
+          const reqs = {order: now + 1, duration: actualCycle[now].enabled2 ? this.getDuration(actualCycle[now].dur):0, repetitions: actualCycle[now].enabled1 ? parseInt(actualCycle[now].reps, 10) : 0}
+          const req = new CycleExercise(null, cycleid, exid, reqs)
+          alert('VOY A CREAR EL EJERCICIO: ' + JSON.stringify(req))
+          try {
+            await this.$createCycleExercise(req)
+          } catch(e) {
+            alert(e)
+          }
+          
+        }
+      }
+    },
+
+    async deleteExercises(index) {
+      alert('A BORRAR TODOS CULIAU')
+      const cycle = this.cycles[index]
+      alert('LEN DEL CICLO A BORRAR LOS EJS: ' + cycle.length)
+      for (let i = 0; i < cycle.length; i++){
+        try {
+          alert('BORRO EL EJERCICIO, CYCLE ID: ' + cycle.id + ' EX ID: ' + this.exercises[index][i].exercise.id)
+          await this.$deleteExercise({cycleid: cycle.id, exerciseid: this.exercises[index][i].exercise.id})
+        } catch(e) {
+          alert(e)
+        }
+      }
     },
 
     async createCycles() {

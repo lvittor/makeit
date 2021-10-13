@@ -11,6 +11,11 @@ export default {
         return state.items.findIndex((item) => item.id === exercise.id);
       };
     },
+    findIdIndex(state) {
+      return (exid) => {
+        return state.items.findIndex((item) => item.id === exid);
+      };
+    },
     getAllExercises(state) {
       alert('STATE: ' + JSON.stringify(state.items.content))
       return state.items.content;
@@ -40,6 +45,18 @@ export default {
       const result = await CycleExerciseApi.get(req)
       commit("push", result)
       return result;
-    }
+    },
+    async delete({getters, commit}, req) {
+      await CycleExerciseApi.delete(req.cycleid, req.exerciseid)
+      const index = getters.findIdIndex(req.cycleid);
+      if (index >= 0) commit("splice", index);
+    },
+    async modify({ getters, commit }, req) {
+      alert('AL PUT LE LLEGO ESTO: ' + JSON.stringify(req))
+      const result = await CycleExerciseApi.modify(req.cycleid, req.exid, req.reqs);
+      const index = getters.findIndex(result);
+      if (index >= 0) commit("replace", index, result);
+      return result;
+    },
   },
 };

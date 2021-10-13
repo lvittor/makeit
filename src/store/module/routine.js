@@ -14,6 +14,21 @@ export default {
         return state.items.findIndex((item) => item.id === routine.id);
       };
     },
+    findIdIndex(state) {
+      return (routineid) => {
+        return state.items.findIndex((item) => item.id === routineid);
+      };
+    },
+    findCycleIndex(state) {
+      return (cycle) => {
+        return state.cycles.findIndex((item) => item.id === cycle.id);
+      };
+    },
+    findCycleIdIndex(state) {
+      return (cycleid) => {
+        return state.cycles.findIndex((item) => item.id === cycleid);
+      };
+    },
   },
   mutations: {
     push(state, routine) {
@@ -46,9 +61,15 @@ export default {
       commit('replaceCycle', result)
       return result
     },
-    async modify({ getters, commit }, routine) {
-      const result = await RoutineApi.modifyRoutine(routine);
+    async modify({ getters, commit }, req) {
+      const result = await RoutineApi.modifyRoutine(req.routineid, req.routine);
       const index = getters.findIndex(result);
+      if (index >= 0) commit("replace", index, result);
+      return result;
+    },
+    async modifyCycle({ getters, commit }, req) {
+      const result = await RoutineApi.modifyCycle(req.routineid, req.cycle);
+      const index = getters.findCycleIndex(result);
       if (index >= 0) commit("replace", index, result);
       return result;
     },
@@ -57,8 +78,13 @@ export default {
       const index = getters.findIndex(routine);
       if (index >= 0) commit("splice", index);
     },
+    async deleteCycle({ getters, commit }, req) {
+      await RoutineApi.deleteCycle(req.routineid, req.cycleid);
+      const index = getters.findCycleIdIndex(req.cycleid);
+      if (index >= 0) commit("splice", index);
+    },
     async getRoutine({ state, getters, commit }, routineid) {
-      const index = getters.findIndex(routineid); // mmmmmmmmm ver esto
+      const index = getters.findIdIndex(routineid); // mmmmmmmmm ver esto
       if (index >= 0) return state.items[index];
       const result = await RoutineApi.getRoutine(routineid)
       commit("push", result);

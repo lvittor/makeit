@@ -19,7 +19,21 @@ class CycleExerciseApi {
     })
   }
 
+  static async delete(cycleid, exerciseid, controller) {
+    return await Api.delete(CycleExerciseApi.getUrl(cycleid, exerciseid), true, controller).catch(err => {
+        throw err;
+    })
+  }
+
+  static async modify(cycleid, exid, reqs, controller) {
+    alert('A LA API LE LLEGO ESTO, CYCLEID: ' + cycleid + ' EXID: ' + exid + ' REQS: ' + JSON.stringify(reqs))
+    alert('BODY: ' + JSON.stringify(reqs))
+    return await Api.put(CycleExerciseApi.getUrl(cycleid, exid), true, reqs, controller).catch(err => {
+        throw err;
+    })
 }
+}
+
 
 class CycleExercise {
   constructor(id, cycleid, exid, reqs) {

@@ -11,6 +11,11 @@ export default {
         return state.items.findIndex((item) => item.id === exercise.id);
       };
     },
+    findIdIndex(state) {
+      return (exerciseid) => {
+        return state.items.findIndex((item) => item.id === exerciseid);
+      };
+    },
     getAllExercises(state) {
       return state.items.content;
     }
@@ -41,9 +46,9 @@ export default {
       if (index >= 0) commit("replace", index, result);
       return result;
     },
-    async delete({ getters, commit }, exercise) {
-      await ExerciseApi.delete(exercise.id);
-      const index = getters.findIndex(exercise);
+    async delete({ getters, commit }, exerciseid) {
+      await ExerciseApi.delete(exerciseid);
+      const index = getters.findIdIndex(exerciseid);
       if (index >= 0) commit("splice", index);
     },
     async get({ state, getters, commit }, exercise) {
