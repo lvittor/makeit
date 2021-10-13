@@ -1,7 +1,7 @@
 <template>
   <div>
     <v-container class="primary lighten-5" fluid>
-      <NavDrawer ref="nav" />
+      <NavDrawer :editable=false ref="nav" />
       
       <v-row align="end">
         <v-col md="2" />
@@ -20,7 +20,8 @@
                     getDifficulty(eachroutine.difficulty),
                     normalizeScore(eachroutine.score),
                     eachroutine.name,
-                    eachroutine.detail
+                    eachroutine.detail,
+                    eachroutine.id
                   )
                 "
               >

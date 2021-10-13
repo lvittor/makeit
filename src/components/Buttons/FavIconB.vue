@@ -1,6 +1,6 @@
 <template>
   <div>
-    <v-btn v-bind:color="isFavourite == true ? 'secondary' : 'primary'" fab @click="changeFavourite()">
+    <v-btn x-large v-bind:color="isFavourite == true ? 'secondary' : 'primary'" fab @click="changeFavourite()">
       <v-icon>mdi-heart</v-icon>
     </v-btn>
   </div>

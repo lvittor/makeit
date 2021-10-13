@@ -13,18 +13,7 @@
           <h1 class="primary--text h-6 RoutineTitle">{{ this.title }}</h1>
         </v-col>
         <v-col>
-          <v-rating
-            :value="score"
-            dense
-            large
-            align="right"
-            color="orange"
-            background-color="grey"
-            hover
-            class="mr-2"
-            readonly
-          >
-          </v-rating>
+          
           <v-rating
             :value="difficulty"
             dense
@@ -39,7 +28,31 @@
             class="mr-2"
           >
           </v-rating>
+          <v-rating
+            :value="score"
+            dense
+            large
+            align="right"
+            color="orange"
+            background-color="grey"
+            hover
+            class="mr-2"
+            readonly
+          >
+          </v-rating>
         </v-col>
+      </v-row>
+      <v-row justify="center">
+          
+          <v-col cols=2>
+            <FavIconB :routineID="this.routineid" ref="fav"/>
+          </v-col>
+            <v-col v-if="editable" cols=2>
+            <EditIconB/>
+          </v-col>
+          <v-col v-if="editable" cols=2>
+            <RemoveIconB :routineID="this.routineid" />
+          </v-col>
       </v-row>
       <v-row>
         <v-col>
@@ -75,8 +88,16 @@
 
 <script>
 import { mapActions } from 'vuex'
+import FavIconB from './Buttons/FavIconB.vue' 
+import EditIconB from './Buttons/EditIconB.vue'
+import RemoveIconB from './Buttons/RemoveIconB.vue'
 export default {
   
+  props: {
+      editable: {
+          type: Boolean
+      }
+    },
 
   data: () => ({
     drawer: false,
@@ -89,6 +110,18 @@ export default {
     cycles: [],
     cyclesAndExercises: [],
   }),
+
+  components: {
+    FavIconB,
+    EditIconB,
+    RemoveIconB
+  },
+
+  mounted(){
+    this.$root.$on('update', () => {
+      this.drawer = false
+    })
+  },
 
   methods: {
 
@@ -124,6 +157,7 @@ export default {
       this.desc = desc;
       this.routineid = id
       this.getAllCycles()
+      this.$refs.fav.isRoutineFavourite(this.routineid)
     },
 
     async getAllCycles() {

@@ -23,7 +23,8 @@
             md="2"
             v-for="eachroutine in cat.routines"
             v-bind:key="eachroutine.id"
-          >
+          > 
+            
             <div
               @click="
                 $refs.nav.toggleDrawer(
@@ -46,7 +47,7 @@
         </v-row>
       </v-container>
     </v-container>
-    <NavDrawer ref="nav" />
+    <NavDrawer :editable=false ref="nav" />
   </div>
 </template>
 
