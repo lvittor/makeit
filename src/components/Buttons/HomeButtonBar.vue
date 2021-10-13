@@ -9,12 +9,15 @@
               :to="bt.route"
               color="primary"
               class="white--text"
-              width="280px"
+              width="300px"
               height="150px"
             >
               <v-container>
                 <v-row align="start" justify="start" style="height: 100px">
-                  <h2 class="font-weight-black align-start">{{ bt.text }}</h2>
+                  <v-col align="start" justify="start">
+                    <div class="text-h6">{{ bt.text1 }}</div> 
+                    <div class="text-h6">{{ bt.text2 }}</div>
+                  </v-col>
                 </v-row>
                 <v-row align="end" no-gutters justify="end">
                   <v-icon color="white" x-large right>
@@ -36,9 +39,9 @@ export default {
   data() {
     return {
       buttons: [
-        { text: "Buscar una rutina", route: "/find-routine" },
-        { text: "Crear una rutina", route: "/create-routine" },
-        { text: "Tus rutinas", route: "/all-your-routines-and-exercises" },
+        { text1: "Buscar una rutina", text2: "", route: "/find-routine" },
+        { text1: "Crear una rutina", text2: "", route: "/create-routine" },
+        { text1: "Tus rutinas y", text2: "ejercicios", route: "/all-your-routines-and-exercises" },
       ],
     };
   },

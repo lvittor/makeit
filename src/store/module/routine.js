@@ -89,6 +89,14 @@ export default {
       commit("replaceAll", result);
       return result;
     },
+
+    async getAllCycles({ commit }, {routineid,controller}) {
+      const result = await RoutineApi.getAllCycles(routineid,controller);
+      commit("replaceCycle", result);
+      return result;
+    },
+
+
     async getFour({ commit }, cat) {
       const result = await RoutineApi.getFourRoutinesBy(cat);
       commit("replaceAll", result);
