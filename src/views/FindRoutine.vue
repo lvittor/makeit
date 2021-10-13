@@ -30,7 +30,8 @@
                   getDifficulty(eachroutine.difficulty),
                   normalizeScore(eachroutine.score),
                   eachroutine.name,
-                  eachroutine.detail
+                  eachroutine.detail,
+                  eachroutine.id
                 )
               "
             >
