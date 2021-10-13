@@ -64,11 +64,11 @@
             </v-col>
             <v-col>
               <div v-if="!editionMode">
-                <h3>{{this.$user.email.substr(0,this.$user.email.length - 10)}}</h3>
+                <h3>{{this.$user.avatarUrl}}</h3>
               </div>
               <div v-else>
                 <v-text-field
-                    :value="$user.email"
+                    :value="$user.avatarUrl"
                     label="Empty"
                     solo
                     disabled
@@ -88,11 +88,11 @@
             </v-col>
             <v-col>
               <div v-if="!editionMode">
-                <h3>{{this.$user.username}}</h3>
+                <h3>{{this.$user.email}}</h3>
               </div>
               <div v-else>
                 <v-text-field
-                    :value="this.$user.username"
+                    :value="this.$user.email"
                     label="Empty"
                     solo
                     disabled

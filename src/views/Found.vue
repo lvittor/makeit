@@ -1,6 +1,6 @@
 <template>
   <div class="back grey lighten-5" @click="message()">
-    <FilterTable />
+      <FilterTable class="pt-16"/>
   </div>
 </template>
 
@@ -21,7 +21,12 @@ export default {
   height: 100%;
 }
 
-.ele {
-  box-shadow: 0 3px 10px rgb(100, 100, 100);
+.vertical-center {
+  margin: 0;
+  position: absolute;
+  top: 45%;
+  -ms-transform: translateY(-50%);
+  transform: translateY(-50%);
 }
+
 </style>
