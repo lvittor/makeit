@@ -8,8 +8,8 @@
           </v-col>
           <v-col md="4">
             <v-btn
-              text
               color="primary"
+              dark
               x-large
               append
               @click="routerPush()"
@@ -188,7 +188,9 @@ export default {
         this.page = this.page-1
       }
       this.loadExerciseData();
-      
+    })
+    this.$root.$on('updateExercise', ()=> {
+      this.loadExerciseData();
     })
   },
 

@@ -31,6 +31,9 @@ export default {
     replace(state, index, exercise) {
       state.items[index] = exercise;
     },
+    replace2(state, index, exercise) {
+      state.items.content[index] = exercise;
+    },
     splice(state, exercise) {
       state.items.splice(exercise, 1);
     },
@@ -54,18 +57,15 @@ export default {
     },
     async modify({ getters, commit }, exercise) {
       const result = await ExerciseApi.modify(exercise);
-      const index = getters.findIndex(result);
-      if (index >= 0) commit("replace", index, result);
-      return result;
+      const index = getters.findIndex2(result);
+      if (index >= 0) commit("replace2", index, exercise);
+      return exercise;
     },
     async get({ state, getters, commit }, exercise) {
-      alert('Ejercicio en cuestion: ' + JSON.stringify(exercise))
       const index = getters.findIndex2(exercise);
-      alert('Indice: ' + index)
       if (index >= 0) return state.items.content[index];
 
       const result = await ExerciseApi.get(exercise.id);
-      alert('Resultado despues de index -1: '+ JSON.stringify(result))
       commit("push2", result);
       return result;
     },

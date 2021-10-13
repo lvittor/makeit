@@ -8,6 +8,7 @@
       <v-btn
         color="primary"
         dark
+        x-large
         v-bind="attrs"
         v-on="on"
       >
