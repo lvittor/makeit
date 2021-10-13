@@ -305,9 +305,6 @@
 </script>
 
 <style scoped>
-  .ashee {
-    background: yellow;
-  }
   .centered-input >>> input {
     text-align: center
   }

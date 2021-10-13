@@ -108,7 +108,7 @@
         md="6"
         class="pa-0"
       >
-        <RoutineStepper :id="id"/>
+        <RoutineStepper :steps="titles.length > 0 ? titles.length : 3" :cycles="cyclesToSend" :series="series" :titles="titles"/>
       </v-col>
     </v-row>
     <v-row justify="center">
@@ -139,21 +139,33 @@ import { CycleExercise } from "../../api/cycleexercise"
 export default {
   data () {
     return {
+      editar: true,
+      controller: null,
+      routineData: [], // TIPO ROUTINETEST
+      cycles: [], // TIPO CYCLESTEST
+      exercises: [], // TIPO EXCERCISES TEST
+      series: [],
+      titles: [],
+
+      cyclesToSend: [],
+      routine: [], // ESTO SERIAN LOS CICLOS QUE LLEGAN AL CREAR
+
       name: '',
       desc: '',
       intensity: 0,
-      controller: null,
       result: null,
       selected: '',
       categories: [],
       items: [],
       switch1: false,
-      routine: [],
       created: null,
     }
   },
 
   created() {
+    if (this.editar){
+      this.loadAll()
+    }
     this.getAllCategories();
     this.getAllExercises();
   },
@@ -168,13 +180,102 @@ export default {
     }), 
 
     ...mapActions('routine', {
+      $getRoutine: 'getRoutine',
       $createRoutine: 'create',
       $createCycle: 'createCycle',
+      $getAllCycles: 'getAllCycles',
     }),
 
     ...mapActions('cycleexercise', {
       $createCycleExercise: 'create',
+      $getAllCycleExercises: 'get',
     }),
+
+    async loadAll() {
+      await this.getRoutine(1) // deberia hacer el GET de la rutina. Ahora uso routineTest como ejemplo de lo que devuelve
+      this.name = this.routineData.name;
+      this.desc = this.routineData.detail;
+      this.intensity = this.reverseMapDifficulty(this.routineData.difficulty);
+      this.selected = this.routineData.category.name;
+      this.setupRoutine(this.cycles, this.exercises)
+    },
+
+    async getRoutine(id) {
+      try {
+        this.controller = new AbortController()
+        const pickedRoutine = await this.$getRoutine(id)
+        this.controller = null
+        this.routineData = pickedRoutine;
+        await this.getRealCycles(id)
+      } catch(e) {
+        alert(e)
+      }
+    },
+
+    async getRealCycles(routineid) {
+      try {
+        this.controller = new AbortController()
+        const pickedCycles = await this.$getAllCycles(routineid)
+        this.controller = null
+        this.cycles = pickedCycles.content
+        await this.getExcercises(this.cycles)
+      } catch(e) {
+        alert(e)
+      }
+    },
+
+    async getExcercises(cycles) {
+      try {
+        for (let i = 0; i < cycles.length; i++) {
+          this.controller = new AbortController()
+          const req = {cycleid: cycles[i].id, size: cycles[i].metadata}
+          const pickedExercises = await this.$getAllCycleExercises(req)
+          this.controller = null
+          this.exercises.push(pickedExercises.content)
+        }
+      } catch(e) {
+        alert(e)
+      }
+    },
+
+    setupRoutine(cycles, exercises) {
+      for (let i = 0; i < cycles.length; i++){
+        this.titles[i] = cycles[i].name
+        this.series[i] = cycles[i].repetitions.toString()
+        const temp = []
+        for (let j = 0; j < exercises[i].length; j++){
+          temp.push({
+            id: j,
+            enabled1: exercises[i][j].repetitions > 0 ? true : false,
+            enabled2: exercises[i][j].duration > 0 ? true : false,
+            actual: exercises[i][j].exercise.name,
+            reps: exercises[i][j].repetitions > 0 ? exercises[i][j].repetitions.toString() : '',
+            dur: exercises[i][j].duration > 0 ? this.reverseGetDuration(exercises[i][j].duration.toString()) : '00:00:00',
+          })
+        }
+        this.cyclesToSend.push(temp)
+      }
+    },
+
+    reverseGetDuration(seconds){
+      const ans = new Date(seconds * 1000).toISOString().substr(11, 8)
+      return ans
+    },
+
+    reverseMapDifficulty(text) {
+      switch(text) {
+        case 'rookie':
+          return 1
+        case 'beginner':
+          return 2
+        case 'intermediate':
+          return 3
+        case 'advanced':
+          return 4
+        case 'expert':
+          return 5
+      }
+    },
 
     async getAllExercises() {
       try {
@@ -252,7 +353,7 @@ export default {
     async createCycles() {
       const id = this.created.id;
       for (let i = 0; i < this.routine.length; i++){
-        const cycle = new Cycle(null, this.routine[i].title, "", this.getType(i), i + 1, parseInt(this.routine[i].serie, 10))
+        const cycle = new Cycle(null, this.routine[i].title, "", this.getType(i), i + 1, parseInt(this.routine[i].serie, 10), this.routine[i].cycle.length)
         try {
           const req = {cycle: cycle, id: id}
           const createdCycle = await this.$createCycle(req)

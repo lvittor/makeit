@@ -12,7 +12,6 @@ export default {
       };
     },
     getAllExercises(state) {
-      alert('STATE: ' + JSON.stringify(state.items.content))
       return state.items.content;
     }
   },

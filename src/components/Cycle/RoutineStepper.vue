@@ -49,18 +49,33 @@ export default {
   data () {
     return {
       e1: 1,
-      steps: 3,
-      cycles: [],
-      series: [],
-      titles: [],
       finished: false,
     }
   },
 
   props: {
-    id: {
+    steps: {
       type: Number,
-    }
+      default: 3,
+    },
+    cycles: {
+      type: Array,
+      default(){
+        return [];
+      }
+    },
+    series: {
+      type: Array,
+      default(){
+        return [];
+      }
+    },
+    titles: {
+      type: Array,
+      default(){
+        return [];
+      }
+    },
   },
 
   watch: {

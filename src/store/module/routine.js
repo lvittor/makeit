@@ -1,4 +1,6 @@
+//import { getOwnPropertyNames } from "core-js/core/object";
 import { RoutineApi } from "../../../api/routine";
+//import category from "../../../api/category";
 
 export default {
   namespaced: true,
@@ -8,21 +10,17 @@ export default {
   },
   getters: {
     findIndex(state) {
-      return (category) => {
-        return state.items.findIndex((item) => item.id === category.id);
-      };
-    },
-    findCategory(state) {
-      return (category) => {
-        return state.items.findCategory(
-          (item) => item.category.id === category.id
-        );
+      return (routine) => {
+        return state.items.findIndex((item) => item.id === routine.id);
       };
     },
   },
   mutations: {
     push(state, routine) {
       state.items.push(routine);
+    },
+    pushCycle(state, cycle) {
+      state.cycles.push(cycle)
     },
     replace(state, index, routine) {
       state.items[index] = routine;
@@ -59,15 +57,10 @@ export default {
       const index = getters.findIndex(routine);
       if (index >= 0) commit("splice", index);
     },
-    async get({ state, getters, commit }, routine) {
-      const index = getters.findIndex(routine);
+    async getRoutine({ state, getters, commit }, routineid) {
+      const index = getters.findIndex(routineid); // mmmmmmmmm ver esto
       if (index >= 0) return state.items[index];
-
-      /*  TODO: No entiendo por que tiene este comportamiento... hablarlo con los chicos
-      const result = await CategoryApi.get();
-      commit("push", result);
-      return result; */
-      const result = await RoutineApi.get();
+      const result = await RoutineApi.getRoutine(routineid)
       commit("push", result);
       return result;
     },
@@ -77,15 +70,19 @@ export default {
       return result;
     },
     async getFour({ commit }, cat) {
+      alert("Cargo 4 rutinas de una categoria");
       const result = await RoutineApi.getFourRoutinesBy(cat);
+      alert(
+        "El llamado a la api de las 4 rutinas me devuelve " +
+          JSON.stringify(result)
+      );
       commit("replaceAll", result);
       return result;
     },
-
-    async getPageByCat({ commit }, {cat,page}) {
-      const result = await RoutineApi.getRoutinesByCat(cat,page,12);
-      commit("replaceAll", result);
+    async getAllCycles({commit}, routineid) {
+      const result = await RoutineApi.getAllCycles(routineid);
+      commit("pushCycle", result)
       return result;
-    },
+    }
   },
 };

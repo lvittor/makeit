@@ -1,4 +1,5 @@
 import {Api} from "./api";
+//import Category from "../src/store/module/category"
 
 export {RoutineApi, Routine, Cycle}
 
@@ -26,6 +27,12 @@ class RoutineApi {
         })
     }
 
+    static async getRoutine(routineid, controller) {
+        return await Api.get(RoutineApi.getUrl(routineid), true, controller).catch(err => {
+            throw err;
+        })
+    }
+
     static async getAllRoutines(controller) {
         return await Api.get(RoutineApi.getUrl(), true, controller).catch(err => {
             throw err;
@@ -35,6 +42,12 @@ class RoutineApi {
     static async getFourRoutinesBy(category, controller){
         const aux = `?categoryId=${category}&page=0&size=4&orderBy=date&direction=asc`
         return await Api.get(RoutineApi.getUrl(aux), true, controller).catch(err => {
+            throw err;
+        })
+    }
+
+    static async getAllCycles(routineid, controller) {
+        return await Api.get(RoutineApi.getUrl(routineid + '/cycles'), true, controller).catch(err => {
             throw err;
         })
     }
@@ -53,7 +66,7 @@ class Routine {
 }
 
 class Cycle {
-    constructor(id, name, detail, type, order, repetitions) {
+    constructor(id, name, detail, type, order, repetitions, metadata) {
         if (id)
             this.id = id;
         this.name = name;
@@ -61,5 +74,6 @@ class Cycle {
         this.type = type;
         this.order = order;
         this.repetitions = repetitions;
+        this.metadata = metadata
     }
 }
