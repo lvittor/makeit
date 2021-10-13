@@ -41,7 +41,9 @@
 
         <v-fade-transition>
           <v-overlay v-if="hover" absolute color="#036358">
-            <v-btn>Ver mas</v-btn>
+            <div class="pa-2" align="center">
+              <v-btn>Ver más</v-btn>
+            </div>
           </v-overlay>
         </v-fade-transition>
       </v-card>
@@ -70,6 +72,9 @@ export default {
       type: Number,
       default: 0,
     },
+    id: {
+      type: Number,
+    }
   },
   data: () => ({
     //

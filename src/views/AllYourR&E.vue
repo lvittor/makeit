@@ -1,56 +1,3 @@
-
-<!-- 
-
-<div>
-    <v-container v-for="cat in categories2" v-bind:key="cat" fluid>
-
-
-      <v-container class="primary lighten-5" fluid>
-        <v-row align="end">
-          <v-col md="2" />
-          <v-col md="6" class="left">
-            <tit class="titulazos">Tus rutinas</tit>
-          </v-col>
-          <v-col md="4">
-            <v-btn
-              text
-              color="primary"
-              x-large
-              append
-              @click="routerPush(cat.name)"
-              ><h3>Agregar nueva rutina</h3></v-btn
-            >
-          </v-col>
-        </v-row>
-        <v-row justify="center">
-          <v-col
-            md="2"
-            v-for="eachroutine in categories"
-            v-bind:key="eachroutine"
-          >
-            <div
-              :to='' redirecciono a la página de kako
-            >
-              <Routine
-                :namep="eachroutine.title"
-                :desc="eachroutine.desc"
-                :reviews="20"
-                :difficulty="getDifficulty(eachroutine.diff)"
-                :score="normalizeScore(eachroutine.score)"
-              />
-            </div>
-          </v-col>
-        </v-row>
-      </v-container>
-
-
-    </v-container>
-    <h1>{{ routiness[0] }}</h1> 
-    <NavDrawer ref="nav" />
-    <v-btn>HolaHola</v-btn>
-  </div>
--->
-
 <template>
   <div>
     <v-container class="primary lighten-5" fluid>
@@ -66,25 +13,37 @@
               x-large
               append
               @click="routerPush()"
-              ><h3>Agregar nueva rutina</h3></v-btn
+              >
+              <h3>Agregar nueva rutina</h3></v-btn
             >
           </v-col>
         </v-row>
-
         <v-row justify="center">
         <v-container>
           <v-row justify="center">
             <v-col md="8">
               <v-container>
                 <v-row>
-                  <v-col md="3" v-for="(exc, index) in excercises" v-bind:key="index">
-                    <EditRoutine 
-                      namep="Piola"
-                      desc="Nashe"
-                      :reviews="20"
-                      :difficulty="5"
-                      :score="10"
-                    />
+                  <v-col md="3" v-for="r in userRoutines" v-bind:key="r.id">
+                    <div
+                      @click="
+                        $refs.nav.toggleDrawer(
+                          r.id,
+                          r.intensity,
+                          r.score,
+                          r.name,
+                          r.detail
+                        )
+                      "
+                    >
+                      <Routine 
+                        :id="r.id"
+                        :namep="r.name"
+                        :desc="r.detail"
+                        :difficulty="r.intensity"
+                        :score="r.score"
+                      />
+                    </div>
                   </v-col>
                 </v-row>
               </v-container>
@@ -92,8 +51,17 @@
           </v-row>
         </v-container>
       </v-row>
+      <div class="text-center">
+        <v-pagination
+          v-model="routinepage"
+          :length="routinetotalPages"
+          :total-visible="7"
+          class="my-4"
+          @input="changeRoutinePage()"
+        ></v-pagination>
+      </div>
     </v-container>
-    <v-container>
+    
 
 
       <v-row align="end">
@@ -119,8 +87,8 @@
             <v-col md="8">
               <v-container>
                 <v-row>
-                  <v-col md="3" v-for="(exc, index) in excercises" v-bind:key="index">
-                    <ExerciseCard namep="Estocadas" desc="fortalecimiento"/>
+                  <v-col md="3" v-for="exc in userExercises" v-bind:key="exc.id">
+                    <ExerciseCard :id="exc.id" :namep="exc.name" :desc="exc.detail"/>
                   </v-col>
                 </v-row>
               </v-container>
@@ -128,7 +96,16 @@
           </v-row>
         </v-container>
       </v-row>
-    </v-container>
+      <div class="text-center">
+        <v-pagination
+          v-model="page"
+          :length="totalPages"
+          :total-visible="7"
+          class="my-4"
+          @input="changeExercisePage()"
+        ></v-pagination>
+      </div>
+    <ModifyNavDrawer ref="nav" style="navigate"/>
   </div>
 </template>
 
@@ -137,7 +114,12 @@
   font-size: 80px;
   vertical-align: bottom;
 }
-
+.navigate{
+  position:fixed; 
+  top:0; 
+  right:0; 
+  overflow-y:scroll;
+}
 .view-more {
   font-size: 25px;
   color: #6200ee;
@@ -146,28 +128,170 @@
 </style>
 
 <script>
-import EditRoutine from "../components/EditRoutine.vue";
+import Routine from "../components/Routine.vue";
 import NewExercise from "../components/NewExercise.vue";
 import ExerciseCard from "../components/ExerciseCard.vue";
+import ModifyNavDrawer from "../components/ModifyNavDrawer.vue";
+
+import { mapActions } from "vuex";
 
 export default {
   name: "AllYourR&E",
 
   data: () => ({
-    excercises: [1,2,3,4,5,6,7,8,8,8,8,8]
-    // routines: [{}, {}]
+    routinepage: 1,
+    routinetotalPages: 2,
+    page: 1,
+    totalPages: 2,
+    result: null, 
+    controller: null, 
+    userRoutines: [],
+    userExercises: [],
+    creationEx: 0,
   }),
-  methods: {
-      routerPush() {
-      this.$router.push({
-        name: "Home",
-      });
-    },
-  },
   components: {
     NewExercise,
     ExerciseCard,
-    EditRoutine
+    Routine,
+    ModifyNavDrawer
   },
+
+  created() {
+
+    this.loadRoutineData();
+    //this.getUserRoutines();
+    //this.getAllUserExercises();
+    this.loadExerciseData()
+  },
+
+  mounted(){
+    this.$root.$on('update', () => {
+       if (this.userRoutines.length == 1 && this.routinepage!=0){
+        this.routinepage = this.routinepage-1
+      }
+      this.loadRoutineData();
+    })
+    this.$root.$on('exerciseCreated', () => {
+      this.loadExerciseData();
+    })
+    this.$root.$on('exerciseDeleted', ()=> {
+      if (this.userExercises.length == 0 && this.page!=0){
+        this.page = this.page-1
+      }
+      this.loadExerciseData();
+      
+    })
+  },
+
+  methods: {
+    ...mapActions('routine', {
+      $getRoutinePage: 'getRoutinePage',
+    }),
+    ...mapActions('exercise', {
+      $getAllUserExercises: 'getAll',
+      $getExercisePage: 'getExercisesPage'
+    }),
+
+    async loadExerciseData(){
+      this.userExercises = await this.getExercisePage(this.page-1)
+      this.totalPages = Math.ceil((this.userExercises.totalCount)/12)
+      this.userExercises = this.userExercises.content
+    },
+
+    async loadRoutineData(){
+      const userRoutines = await this.$getRoutinePage(this.routinepage-1);
+      this.routinetotalPages = Math.ceil((userRoutines.totalCount)/12)
+      this.setResult(userRoutines)
+      this.setRoutines();
+    },
+
+    setResult(result){
+      this.result = result;
+    },
+    async changeExercisePage(){
+      this.userExercises = await this.getExercisePage(this.page-1)
+      this.userExercises = this.userExercises.content
+    },
+
+    async changeRoutinePage(){
+      const userRoutines = await this.$getRoutinePage(this.routinepage-1);
+      this.setResult(userRoutines)
+      this.setRoutines();
+    },
+
+
+    async getExercisePage(page) {
+      try {
+        const exercises = await this.$getExercisePage(page);
+        return exercises 
+      } catch (e) {
+        alert("ERROR")
+        this.setResult(e);
+      }
+    },
+    mapIntensity(intensity) {
+      switch (intensity) {
+        case "rookie":
+          return 1;
+        case "beginner":
+          return 2;
+        case "intermediate":
+          return 3;
+        case "advanced":
+          return 4;
+        case "expert":
+          return 5;
+      }
+    },
+
+    mapScore(score) {
+      return score / 2;
+    },
+
+    setRoutines() {
+      this.userRoutines = []
+      for (let i = 0; i < this.result.content.length; i++) {
+        const r = this.result.content[i];
+        this.userRoutines.push({
+          id: r.id,
+          name: r.name,
+          detail: r.detail,
+          intensity: this.mapIntensity(r.difficulty),
+          score: this.mapScore(r.score),
+        });
+      }
+    },
+
+    async getUserRoutines(){
+      try{
+        const userRoutines = await this.$getUserRoutines(this.controller);
+        this.setResult(userRoutines);
+        this.setRoutines();
+      } catch (e) {
+        alert("ERROR getUserRoutines");
+        this.setResult(e);
+      }
+    },
+
+    setExercises(exercises){
+      this.userExercises = exercises.content;
+    },
+
+    async getAllUserExercises(){
+      try{
+        const exercises = await this.$getAllUserExercises(this.controller);
+        this.setExercises(exercises);
+      } catch(e){
+        alert("ERROR getAllUserExercises");
+        this.setResult(e)
+      }
+    },
+    routerPush() {
+      this.$router.push({
+        name: "CreateRoutine",
+      });
+    },
+  },
+
 };
 </script>

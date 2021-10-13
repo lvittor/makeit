@@ -25,7 +25,11 @@ class UserApi {
 
     static async modify(user, controller) {
         return await Api.put(UserApi.getUrl('current'), true, user, controller)
-      }
+    }
+
+    static async getCurrentRoutines(controller){
+        return await Api.get(UserApi.getUrl('current/routines'), true, controller)
+    }
 
 }
 

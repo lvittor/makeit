@@ -5,8 +5,7 @@ export {RoutineApi, Routine, Cycle}
 class RoutineApi {
     static getUrl(slug) {
         return `${Api.baseUrl}/routines${ slug ? `/${slug}` : ''}`
-      }
-
+    }
 
     static async createRoutine(routine, controller) {
         return await Api.post(RoutineApi.getUrl(), true, routine, controller).catch(err => {
@@ -22,6 +21,12 @@ class RoutineApi {
 
     static async modifyRoutine(routine, controller) {
         return await Api.put(RoutineApi.getUrl(), true, routine, controller).catch(err => {
+            throw err;
+        })
+    }
+
+    static async deleteRoutine(routineID, controller){
+        return await Api.delete(RoutineApi.getUrl(routineID), true, controller).catch(err => {
             throw err;
         })
     }
@@ -51,6 +56,19 @@ class RoutineApi {
             size = 12
         }
         const aux = `?categoryId=${category}&page=${page}&size=${size}&orderBy=date&direction=asc`
+
+        return await Api.get(RoutineApi.getUrl(aux), true, controller).catch(err => {
+            throw err;
+        })
+    }
+    static async getPage(page, size, controller){
+        if(page == null){
+            page = 0
+        }
+        if(size == null){
+            size = 12
+        }
+        const aux = `?page=${page}&size=${size}&orderBy=date&direction=asc`
         return await Api.get(RoutineApi.getUrl(aux), true, controller).catch(err => {
             throw err;
         })

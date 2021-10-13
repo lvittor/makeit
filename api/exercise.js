@@ -7,12 +7,12 @@ class ExerciseApi {
     return `${Api.baseUrl}/exercises${ slug ? `/${slug}` : ''}`
   }
 
-  static async add(category, controller) {
-   return await Api.post(ExerciseApi.getUrl(), true, category, controller)
+  static async add(exercise, controller) {
+   return await Api.post(ExerciseApi.getUrl(), true, exercise, controller)
   }
 
-  static async modify(category, controller) {
-    return await Api.put(ExerciseApi.getUrl(category.id), true, category, controller)
+  static async modify(exercise, controller) {
+    return await Api.put(ExerciseApi.getUrl(exercise.id), true, exercise, controller)
   }
 
   static async delete(id, controller) {
@@ -25,6 +25,19 @@ class ExerciseApi {
 
   static async getAll(controller) {
     return await Api.get(ExerciseApi.getUrl(), true, controller)
+  }
+
+  static async getPage(page, size, controller){
+    if(page == null){
+        page = 0
+    }
+    if(size == null){
+        size = 12
+    }
+    const aux = `?page=${page}&size=${size}&orderBy=id&direction=asc`
+    return await Api.get(ExerciseApi.getUrl(aux), true, controller).catch(err => {
+        throw err;
+    })
   }
 }
 
