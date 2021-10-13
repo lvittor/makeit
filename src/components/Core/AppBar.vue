@@ -27,7 +27,7 @@
             dark
             to="/profile"
           >
-            <span class="mr-2 ">{{ user }}</span>
+            <span class="mr-2 "> Tu perfil </span>
             <v-icon>mdi-account</v-icon>
           </v-btn>
         </v-col>
@@ -44,17 +44,12 @@ import {mapState, mapGetters, mapActions} from 'vuex'
 
 
 export default {
-  data: () => {
-    return {
-      firstName: '',
-      lastName: '',
-      user: '',
-    }
-  },
+  
 
   created(){
-    this.getFirstAndLastName()
+    this.getUser()
   },
+
 
   components: {
     SearchBar,
@@ -71,15 +66,10 @@ export default {
     ...mapActions('security', {
       $getCurrentUser: 'getCurrentUser',
     }),
-    async getFirstAndLastName(){
+
+    async getUser(){
       if (this.$isLoggedIn){
-        
-        
         await this.$getCurrentUser()
-        this.user = this.$user.firstName + ' ' + this.$user.lastName
-        
-      }else{
-        this.user = ''
       }
     }
   }

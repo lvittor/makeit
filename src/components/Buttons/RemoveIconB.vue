@@ -1,5 +1,5 @@
 <template>
-  <v-btn color="primary" fab @click="deleteRoutine(routineID)">
+  <v-btn x-large  color="primary" fab @click="deleteRoutine(routineID)">
     <v-icon>mdi-delete</v-icon>
   </v-btn>
 </template>

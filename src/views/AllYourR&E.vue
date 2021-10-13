@@ -25,14 +25,15 @@
               <v-container>
                 <v-row>
                   <v-col md="3" v-for="r in userRoutines" v-bind:key="r.id">
+                    
                     <div
                       @click="
                         $refs.nav.toggleDrawer(
-                          r.id,
                           r.intensity,
                           r.score,
                           r.name,
-                          r.detail
+                          r.detail,
+                          r.id
                         )
                       "
                     >
@@ -105,7 +106,7 @@
           @input="changeExercisePage()"
         ></v-pagination>
       </div>
-    <ModifyNavDrawer ref="nav" style="navigate"/>
+    <NavigationDrawer :editable=true ref="nav" style="navigate"/>
   </div>
 </template>
 
@@ -131,9 +132,10 @@
 import Routine from "../components/Routine.vue";
 import NewExercise from "../components/NewExercise.vue";
 import ExerciseCard from "../components/ExerciseCard.vue";
-import ModifyNavDrawer from "../components/ModifyNavDrawer.vue";
+import NavigationDrawer from "../components/NavigationDrawer.vue";
 
 import { mapActions } from "vuex";
+import RoutineHelper from "@/RoutineHelper.js";
 
 export default {
   name: "AllYourR&E",
@@ -153,7 +155,7 @@ export default {
     NewExercise,
     ExerciseCard,
     Routine,
-    ModifyNavDrawer,
+    NavigationDrawer
   },
 
   created() {
@@ -163,6 +165,13 @@ export default {
     //this.getAllUserExercises();
     this.loadExerciseData()
   },
+
+  getDifficulty(difficultyString) {
+      return RoutineHelper.getDifficulty(difficultyString)
+    },
+    normalizeScore(score010) {
+      return RoutineHelper.normalizeScore(score010)
+    },
 
   mounted(){
     this.$root.$on('update', () => {
