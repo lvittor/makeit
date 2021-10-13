@@ -11,6 +11,10 @@ class CycleExerciseApi {
     return await Api.post(CycleExerciseApi.getUrl(cycleexercise.cycleid, cycleexercise.exid), true, cycleexercise.reqs, controller)
   }
 
+  static async getAll(cycleId, controller) {
+    return await Api.get(CycleExerciseApi.getUrl(cycleId), true, controller)
+  }
+
 }
 
 class CycleExercise {
