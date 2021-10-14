@@ -10,7 +10,7 @@
               contain
               src="../assets/HomeTitle.svg"
               transition="scale-transition"
-              width="400"
+              width="650"
             />
           </div>
         </v-col>

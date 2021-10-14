@@ -22,7 +22,7 @@
           </v-row>
         </v-container>
         <v-fade-transition>
-          <v-overlay v-show="hover" absolute color="#036358">
+          <v-overlay v-show="hover" z-index="0" absolute color="#036358">
             <div class="pa-2" align="center"> <!-- @click="getEditableRoutine(/*id de la rutina*/1)" -->
               <!-- <v-btn>Editar</v-btn> -->
               <v-dialog
