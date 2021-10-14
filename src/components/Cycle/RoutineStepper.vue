@@ -3,17 +3,17 @@
     <v-card class="mb-4">
       <v-card-text>
         <v-select
-          v-model="steps"
+          v-model="realSteps"
           :items="[3, 4, 5, 6, 7, 8, 9, 10]"
           label="Cantidad de ciclos"
-          :disabled="e1 > steps"
+          :disabled="e1 > realSteps"
         ></v-select>
       </v-card-text>
     </v-card>
 
     <v-stepper v-model="e1" class="mb-10">
       <v-stepper-header>
-        <template v-for="n in steps">
+        <template v-for="n in realSteps">
           <v-stepper-step
             :key="`${n}-step`"
             :complete="e1 > n"
@@ -22,7 +22,7 @@
           </v-stepper-step>
 
           <v-divider
-            v-if="n !== steps"
+            v-if="n !== realSteps"
             :key="n"
           ></v-divider>
         </template>
@@ -30,12 +30,12 @@
 
       <v-stepper-items>
         <v-stepper-content
-          v-for="n in steps"
+          v-for="n in realSteps"
           :key="`${n}-content`"
           :step="n"
           class="pa-0 mt-0"
         >
-          <CycleCard :exercises="cycles[n-1]" :serie="series[n-1]" :title="getTitle()" :readonly="getReadonly()" :cycle="n" :max="steps"/>
+          <CycleCard :exercises="cycles[n-1]" :serie="series[n-1]" :title="getTitle()" :readonly="getReadonly()" :cycle="n" :max="realSteps"/>
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -49,22 +49,42 @@ export default {
   data () {
     return {
       e1: 1,
-      steps: 3,
-      cycles: [],
-      series: [],
-      titles: [],
       finished: false,
+      realSteps: null,
     }
   },
 
   props: {
-    id: {
+    steps: {
       type: Number,
-    }
+      default: 3,
+    },
+    cycles: {
+      type: Array,
+      default(){
+        return [];
+      }
+    },
+    series: {
+      type: Array,
+      default(){
+        return [];
+      }
+    },
+    titles: {
+      type: Array,
+      default(){
+        return [];
+      }
+    },
+  },
+
+  created() {
+    this.realSteps = this.steps
   },
 
   watch: {
-    steps (val) {
+    realSteps (val) {
       if (this.e1 > val) {
         this.e1 = val;
       }
@@ -72,11 +92,15 @@ export default {
   },
 
   methods: {
+    setSteps(n){
+      this.realSteps = n
+    },
+
     getTitle() {
       switch(this.e1) {
         case 1:
           return "Calentamiento";
-        case this.steps:
+        case this.realSteps:
           return "Enfriamiento";
         default:
           return this.titles[this.e1-1];
@@ -84,21 +108,21 @@ export default {
     },
 
     getReadonly() {
-      if (this.e1 == 1 || this.e1 == this.steps )
+      if (this.e1 == 1 || this.e1 == this.realSteps)
         return true;
       return false;
     },
 
     nextStep() {
       this.e1++;
-      if (this.e1 > this.steps && this.finished == false) {
+      if (this.e1 > this.realSteps && this.finished == false) {
         this.sendCycles(this.finished);
         this.finished = true;
       }
     },
 
     sendCycles(finished) {
-      this.$root.$emit('getCycles', this.cycles, this.series, this.titles, finished);
+      this.$root.$emit('getCycles', this.cycles, this.series, this.titles, finished, this.e1 - 1);
     },
 
     prevStep () {
@@ -128,6 +152,9 @@ export default {
     }),
     this.$root.$on('updatecycle', (object, cycle, serie, title) => {
       this.updateCycles(object, cycle, serie, title);
+    }),
+    this.$root.$once('updateSteps', (n) => {
+      this.setSteps(n);
     })
   },
 

@@ -16,19 +16,21 @@ export default {
        return state.items.content.findIndex((item) => item.id === exercise.id);
       };
     },
+    findIdIndex(state) {
+      return (exerciseid) => {
+        return state.items.findIndex((item) => item.id === exerciseid);
+      };
+    },
     getAllExercises(state) {
-      return state.items.content;
+      return state.items;
     }
   },
   mutations: {
     push(state, exercise) {
       state.items.push(exercise);
     },
-    push2(state, exercise) {
-      state.items.content.push(exercise);
-    },
-    replace(state, index, exercise) {
-      state.items[index] = exercise;
+    replace(state, obj) {
+      state.items[obj.index] = obj.exercise;
     },
     replace2(state, index, exercise) {
       state.items.content[index] = exercise;
@@ -44,13 +46,6 @@ export default {
     },
   },
   actions: {
-    async delete({ getters, commit }, exercise) {
-      await ExerciseApi.delete(exercise.id);
-      // const index = getters.findIndex2(exercise);
-      // if (index >= 0) commit("splice2", index);
-      const index = getters.findIndex(exercise);
-      if (index >= 0) commit("splice", index);
-    },
     async create({ getters, commit }, exercise) {
       const result = await ExerciseApi.add(exercise);
       if (!getters.findIndex(result)) commit("push", result.content);
@@ -60,10 +55,14 @@ export default {
     async modify({ getters, commit }, exercise) {
       const result = await ExerciseApi.modify(exercise);
       const index = getters.findIndex(result);
-      if (index >= 0) commit("replace", index, exercise);
-      // const index = getters.findIndex2(result);
-      // if (index >= 0) commit("replace2", index, exercise);
-      return exercise;
+      const obj = {index: index, exercise: result}
+      if (index >= 0) commit("replace", obj);
+      return result;
+    },
+    async delete({ getters, commit }, exerciseid) {
+      await ExerciseApi.delete(exerciseid);
+      const index = getters.findIndex2(exerciseid);
+      if (index >= 0) commit("splice", index);
     },
     async get({ state, getters, commit }, exercise) {
       const index = getters.findIndex(exercise);

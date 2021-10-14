@@ -16,8 +16,8 @@ export default {
     push(state, category) {
       state.items.push(category);
     },
-    replace(state, index, category) {
-      state.items[index] = category;
+    replace(state, obj) {
+      state.items[obj.index] = obj.category;
     },
     splice(state, index) {
       state.items.splice(index, 1);
@@ -35,7 +35,8 @@ export default {
     async modify({ getters, commit }, category) {
       const result = await CategoryApi.modify(category);
       const index = getters.findIndex(result);
-      if (index >= 0) commit("replace", index, result);
+      const obj = {index: index, category: result}
+      if (index >= 0) commit("replace", obj);
       return result;
     },
     async delete({ getters, commit }, category) {
@@ -51,9 +52,11 @@ export default {
       commit("push", result);
       return result;
     },
-    async getAll({ commit }) {
-      const result = await CategoryApi.getAll();
-      commit("replaceAll", result);
+    async getAll({ commit }, filter) {
+      if (!filter)
+        filter = ''
+      const result = await CategoryApi.getAll(filter);
+      commit("replaceAll", result.content)
       return result;
     },
     async getFiltered({ commit }, filters){

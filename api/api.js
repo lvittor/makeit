@@ -1,7 +1,7 @@
 export { Api }
 
 class Api {
-  static token
+  static token = "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOjEsImlhdCI6MTYzNDAwNDk1NDgxNywiZXhwIjoxNjM0MDA3NTQ2ODE3fQ.zvQ35gYRWll_2Z5ejtnUtU3odKSKMTE-RSFT6vHnLGM"
 
   static get baseUrl() {
     return 'http://127.0.0.1:8080/api'

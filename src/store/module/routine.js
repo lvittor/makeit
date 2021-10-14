@@ -1,3 +1,4 @@
+//import { getOwnPropertyNames } from "core-js/core/object";
 import { RoutineApi } from "../../../api/routine";
 import { UserApi } from "../../../api/user";
 import { FavouritesApi } from "../../../api/favourites";
@@ -20,11 +21,19 @@ export default {
         return state.favourites.findIndex((item) => item.id === favId);
       };
     },
-    findCategory(state) {
-      return (category) => {
-        return state.items.findCategory(
-          (item) => item.category.id === category.id
-        );
+    findIdIndex(state) {
+      return (routineid) => {
+        return state.items.findIndex((item) => item.id === routineid);
+      };
+    },
+    findCycleIndex(state) {
+      return (cycle) => {
+        return state.cycles.findIndex((item) => item.id === cycle.id);
+      };
+    },
+    findCycleIdIndex(state) {
+      return (cycleid) => {
+        return state.cycles.findIndex((item) => item.id === cycleid);
       };
     },
   },
@@ -32,14 +41,24 @@ export default {
     push(state, routine) {
       state.items.push(routine);
     },
+    pushCycle(state, cycle) {
+      state.cycles.push(cycle)
+    },
+    replaceAllCycles(state, cycles) {
+      state.cycles = cycles
+    },
+    replace(state, obj) {
+      state.items[obj.index] = obj.routine;
+    },
     pushFavouritepush(state, routine) {
       state.favourites.push(routine);
     },
-    replace(state, index, routine) {
-      state.items[index] = routine;
-    },
+    
     splice(state, index) {
       state.items.splice(index, 1);
+    },
+    spliceCycles(state, index) {
+      state.cycles.splice(index, 1)
     },
     spliceFavourites(state, index) {
       state.favourites.splice(index, 1);
@@ -47,8 +66,8 @@ export default {
     replaceAll(state, routine) {
       state.items = routine;
     },
-    replaceCycle(state, cycle) {
-      state.cycles = cycle;
+    replaceCycle(state, obj) {
+      state.cycles[obj.index] = obj.cycle;
     },
     replaceAllFavourites(state, favourite) {
       state.favourites = favourite;
@@ -63,14 +82,21 @@ export default {
 
     async createCycle({ commit }, req) {
       const result = await RoutineApi.createCycle(req.id, req.cycle);
-      commit('replaceCycle', result)
+      commit('pushCycle', result)
       return result
     },
-
-    async modify({ getters, commit }, routine) {
-      const result = await RoutineApi.modifyRoutine(routine);
+    async modify({ getters, commit }, req) {
+      const result = await RoutineApi.modifyRoutine(req.routineid, req.routine);
       const index = getters.findIndex(result);
-      if (index >= 0) commit("replace", index, result);
+      const obj = {index: index, routine: result}
+      if (index >= 0) commit("replace", obj);
+      return result;
+    },
+    async modifyCycle({ getters, commit }, req) {
+      const result = await RoutineApi.modifyCycle(req.routineid, req.cycle);
+      const index = getters.findCycleIndex(result);
+      const obj = {index: index, cycle: result}
+      if (index >= 0) commit("replaceCycle", obj);
       return result;
     },
 
@@ -79,44 +105,43 @@ export default {
       const index = getters.findIndex(routine);
       if (index >= 0) commit("splice", index);
     },
-
-    // async get({ state, getters, commit }, routine) {
-    //   const index = getters.findIndex(routine);
-    //   if (index >= 0) return state.items[index];
-
-    //   /*  TODO: No entiendo por que tiene este comportamiento... hablarlo con los chicos
-    //   const result = await CategoryApi.get();
-    //   commit("push", result);
-    //   return result; */
-    //   alert('get')
-    //   const result = await RoutineApi.get();
-    //   alert('get' + JSON.stringify(result))
-    //   commit("push", result);
-    //   return result;
-    // },
-
+    async deleteCycle({ getters, commit }, req) {
+      await RoutineApi.deleteCycle(req.routineid, req.cycleid);
+      const index = getters.findCycleIdIndex(req.cycleid);
+      if (index >= 0) commit("spliceCycle", index);
+    },
+    async getRoutine({ state, getters, commit }, routineid) {
+      const index = getters.findIdIndex(routineid); // mmmmmmmmm ver esto
+      if (index >= 0) return state.items[index];
+      const result = await RoutineApi.getRoutine(routineid)
+      commit("push", result);
+      return result;
+    },
     async getAll({ commit }, controller) {
       const result = await RoutineApi.getAllRoutines(controller);
       commit("replaceAll", result.content);
-
       return result;
     },
 
     async getFiltered({ commit }, filters){
       const result = await RoutineApi.getFiltered(filters);
-      commit("replaceAll", result);
-      return result;
-    },
-      
-    async getAllCycles({ commit }, {routineid,controller}) {
-      const result = await RoutineApi.getAllCycles(routineid,controller);
-      commit("replaceCycle", result.content);
+      commit("replaceAll", result.content);
       return result;
     },
 
     async getFour({ commit }, cat) {
+      alert("Cargo 4 rutinas de una categoria");
       const result = await RoutineApi.getFourRoutinesBy(cat);
+      alert(
+        "El llamado a la api de las 4 rutinas me devuelve " +
+          JSON.stringify(result)
+      );
       commit("replaceAll", result.content);
+      return result;
+    },
+    async getAllCycles({commit}, routineid) {
+      const result = await RoutineApi.getAllCycles(routineid);
+      commit("replaceAllCycles", result.content)
       return result;
     },
 
