@@ -2,14 +2,21 @@
   <div>
     <v-container class="primary lighten-5" fluid>
         <v-row class="pa-0">
-          <v-col>
+          <v-col cols="2"></v-col>
+          <v-col cols="9">
+            <span class="titulazos">Tus rutinas y ejercicios</span>
+          </v-col>
+          <v-col cols="1" align-self="start">
             <GoBack class="go-back-position"/>
           </v-col>
         </v-row>
+        <v-row>
+        <v-divider></v-divider>
+      </v-row>
         <v-row align="end">
           <v-col md="2" />
           <v-col md="6" class="left">
-            <tit class="titulazos">Tus rutinas</tit>
+            <span class="titulazos2">Rutinas </span>
           </v-col>
           <v-col md="4">
             <v-btn
@@ -70,10 +77,10 @@
     
 
 
-      <v-row align="end">
+      <v-row align="end" class="mt-16">
           <v-col md="2" />
           <v-col md="6" class="left">
-            <tit class="titulazos">Tus ejercicios</tit>
+            <tit class="titulazos2">Tus ejercicios</tit>
           </v-col>
           <v-col align="center" md="2">
             <NewExercise/>
@@ -120,6 +127,11 @@
   font-size: 80px;
   vertical-align: bottom;
 }
+.titulazos2 {
+  font-size: 70px;
+  vertical-align: bottom;
+  font-weight: lighter;
+}
 .navigate{
   position:fixed; 
   top:0; 
@@ -134,7 +146,6 @@
 .go-back-position {
    position: relative;
    top: 5px;
-   right: -1750px;
 }
 </style>
 

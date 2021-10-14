@@ -1,18 +1,27 @@
 <template>
   <div>
+
     <v-container fluid>
-      <v-row class="pa-0 primary lighten-5">
-        <v-col>
-          <GoBack class="go-back-position"/>
+      <v-row class=" primary lighten-5">
+        <v-col cols="2"></v-col>
+        <v-col cols="9">
+          <span class="titulazos">Rutinas por categoría</span>
         </v-col>
+        <v-col cols="1" align-self="start">
+          <GoBack class="go-back-position"/>
+       </v-col>
+      </v-row>
+      <v-row>
+        <v-divider></v-divider>
       </v-row>
     </v-container>
+
     <v-container v-for="cat in routinesByCat" v-bind:key="cat.category.id" fluid class="pa-0">
       <v-container class="primary lighten-5" fluid>
         <v-row align="end">
           <v-col md="2" />
           <v-col md="6" class="left">
-            <tit class="titulazos">{{ cat.category.name }}</tit>
+            <span class="titulazos2">{{ cat.category.name }}</span>
           </v-col>
           <v-col md="4">
             <v-btn
@@ -64,6 +73,12 @@
   vertical-align: bottom;
 }
 
+.titulazos2 {
+  font-size: 70px;
+  vertical-align: bottom;
+  font-weight: lighter;
+}
+
 .view-more {
   font-size: 25px;
   color: #6200ee;
@@ -72,7 +87,6 @@
 .go-back-position {
    position: relative;
    top: 5px;
-   right: -1750px;
 }
 </style>
 
