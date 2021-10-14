@@ -30,15 +30,26 @@ export default {
         ...mapActions('routine', {
             $setFavourite: 'setFavourite',
             $getFavourites: 'getFavourites',
+            $getFavouritesPage: 'getFavouritesPage',
             $deleteFavourite: 'deleteFavourite'
         
         }),
 
         async setFavourites(){
-          const pickedFavourites = await this.$getFavourites();
+          let isLastPage = false
+          let i = 0
           this.favourites = []
-          for(const fav of pickedFavourites.content)
-            this.favourites.push(fav.id)
+          while(!isLastPage){
+            const pickedFavourites = await this.$getFavouritesPage({page: i, size: 10});
+            i=i+1
+            isLastPage = pickedFavourites.isLastPage
+            
+            for(const fav of pickedFavourites.content)
+              this.favourites.push(fav.id)
+          }
+
+          
+          
         },
 
         isRoutineFavourite(id) {
@@ -56,6 +67,7 @@ export default {
             this.favourites.push(this.routineID)
             this.isFavourite = true
           }
+          this.$root.$emit("updateFavs")
         },
     }
 }

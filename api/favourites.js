@@ -24,4 +24,11 @@ class FavouritesApi {
             throw err;
         })
     }
+
+    static async getFavouritesPage(page, size, controller){
+        const aux = `?page=${page}&size=${size}`
+        return await Api.get(FavouritesApi.getUrl(aux), true, controller).catch(err => {
+            throw err;
+        })
+    }
 }

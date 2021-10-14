@@ -54,8 +54,8 @@ export default {
     setExercises(){
       const pickedExercises = this.$exercises
       this.setResult(pickedExercises);
-      for (let i = 0; i < this.result.content.length; i++){
-        this.exercises.push(this.result.content[i].name)
+      for (let i = 0; i < this.result.length; i++){
+        this.exercises.push(this.result[i].name)
       }
     },
 
