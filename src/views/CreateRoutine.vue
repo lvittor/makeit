@@ -105,6 +105,7 @@
             :disabled="!validate()"
           >
             Guardar rutina
+          </v-btn>
         </div>
       </v-col>
     </v-row>
