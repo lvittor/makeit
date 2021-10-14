@@ -61,16 +61,42 @@
       </div>
       <div class="transition-wrapper">
         <div class="d-flex justify-space-between mt-8">
-          
+          <v-dialog
+            v-model="dialog"
+            persistent
+            max-width="400"
+          >
+          <template v-slot:activator="{  attrs }">
           <v-btn
             block
             style="min-width: 88px"
             color="primary"
             depressed
+            v-bind="attrs"
+            
             @click="createUser(email, password, confirmpassword, firstName, lastName, username)"
           >
             {{ $vuetify.lang.t("$vuetify.auth.sign-up.signup") }}
           </v-btn>
+          </template>
+              <v-card>
+              <v-card-title class="text-h5">
+                {{dialogData.header}}
+              </v-card-title>
+              <v-card-text>{{dialogData.detail}}</v-card-text>
+              <v-card-actions>
+                <v-spacer></v-spacer>
+                <v-btn
+                  color="primary"
+                  text
+                  :to="dialogData.button.route"
+                  @click="dialog = false"
+                >
+                  {{dialogData.button.text}}
+                </v-btn>
+              </v-card-actions>
+            </v-card>
+          </v-dialog>
         </div>
       </div>
     </v-container>
@@ -90,6 +116,7 @@ export default {
   },
   data: () => {
     return {
+      dialog: false,
       user: null,
       email: '',
       password: '',
@@ -97,6 +124,31 @@ export default {
       firstName: '',
       lastName: '',
       username: '',
+      dialogData: {
+        header: "Se ha registrado exitosamente",
+        detail: "En breve podrá ver un mail en su casilla de correo electrónico. Presione el link que se encuentra en el mismo para confirmar su cuenta",
+        button: {
+          text: "OK",
+          route: "/auth/signin"
+        }
+      },
+      success: {
+        header: "Se ha registrado exitosamente",
+        detail: "En breve podrá ver un mail en su casilla de correo electrónico. Presione el link que se encuentra en el mismo para confirmar su cuenta",
+        button: {
+          text: "OK",
+          route: "/auth/signin"
+        }
+      },
+      error: {
+        header: "Ha ocurrido un error",
+        detail: "Los datos ingresados no son válidos",
+        button: {
+          text: "reintentar",
+          route: "/auth/signup"
+        }
+      },
+  
     }
   },
 
@@ -110,8 +162,11 @@ export default {
         const user = new User(mail, password, firstName, lastName, username  );
         try {
           this.user = await this.$createUser(user);
-          Helper.setResult(this.user)
+          this.dialogData = this.success
+          this.dialog = true
         } catch (e) {
+          this.dialogData = this.error
+          this.dialog = true
           Helper.setResult(e)
         }
       }
