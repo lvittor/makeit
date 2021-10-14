@@ -1,6 +1,11 @@
 <template>
   <div>
     <v-container class="primary lighten-5" fluid>
+        <v-row class="pa-0">
+          <v-col>
+            <GoBack class="go-back-position"/>
+          </v-col>
+        </v-row>
         <v-row align="end">
           <v-col md="2" />
           <v-col md="6" class="left">
@@ -126,6 +131,11 @@
   color: #6200ee;
   vertical-align: middle;
 }
+.go-back-position {
+   position: relative;
+   top: 5px;
+   right: -1750px;
+}
 </style>
 
 <script>
@@ -133,6 +143,7 @@ import Routine from "../components/Routine.vue";
 import NewExercise from "../components/NewExercise.vue";
 import ExerciseCard from "../components/ExerciseCard.vue";
 import NavigationDrawer from "../components/NavigationDrawer.vue";
+import GoBack from "../components/Buttons/GoBack"
 
 import { mapActions } from "vuex";
 import RoutineHelper from "@/RoutineHelper.js";
@@ -155,7 +166,8 @@ export default {
     NewExercise,
     ExerciseCard,
     Routine,
-    NavigationDrawer
+    NavigationDrawer,
+    GoBack
   },
 
   created() {

@@ -1,6 +1,13 @@
 <template>
   <div>
-    <v-container v-for="cat in routinesByCat" v-bind:key="cat.category.id" fluid>
+    <v-container fluid>
+      <v-row class="pa-0 primary lighten-5">
+        <v-col>
+          <GoBack class="go-back-position"/>
+        </v-col>
+      </v-row>
+    </v-container>
+    <v-container v-for="cat in routinesByCat" v-bind:key="cat.category.id" fluid class="pa-0">
       <v-container class="primary lighten-5" fluid>
         <v-row align="end">
           <v-col md="2" />
@@ -62,6 +69,11 @@
   color: #6200ee;
   vertical-align: middle;
 }
+.go-back-position {
+   position: relative;
+   top: 5px;
+   right: -1750px;
+}
 </style>
 
 <script>
@@ -69,6 +81,7 @@ import Routine from "../components/Routine.vue";
 import NavDrawer from "../components/NavigationDrawer.vue";
 import { mapActions } from "vuex";
 import RoutineHelper from "@/RoutineHelper.js";
+import GoBack from "../components/Buttons/GoBack"
 
 export default {
   name: "FindRoutine",
@@ -190,6 +203,7 @@ export default {
   components: {
     Routine,
     NavDrawer,
+    GoBack
   },
 };
 </script>

@@ -1,5 +1,10 @@
 <template>
   <v-container class="grey lighten-5" fluid>
+    <v-row>
+      <v-col>
+        <GoBack class="go-back-position"/>
+      </v-col>
+    </v-row>
     <v-row justify="center" class="mb-10" align="center">
       <v-col
         cols="3"
@@ -128,8 +133,18 @@
   </v-container>
 </template>
 
+<style>
+.go-back-position {
+   position: relative;
+   top: 5px;
+   right: -1750px;
+}
+</style>
+
+
 <script>
 import { mapActions } from 'vuex'
+import GoBack from "../components/Buttons/GoBack"
 import RoutineStepper from "../components/Cycle/RoutineStepper.vue"
 import { Routine } from "../../api/routine"
 import { Cycle } from "../../api/routine"
@@ -333,6 +348,7 @@ export default {
 
   components: {
     RoutineStepper,
+    GoBack,
   },
 }
 </script>

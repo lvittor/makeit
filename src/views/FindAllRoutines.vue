@@ -5,9 +5,10 @@
       
       <v-row align="end">
         <v-col md="2" />
-        <v-col md="6" class="left">
+        <v-col md="9" class="left">
           <tit class="titulazos">{{ this.$route.params.category.name }}</tit>
         </v-col>
+        <v-col><GoBack/></v-col>
       </v-row>
 
       <v-row justify="center">
@@ -76,6 +77,7 @@ import Routine from "../components/Routine.vue";
 import NavDrawer from "../components/NavigationDrawer.vue";
 import RoutineHelper from "@/RoutineHelper.js";
 import { mapActions } from "vuex";
+import GoBack from "../components/Buttons/GoBack"
 export default {
   name: "FindRoutine",
 
@@ -130,6 +132,7 @@ export default {
   components: {
     Routine,
     NavDrawer,
+    GoBack
   },
 };
 </script>
