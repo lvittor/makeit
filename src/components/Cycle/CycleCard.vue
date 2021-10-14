@@ -158,6 +158,8 @@
     data() {
       return {
         items: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
+        id: 0,
+        set: false,
       }
     },
 
@@ -212,8 +214,12 @@
       },
 
       addExercise() {
+        if (!this.set) {
+          this.id = this.exercises.length + 1
+          this.set = true
+        }
         this.exercises.push({
-          id: this.exercises.length,
+          id: this.id++,
           enabled1: false,
           enabled2: false,
           actual: '',

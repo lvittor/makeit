@@ -26,8 +26,6 @@ class CycleExerciseApi {
   }
 
   static async modify(cycleid, exid, reqs, controller) {
-    alert('A LA API LE LLEGO ESTO, CYCLEID: ' + cycleid + ' EXID: ' + exid + ' REQS: ' + JSON.stringify(reqs))
-    alert('BODY: ' + JSON.stringify(reqs))
     return await Api.put(CycleExerciseApi.getUrl(cycleid, exid), true, reqs, controller).catch(err => {
         throw err;
     })

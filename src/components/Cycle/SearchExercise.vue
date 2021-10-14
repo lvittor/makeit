@@ -12,8 +12,6 @@
       flat
       @change="changeActual($event)"
     />
-    <v-btn @click="printealo()">
-    </v-btn>
   </div>
 </template>
 
@@ -54,10 +52,6 @@ export default {
   },
 
   methods: {    
-    printealo(){
-      alert(JSON.stringify(this.exercises))
-    },
-
     setResult(result){
       this.result = result;
     },

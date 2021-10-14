@@ -17,15 +17,15 @@ export default {
       };
     },
     getAllExercises(state) {
-      return state.items.content;
+      return state.items;
     }
   },
   mutations: {
     push(state, exercise) {
       state.items.push(exercise);
     },
-    replace(state, index, exercise) {
-      state.items[index] = exercise;
+    replace(state, obj) {
+      state.items[obj.index] = obj.exercise;
     },
     splice(state, index) {
       state.items.splice(index, 1);
@@ -43,7 +43,8 @@ export default {
     async modify({ getters, commit }, exercise) {
       const result = await ExerciseApi.modify(exercise);
       const index = getters.findIndex(result);
-      if (index >= 0) commit("replace", index, result);
+      const obj = {index: index, exercise: result}
+      if (index >= 0) commit("replace", obj);
       return result;
     },
     async delete({ getters, commit }, exerciseid) {
@@ -61,7 +62,7 @@ export default {
     },
     async getAll({ commit }, controller) {
       const result = await ExerciseApi.getAll(controller);
-      commit("replaceAll", result);
+      commit("replaceAll", result.content);
       return result;
     },
   },

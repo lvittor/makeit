@@ -37,18 +37,24 @@ export default {
     pushCycle(state, cycle) {
       state.cycles.push(cycle)
     },
-    replace(state, index, routine) {
-      state.items[index] = routine;
+    replaceAllCycles(state, cycles) {
+      state.cycles = cycles
+    },
+    replace(state, obj) {
+      state.items[obj.index] = obj.routine;
     },
     splice(state, index) {
       state.items.splice(index, 1);
     },
+    spliceCycles(state, index) {
+      state.cycles.splice(index, 1)
+    },
     replaceAll(state, routine) {
       state.items = routine;
     },
-    replaceCycle(state, cycle) {
-      state.cycles = cycle;
-    }
+    replaceCycle(state, obj) {
+      state.cycles[obj.index] = obj.cycle;
+    },
   },
   actions: {
     async create({ getters, commit }, routine) {
@@ -58,19 +64,21 @@ export default {
     },
     async createCycle({ commit }, req) {
       const result = await RoutineApi.createCycle(req.id, req.cycle);
-      commit('replaceCycle', result)
+      commit('pushCycle', result)
       return result
     },
     async modify({ getters, commit }, req) {
       const result = await RoutineApi.modifyRoutine(req.routineid, req.routine);
       const index = getters.findIndex(result);
-      if (index >= 0) commit("replace", index, result);
+      const obj = {index: index, routine: result}
+      if (index >= 0) commit("replace", obj);
       return result;
     },
     async modifyCycle({ getters, commit }, req) {
       const result = await RoutineApi.modifyCycle(req.routineid, req.cycle);
       const index = getters.findCycleIndex(result);
-      if (index >= 0) commit("replace", index, result);
+      const obj = {index: index, cycle: result}
+      if (index >= 0) commit("replaceCycle", obj);
       return result;
     },
     async delete({ getters, commit }, routine) {
@@ -81,7 +89,7 @@ export default {
     async deleteCycle({ getters, commit }, req) {
       await RoutineApi.deleteCycle(req.routineid, req.cycleid);
       const index = getters.findCycleIdIndex(req.cycleid);
-      if (index >= 0) commit("splice", index);
+      if (index >= 0) commit("spliceCycle", index);
     },
     async getRoutine({ state, getters, commit }, routineid) {
       const index = getters.findIdIndex(routineid); // mmmmmmmmm ver esto
@@ -92,7 +100,7 @@ export default {
     },
     async getAll({ commit }, controller) {
       const result = await RoutineApi.getAllRoutines(controller);
-      commit("replaceAll", result);
+      commit("replaceAll", result.content);
       return result;
     },
     async getFour({ commit }, cat) {
@@ -102,12 +110,12 @@ export default {
         "El llamado a la api de las 4 rutinas me devuelve " +
           JSON.stringify(result)
       );
-      commit("replaceAll", result);
+      commit("replaceAll", result.content);
       return result;
     },
     async getAllCycles({commit}, routineid) {
       const result = await RoutineApi.getAllCycles(routineid);
-      commit("pushCycle", result)
+      commit("replaceAllCycles", result.content)
       return result;
     }
   },

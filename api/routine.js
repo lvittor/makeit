@@ -33,7 +33,7 @@ class RoutineApi {
         })
     }
 
-    static async delete(routineid, cycleid, controller) {
+    static async deleteCycle(routineid, cycleid, controller) {
         return await Api.delete(RoutineApi.getUrl(routineid + '/cycles/' + cycleid), true, controller).catch(err => {
             throw err;
         })

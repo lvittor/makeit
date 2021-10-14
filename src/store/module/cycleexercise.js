@@ -8,16 +8,15 @@ export default {
   getters: {
     findIndex(state) {
       return (exercise) => {
-        return state.items.findIndex((item) => item.id === exercise.id);
+        return state.items.findIndex((item) => (item.exercise.id === exercise.exercise.id) && (item.order === exercise.order) && (item.duration === exercise.duration) && (item.repetitions === exercise.repetitions));
       };
     },
     findIdIndex(state) {
       return (exid) => {
-        return state.items.findIndex((item) => item.id === exid);
+        return state.items.findIndex((item) => item.exercise.id === exid);
       };
     },
     getAllExercises(state) {
-      alert('STATE: ' + JSON.stringify(state.items.content))
       return state.items.content;
     }
   },
@@ -25,8 +24,8 @@ export default {
     push(state, exercise) {
       state.items.push(exercise);
     },
-    replace(state, index, exercise) {
-      state.items[index] = exercise;
+    replace(state, obj) {
+      state.items[obj.index] = obj.exercise;
     },
     splice(state, index) {
       state.items.splice(index, 1);
@@ -38,12 +37,12 @@ export default {
   actions: {
     async create({ commit }, cycleexercise) {
       const result = await CycleExerciseApi.add(cycleexercise);
-      commit('replaceAll', result)
+      commit('push', result)
       return result;
     },
-    async get({commit}, req) {
+    async getAll({commit}, req) {
       const result = await CycleExerciseApi.get(req)
-      commit("push", result)
+      commit("replaceAll", result.content)
       return result;
     },
     async delete({getters, commit}, req) {
@@ -52,10 +51,10 @@ export default {
       if (index >= 0) commit("splice", index);
     },
     async modify({ getters, commit }, req) {
-      alert('AL PUT LE LLEGO ESTO: ' + JSON.stringify(req))
       const result = await CycleExerciseApi.modify(req.cycleid, req.exid, req.reqs);
       const index = getters.findIndex(result);
-      if (index >= 0) commit("replace", index, result);
+      const obj = {index: index, exercise: result}
+      if (index >= 0) commit("replace", obj);
       return result;
     },
   },
