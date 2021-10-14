@@ -15,7 +15,55 @@
         <v-divider></v-divider>
       </v-row>
     </v-container>
-
+    <!-- -------------------------------------- -->
+    <v-container v-if="foundFavourite == true" class="pa-0" fluid>
+      <v-container class="primary lighten-5 pa-0" fluid>
+        <v-row align="end">
+          <v-col md="2" />
+          <v-col md="6" class="left">
+            <span class="titulazos2">Favoritas</span>
+          </v-col>
+          <v-col md="4">
+            <v-btn
+              text
+              color="primary"
+              x-large
+              append
+              @click="routerPushFav()"
+              ><h3>Ver más</h3></v-btn
+            >
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col
+            md="2"
+            v-for="fav in favourites.content"
+            v-bind:key="fav.id"
+          > 
+            
+            <div
+              @click="
+                $refs.nav.toggleDrawer(
+                  getDifficulty(fav.difficulty),
+                  normalizeScore(fav.score),
+                  fav.name,
+                  fav.detail,
+                  fav.id
+                )
+              "
+            >
+              <Routine
+                :namep="fav.name"
+                :desc="fav.detail"
+                :difficulty="getDifficulty(fav.difficulty)"
+                :score="normalizeScore(fav.score)"
+              />
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-container>
+    <!-- -------------------------------------- -->
     <v-container v-for="cat in routinesByCat" v-bind:key="cat.category.id" fluid class="pa-0">
       <v-container class="primary lighten-5" fluid>
         <v-row align="end">
@@ -105,14 +153,22 @@ export default {
     categories2: null,
     routinesByCat: [],
     routiness: [],
-
+    favourites: [],
+    foundFavourite: false,
   }),
 
   created(){
     this.loadData()
+    this.foundFavourite = false
+    this.getAllFavourites()
   },
 
-  
+  mounted(){
+    this.$root.$on('updateFavs', () => {
+      this.getAllFavourites();
+    })
+  },
+
 
   methods: {
 
@@ -143,6 +199,13 @@ export default {
       });
     },
 
+    routerPushFav() {
+      this.$router.push({
+        name: "FindAllFavourites",
+      });
+    },
+    
+
     ...mapActions('category', {
       $getAllCategories: 'getAll',
     }),
@@ -152,9 +215,23 @@ export default {
       //$modifyRoutine: 'modify',
       //$deleteRoutine: 'delete',
       //$getRoutine: 'get',
+      $getAllFavourites: 'getFavouritesPage',
       $getAllRoutines: 'getAll',
       $getFourRoutines: 'getFour',
     }),
+
+    async getAllFavourites(){
+      try{
+        const favs = await this.$getAllFavourites({page: 0, size: 4});
+        this.foundFavourite = false;
+        if(favs.totalCount != 0)
+          this.foundFavourite = !this.foundFavourite;
+        this.favourites = favs
+        return favs
+      }catch(e){
+        alert("Problemas")
+      }
+    },
 
     async getAllCategories() {
       try {
