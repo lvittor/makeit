@@ -66,6 +66,11 @@ export default {
             commit('setUser', result)
             return result;
         },
+        async resendVerify( {commit} , user) {
+            const result = await UserApi.resendVerify(user)
+            commit('setToken', null)
+            return result;
+        },
         /* async getUserRoutines({commit}, controller){
             const result = await UserApi.getCurrentRoutines(controller);
             commit("replaceAll", result);

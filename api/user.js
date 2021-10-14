@@ -23,6 +23,10 @@ class UserApi {
         return await Api.post(UserApi.getUrl(), false, user, controller)
     }
 
+    static async resendVerify(user, controller){
+        return await Api.post(UserApi.getUrl('resend_verification'), false, user, controller)
+    }
+
     static async modify(user, controller) {
         return await Api.put(UserApi.getUrl('current'), true, user, controller)
     }
