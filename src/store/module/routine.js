@@ -98,9 +98,16 @@ export default {
     async getAll({ commit }, controller) {
       const result = await RoutineApi.getAllRoutines(controller);
       commit("replaceAll", result.content);
+
       return result;
     },
 
+    async getFiltered({ commit }, filters){
+      const result = await RoutineApi.getFiltered(filters);
+      commit("replaceAll", result);
+      return result;
+    },
+      
     async getAllCycles({ commit }, {routineid,controller}) {
       const result = await RoutineApi.getAllCycles(routineid,controller);
       commit("replaceCycle", result.content);

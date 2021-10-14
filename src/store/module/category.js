@@ -51,8 +51,13 @@ export default {
       commit("push", result);
       return result;
     },
-    async getAll({ commit }, controller) {
-      const result = await CategoryApi.getAll(controller);
+    async getAll({ commit }) {
+      const result = await CategoryApi.getAll();
+      commit("replaceAll", result);
+      return result;
+    },
+    async getFiltered({ commit }, filters){
+      const result = await CategoryApi.getFiltered(filters);
       commit("replaceAll", result);
       return result;
     },
