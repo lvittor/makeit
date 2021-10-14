@@ -7,6 +7,7 @@ export default {
   state: {
     items: [],
     cycles: [],
+    favourites:[]
   },
   getters: {
     findIndex(state) {
@@ -14,9 +15,9 @@ export default {
         return state.items.findIndex((item) => item.id === routine.id);
       };
     },
-    findIndex2(state) {
-      return (routine) => {
-        return state.items.content.findIndex((item) => item.id === routine.id);
+    findIndexFavourites(state) {
+      return (favId) => {
+        return state.favourites.findIndex((item) => item.id === favId);
       };
     },
     findCategory(state) {
@@ -31,8 +32,8 @@ export default {
     push(state, routine) {
       state.items.push(routine);
     },
-    push2(state, routine) {
-      state.items.content.push(routine);
+    pushFavouritepush(state, routine) {
+      state.favourites.push(routine);
     },
     replace(state, index, routine) {
       state.items[index] = routine;
@@ -40,53 +41,64 @@ export default {
     splice(state, index) {
       state.items.splice(index, 1);
     },
-    splice2(state, index) {
-      state.items.content.splice(index, 1);
+    spliceFavourites(state, index) {
+      state.favourites.splice(index, 1);
     },
     replaceAll(state, routine) {
       state.items = routine;
     },
     replaceCycle(state, cycle) {
       state.cycles = cycle;
-    }
+    },
+    replaceAllFavourites(state, favourite) {
+      state.favourites = favourite;
+    },
   },
   actions: {
     async create({ getters, commit }, routine) {
       const result = await RoutineApi.createRoutine(routine); //add(routine);
-      if (!getters.findIndex2(result)) commit("push2", result);
+      if (!getters.findIndex(result)) commit("push", result);
       return result;
     },
+
     async createCycle({ commit }, req) {
       const result = await RoutineApi.createCycle(req.id, req.cycle);
       commit('replaceCycle', result)
       return result
     },
+
     async modify({ getters, commit }, routine) {
       const result = await RoutineApi.modifyRoutine(routine);
       const index = getters.findIndex(result);
       if (index >= 0) commit("replace", index, result);
       return result;
     },
+
     async delete({ getters, commit }, routine) {
       await RoutineApi.deleteRoutine(routine.id);
-      const index = getters.findIndex2(routine);
-      if (index >= 0) commit("splice2", index);
-    },
-    async get({ state, getters, commit }, routine) {
       const index = getters.findIndex(routine);
-      if (index >= 0) return state.items[index];
-
-      /*  TODO: No entiendo por que tiene este comportamiento... hablarlo con los chicos
-      const result = await CategoryApi.get();
-      commit("push", result);
-      return result; */
-      const result = await RoutineApi.get();
-      commit("push", result);
-      return result;
+      if (index >= 0) commit("splice", index);
     },
-    async getAll({ commit }) {
-      const result = await RoutineApi.getAllRoutines();
-      commit("replaceAll", result);
+
+    // async get({ state, getters, commit }, routine) {
+    //   const index = getters.findIndex(routine);
+    //   if (index >= 0) return state.items[index];
+
+    //   /*  TODO: No entiendo por que tiene este comportamiento... hablarlo con los chicos
+    //   const result = await CategoryApi.get();
+    //   commit("push", result);
+    //   return result; */
+    //   alert('get')
+    //   const result = await RoutineApi.get();
+    //   alert('get' + JSON.stringify(result))
+    //   commit("push", result);
+    //   return result;
+    // },
+
+    async getAll({ commit }, controller) {
+      const result = await RoutineApi.getAllRoutines(controller);
+      commit("replaceAll", result.content);
+
       return result;
     },
 
@@ -98,44 +110,56 @@ export default {
       
     async getAllCycles({ commit }, {routineid,controller}) {
       const result = await RoutineApi.getAllCycles(routineid,controller);
-      commit("replaceCycle", result);
+      commit("replaceCycle", result.content);
       return result;
     },
-      
+
     async getFour({ commit }, cat) {
       const result = await RoutineApi.getFourRoutinesBy(cat);
-      commit("replaceAll", result);
+      commit("replaceAll", result.content);
       return result;
     },
 
     async getPageByCat({ commit }, {cat,page}) {
       const result = await RoutineApi.getRoutinesByCat(cat,page,12);
-      commit("replaceAll", result);
+      commit("replaceAll", result.content);
       return result;
     },
+
     async getUserRoutines({commit}, controller){
       const result = await UserApi.getCurrentRoutines(controller);
-      commit("replaceAll", result);
+      commit("replaceAll", result.content);
       return result;
     },
-    async setFavourite({commit}, routineID, controller){
-      const result = await FavouritesApi.setFavourite(routineID, controller);
-      commit("replaceAll", result);
+
+    async setFavourite({getters, commit}, routineID){
+      const result = await FavouritesApi.setFavourite(routineID);
+      if (!getters.findIndexFavourites(result)) commit("pushFavourite", result);
       return result;
+      
     },
+
     async getFavourites({commit}, controller){
       const result = await FavouritesApi.getFavourites(controller);
-      commit("replaceAll", result);
+      commit("replaceAllFavourites", result.content);
       return result;
     },
-    async deleteFavourite({commit}, routineID, controller){
-      const result = await FavouritesApi.deleteFavourite(routineID, controller);
-      commit("replaceAll", result);
+
+    async getFavouritesPage({commit}, {page, size}){
+      const result = await FavouritesApi.getFavouritesPage(page,size);
+      commit("replaceAllFavourites", result.content);
       return result;
     },
+
+    async deleteFavourite({getters, commit}, routineID){
+      await FavouritesApi.deleteFavourite(routineID);
+      const index = getters.findIndexFavourites(routineID);
+      if (index >= 0) commit("spliceFavourites", index);
+    },
+    
     async getRoutinePage({commit}, page){
       const result = await RoutineApi.getPage(page,12);
-      commit("replaceAll", result);
+      commit("replaceAll", result.content);
       return result;
     }
   },

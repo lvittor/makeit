@@ -21,6 +21,7 @@ export default {
         async deleteRoutine(routineID){
             alert("Estas seguro de borrar la rutina con id: " + routineID)
             await this.$delete({id: routineID});
+            
             this.$root.$emit("update")
         }
     }
