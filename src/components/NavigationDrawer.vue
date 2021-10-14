@@ -162,11 +162,11 @@ export default {
 
     async getAllCycles() {
       try {
-        this.controller = new AbortController();
         const pickedCycles = await this.$getAllCycles(this.routineid);
-        this.controller = null;
         this.cycles = pickedCycles.content
+        
         this.cyclesAndExercises = []
+        
         for(let i=0 ; i<this.cycles.length ; ++i){
           const exercisesData = await this.getAllCycleExcercises(this.cycles[i].id)
           let ex = []
@@ -183,9 +183,7 @@ export default {
 
     async getAllCycleExcercises(cycleId){
       try {
-        this.controller = new AbortController();
         const pickedExercises = await this.$getAllCycleExcercises(cycleId);
-        this.controller = null;
         return pickedExercises
       } catch(e){
         //this.setResult(e);
