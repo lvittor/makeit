@@ -9,7 +9,7 @@
          <GoBack class="go-back-position"/>
       </v-col>
     </v-row>
-    <v-container class="pt-16">
+    <v-container class="pt-16" fluid>
       <div class="back grey lighten-5 align-center fluid" @click="message()">
           <FilterTable class="pa-16"/>
       </div>
