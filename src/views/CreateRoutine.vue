@@ -138,15 +138,15 @@ import { CycleExercise } from "../../api/cycleexercise"
 export default {
   data () {
     return {
-      edit: true,
       controller: null,
       done: true,
+      edit: false,
       routineData: [], // TIPO ROUTINETEST
       cycles: [], // TIPO CYCLESTEST
       exercises: [], // TIPO EXCERCISES TEST
       series: [],
       titles: [],
-      routineid: 15,
+      routineid: 0,
 
       cyclesToSend: [],
       routine: [], // ESTO SERIAN LOS CICLOS QUE LLEGAN AL CREAR
@@ -165,7 +165,14 @@ export default {
   },
 
   created() {
-    if (this.edit ){
+    this.edit = this.$route.params.edit
+    this.routineid = this.$route.params.routineid
+
+    if (!this.edit){
+      this.edit = false
+    }
+
+    if (this.edit){
       this.done = false
       this.loadAll()
     }
@@ -371,6 +378,7 @@ export default {
 
     method(){
       if (this.edit){
+        this.edit = false
         this.putRoutine()
       } else {
         this.createRoutine()
