@@ -4,11 +4,11 @@
       <NavDrawer :editable=false ref="nav" />
       
       <v-row align="end">
-        <v-col md="2" />
-        <v-col md="9" class="left">
-          <tit class="titulazos">{{ this.$route.params.category.name }}</tit>
+        <v-col cols="2" />
+        <v-col cols="9" class="left">
+          <span class="titulazos">{{ this.$route.params.category.name }}</span>
         </v-col>
-        <v-col><GoBack/></v-col>
+        <v-col cols="1" align-self="start"><GoBack/></v-col>
       </v-row>
 
       <v-row justify="center">
