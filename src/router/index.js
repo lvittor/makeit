@@ -13,6 +13,12 @@ const routes = [
     meta: { requiresAuth: true }
   },
   {
+    path: "/welcome",
+    name: "Welcome",
+    component: () => import("../views/Welcome.vue"),
+    meta: { requiresAuth: false },
+  },
+  {
     path: "/about",
     name: "About",
     component: () => import("../views/About.vue"),
@@ -85,8 +91,7 @@ const router = new VueRouter({
 router.beforeEach((to, from, next) => {
   if (to.matched.some(route => route.meta.requiresAuth)) {
     if (!index.getters['security/isLoggedIn']) {
-      
-      next({ path: "/auth/signin", query: { redirect: to.fullPath } });
+      next({ path: "/welcome"});
     } 
     else {
       next();
