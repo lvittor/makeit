@@ -84,19 +84,24 @@ export default {
       commit("push", result);
       return result;
     },
-    async getAll({ commit }, controller) {
-      const result = await RoutineApi.getAllRoutines(controller);
+    async getAll({ commit }) {
+      const result = await RoutineApi.getAllRoutines();
       commit("replaceAll", result);
       return result;
     },
 
+    async getFiltered({ commit }, filters){
+      const result = await RoutineApi.getFiltered(filters);
+      commit("replaceAll", result);
+      return result;
+    },
+      
     async getAllCycles({ commit }, {routineid,controller}) {
       const result = await RoutineApi.getAllCycles(routineid,controller);
       commit("replaceCycle", result);
       return result;
     },
-
-
+      
     async getFour({ commit }, cat) {
       const result = await RoutineApi.getFourRoutinesBy(cat);
       commit("replaceAll", result);
