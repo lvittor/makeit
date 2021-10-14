@@ -40,6 +40,22 @@
           
         </div>
       </div>
+      <div class="transition-wrapper" v-if=verificationError>
+        <div class="d-flex justify-space-between mt-8">
+          <v-btn
+            block
+            style="min-width: 88px"
+            color="primary"
+            depressed
+            text
+            @click="resendVerificationEmail()"
+            :loading="resendingEmail"
+          >
+            Reenviar email de verificación 
+          </v-btn>
+          
+        </div>
+      </div>
     </v-container>
   </div>
 </template>
@@ -57,6 +73,8 @@ export default {
   data() {
     return {
       email: '',
+      verificationError: false,
+      resendingEmail: false,
       password: '',
       result: null,
       controller: null,
@@ -79,17 +97,31 @@ export default {
       $getCurrentUser: 'getCurrentUser',
       $login: 'login',
       $logout: 'logout',
+      $resendVerify: 'resendVerify',
     }),
+
+    async resendVerificationEmail(){
+        this.resendingEmail = true
+        await this.$resendVerify({email: this.email});
+        this.resendingEmail = false
+        this.snackbar = true         
+    },
+
     async login(username, password) {
       try {
         const credentials = new Credentials(username, password)
+        this.$root.$emit("updateAppbar")
         await this.$login({credentials, rememberMe: true })
         this.$router.push({
           name: "Home",
         });
+        this.$emit("updateAppbar")
       } catch (e) {
         if(e.code == 4){
           this.errMessage = "Contraseña o usuario inválidos"
+        }else if(e.code == 8){
+          this.errMessage = "El email ingresado no se encuentra verificado"
+          this.verificationError = true
         }
       }
     },

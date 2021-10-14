@@ -6,7 +6,7 @@
       <router-view :key="$route.path"/>
     </v-main>
 
-    <div v-if="['signin', 'signup'].indexOf($route.name) <= -1">
+    <div v-if="['signin', 'signup', 'Welcome'].indexOf($route.name) <= -1">
       <Footer />
     </div>
     

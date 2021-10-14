@@ -1,6 +1,7 @@
 <template>
-  <v-hover>
-    <template v-slot:default="{ hover }">
+<div>
+  <v-hover v-slot="{ hover }">
+    <template >
       <!-- <template> -->
       <v-card class="mx-auto" max-width="344">
         <v-img
@@ -40,13 +41,16 @@
         </v-card-title>
 
         <v-fade-transition>
-          <v-overlay v-if="hover" absolute color="#036358">
-            <v-btn>Ver mas</v-btn>
+          <v-overlay v-if="hover" z-index="0" absolute color="#036358">
+            <div class="pa-2" align="center">
+              <v-btn>Ver más</v-btn>
+            </div>
           </v-overlay>
         </v-fade-transition>
       </v-card>
     </template>
   </v-hover>
+  </div>
 </template>
 
 <script>
@@ -70,6 +74,9 @@ export default {
       type: Number,
       default: 0,
     },
+    id: {
+      type: Number,
+    }
   },
   data: () => ({
     //

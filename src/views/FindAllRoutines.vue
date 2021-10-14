@@ -1,13 +1,14 @@
 <template>
   <div>
     <v-container class="primary lighten-5" fluid>
-      <NavDrawer ref="nav" />
+      <NavDrawer :editable=false ref="nav" />
       
       <v-row align="end">
-        <v-col md="2" />
-        <v-col md="6" class="left">
-          <tit class="titulazos">{{ this.$route.params.category.name }}</tit>
+        <v-col cols="2" />
+        <v-col cols="9" class="left">
+          <span class="titulazos">{{ this.$route.params.category.name }}</span>
         </v-col>
+        <v-col cols="1" align-self="start"><GoBack/></v-col>
       </v-row>
 
       <v-row justify="center">
@@ -20,7 +21,8 @@
                     getDifficulty(eachroutine.difficulty),
                     normalizeScore(eachroutine.score),
                     eachroutine.name,
-                    eachroutine.detail
+                    eachroutine.detail,
+                    eachroutine.id
                   )
                 "
               >
@@ -75,6 +77,7 @@ import Routine from "../components/Routine.vue";
 import NavDrawer from "../components/NavigationDrawer.vue";
 import RoutineHelper from "@/RoutineHelper.js";
 import { mapActions } from "vuex";
+import GoBack from "../components/Buttons/GoBack"
 export default {
   name: "FindRoutine",
 
@@ -129,6 +132,7 @@ export default {
   components: {
     Routine,
     NavDrawer,
+    GoBack
   },
 };
 </script>
