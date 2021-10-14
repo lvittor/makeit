@@ -163,7 +163,7 @@ export default {
     async getAllCycles() {
       try {
         this.controller = new AbortController();
-        const pickedCycles = await this.$getAllCycles({routineid: this.routineid, controller: this.controller});
+        const pickedCycles = await this.$getAllCycles(this.routineid);
         this.controller = null;
         this.cycles = pickedCycles.content
         this.cyclesAndExercises = []

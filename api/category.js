@@ -23,8 +23,8 @@ class CategoryApi {
     return await Api.get(CategoryApi.getUrl(id),true,  controller)
   }
 
-  static async getAll(controller) {
-    return await Api.get(CategoryApi.getUrl(), true, controller)
+  static async getAll(filter, controller) {
+    return await Api.get(CategoryApi.getUrl(filter), true, controller)
   }
 
   static async getFiltered(filters, controller) {

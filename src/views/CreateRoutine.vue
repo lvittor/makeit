@@ -92,7 +92,7 @@
         md="6"
         class="pa-0"
       >
-        <RoutineStepper :id="id"/>
+        <RoutineStepper v-show="done == true" :steps="titles.length > 0 ? titles.length : 3" :cycles="cyclesToSend" :series="series" :titles="titles"/>
       </v-col>
     </v-row>
     <v-row justify="center">
@@ -101,11 +101,12 @@
           <v-btn 
             x-large
             color="primary"
-            @click="createRoutine()"
+            @click="method()"
             :disabled="!validate()"
           >
             Guardar rutina
           </v-btn>
+          <v-btn @click="printealo()"/>
         </div>
       </v-col>
     </v-row>
@@ -137,26 +138,46 @@ import { CycleExercise } from "../../api/cycleexercise"
 export default {
   data () {
     return {
+      edit: true,
+      controller: null,
+      done: true,
+      routineData: [], // TIPO ROUTINETEST
+      cycles: [], // TIPO CYCLESTEST
+      exercises: [], // TIPO EXCERCISES TEST
+      series: [],
+      titles: [],
+      routineid: 15,
+
+      cyclesToSend: [],
+      routine: [], // ESTO SERIAN LOS CICLOS QUE LLEGAN AL CREAR
+
       name: '',
       desc: '',
       intensity: 0,
-      controller: null,
       result: null,
       selected: '',
       categories: [],
+      allExercises: [],
       items: [],
       switch1: false,
-      routine: [],
       created: null,
     }
   },
 
   created() {
+    if (this.edit ){
+      this.done = false
+      this.loadAll()
+    }
     this.getAllCategories();
     this.getAllExercises();
   },
 
   methods: {
+    printealo() {
+      alert(JSON.stringify(this.routine))
+    },
+
     ...mapActions('category', {
       $getAllCategories: "getAll"
     }),
@@ -166,13 +187,109 @@ export default {
     }), 
 
     ...mapActions('routine', {
+      $getRoutine: 'getRoutine',
       $createRoutine: 'create',
+      $putRoutine: 'modify',
       $createCycle: 'createCycle',
+      $putCycle: 'modifyCycle',
+      $deleteCycle: 'deleteCycle',
+      $getAllCycles: 'getAllCycles',
     }),
 
     ...mapActions('cycleexercise', {
       $createCycleExercise: 'create',
+      $getAllCycleExercises: 'getAll',
+      $deleteExercise: 'delete',
+      $putExercise: 'modify',
     }),
+
+    async loadAll() {
+      await this.getRoutine(this.routineid) // deberia hacer el GET de la rutina. Ahora uso routineTest como ejemplo de lo que devuelve
+      this.name = this.routineData.name;
+      this.desc = this.routineData.detail;
+      this.intensity = this.reverseMapDifficulty(this.routineData.difficulty);
+      this.selected = this.routineData.category.name;
+      this.setupRoutine(this.cycles, this.exercises)
+    },
+
+    async getRoutine(id) {
+      try {
+        this.controller = new AbortController()
+        const pickedRoutine = await this.$getRoutine(id)
+        this.controller = null
+        this.routineData = pickedRoutine;
+        await this.getRealCycles(id)
+      } catch(e) {
+        alert(e)
+      }
+    },
+
+    async getRealCycles(routineid) {
+      try {
+        this.controller = new AbortController()
+        const pickedCycles = await this.$getAllCycles(routineid)
+        this.controller = null
+        this.cycles = pickedCycles.content
+        await this.getExercises(this.cycles)
+      } catch(e) {
+        alert(e)
+      }
+    },
+
+    async getExercises(cycles) {
+      try {
+        for (let i = 0; i < cycles.length; i++) {
+          this.controller = new AbortController()
+          const req = {cycleid: cycles[i].id, size: cycles[i].metadata}
+          const pickedExercises = await this.$getAllCycleExercises(req)
+          this.controller = null
+          this.exercises.push(pickedExercises.content)
+        }
+      } catch(e) {
+        alert(e)
+      }
+    },
+
+    setupRoutine(cycles, exercises) {
+      for (let i = 0; i < cycles.length; i++){
+        this.titles[i] = cycles[i].name
+        this.series[i] = cycles[i].repetitions.toString()
+        const temp = []
+        for (let j = 0; j < exercises[i].length; j++){
+          temp.push({
+            id: j,
+            enabled1: exercises[i][j].repetitions > 0 ? true : false,
+            enabled2: exercises[i][j].duration > 0 ? true : false,
+            actual: exercises[i][j].exercise.name,
+            reps: exercises[i][j].repetitions > 0 ? exercises[i][j].repetitions.toString() : '',
+            dur: exercises[i][j].duration > 0 ? this.reverseGetDuration(exercises[i][j].duration.toString()) : '00:00:00',
+          })
+        }
+        this.cyclesToSend.push(temp)
+      }
+      this.done = true;
+      this.$root.$emit('updateSteps', this.titles.length)
+    },
+
+    reverseGetDuration(seconds){
+      const ans = new Date(seconds * 1000).toISOString().substr(11, 8)
+      return ans
+    },
+
+    reverseMapDifficulty(text) {
+      switch(text) {
+        case 'rookie':
+          return 1
+        case 'beginner':
+          return 2
+        case 'intermediate':
+          return 3
+        case 'advanced':
+          return 4
+        case 'expert':
+          return 5
+      }
+    },
 
     async getAllExercises() {
       try {
@@ -180,6 +297,7 @@ export default {
         const pickedExercises = await this.$getAllExercises(this.controller);
         this.controller = null;
         this.setResult(pickedExercises);
+        this.setExercises()
       } catch(e) {
         this.setResult(e);
       }
@@ -188,14 +306,26 @@ export default {
     async getAllCategories() {
       try {
         this.controller = new AbortController();
-        const pickedCategories = await this.$getAllCategories(this.controller);
+        let pickedCategories = await this.$getAllCategories();
         this.controller = null;
+        let left = pickedCategories.totalCount - 10
+        let page = 1
         this.setResult(pickedCategories);
         this.setCategories()
+        while (left > 0) {
+          let filter = "?page=" + page
+          this.controller = new AbortController();
+          pickedCategories = await this.$getAllCategories(filter);
+          this.controller = null;
+          left -= 10
+          page++
+          this.setResult(pickedCategories);
+          this.setCategories()
+        }
       } catch(e){
         this.setResult(e);
       }
-    },
+    }, 
 
     validate() {
       if (this.name && this.desc && this.selected && this.intensity != 0) {
@@ -211,19 +341,25 @@ export default {
       this.result = result;
     },
 
+    setExercises() { 
+      for (let i = 0; i < this.result.content.length; i++){
+        this.allExercises.push(this.result.content[i])
+      }
+    },
+
     setCategories() {
       for (let i = 0; i < this.result.content.length; i++){
         this.categories.push({
           name: this.result.content[i].name,
           id: this.result.content[i].id
         });
-        this.items.push(this.categories[i].name)
+        this.items.push(this.result.content[i].name)
       }
     },
 
-    getCycles(cycles, series, titles, finished) {
+    getCycles(cycles, series, titles, finished, size) {
       if (!finished){
-        for (let i = 0; i < cycles.length; i++) {
+        for (let i = 0; i < size; i++) {
           this.routine.push({
             title: titles[i],
             serie: series[i],
@@ -233,9 +369,47 @@ export default {
       }
     },
 
+    method(){
+      if (this.edit){
+        this.putRoutine()
+      } else {
+        this.createRoutine()
+      }
+    },
+
+    needEditRoutine() {
+      const data = this.routineData
+      if (data.name !== this.name || data.detail !== this.desc || data.difficulty !== this.mapDifficulty(this.intensity) || data.category.name !== this.selected)
+        return true
+      return false
+    },
+
+    async putRoutine() {
+      if (this.needEditRoutine()){
+        const cat = this.getId(this.selected);
+        const category = new Category(cat.id, cat.name, cat.name);
+        const routine = new Routine(null, this.name, this.desc, true, category, this.mapDifficulty(this.intensity))
+        const req = {routineid: this.routineid, routine: routine}
+        try {
+          this.created = await this.$putRoutine(req)
+          await this.putCycles()
+        } catch(e) {
+          alert(e)
+        } 
+      } else {
+        try {
+          await this.putCycles()
+        } catch(e) {
+          alert(e)
+        }
+      }
+      alert('rutina guardada')
+      this.$router.push('/');
+    },
+
     async createRoutine() {
-      const id = this.getId(this.selected);
-      const category = new Category(id, this.categories[id - 1].name, this.categories[id - 1].name);
+      const obj = this.getId(this.selected);
+      const category = new Category(obj.id, obj.name, obj.name);
       const routine = new Routine(null, this.name, this.desc, true, category, this.mapDifficulty(this.intensity))
       try {
         this.created = await this.$createRoutine(routine)
@@ -243,14 +417,161 @@ export default {
       } catch (e) {
         alert(e)
       }
-      alert('Su rutina ha sido creada!')
+      alert('rutina creada')
       this.$router.push('/');
+    },
+
+    needEditCycle(cycle, idx) {
+      const oldCycle = this.cycles[idx]
+      if (oldCycle.name != cycle.name || oldCycle.repetitions != cycle.repetitions || oldCycle.metadata != cycle.amount)
+        return true
+      return false
+    },
+
+    async putCycles() {
+      const newCycles = this.routine.length
+      const oldCycles = this.cycles.length
+      let limit = oldCycles - newCycles
+      const sub = limit < 0 ? -limit : 0
+      let now = 0
+      let createdCycle = null
+      for (; now < (newCycles - sub); now++) {
+        if (this.needEditCycle({name: this.routine[now].title, repetitions: this.routine[now].serie, amount: this.routine[now].cycle.length}, now)) {
+          const cycle = new Cycle(null, this.routine[now].title, "", this.getType(now), now + 1, parseInt(this.routine[now].serie, 10), this.routine[now].cycle.length)
+          try {
+            const req = {routineid: this.routineid, cycle: {id: this.cycles[now].id, cycle: cycle}}
+            createdCycle = await this.$putCycle(req)
+            await this.putExercises(createdCycle.id, now)
+          } catch(e) {
+            alert(e)
+          }
+        } else {
+          try {
+            await this.putExercises(this.cycles[now].id, now)
+          } catch(e) {
+            alert(e)
+          }
+        }
+      }
+      if (limit > 0) {
+        for (; limit > 0; limit--) {
+          try {
+            const req = {routineid: this.routineid, cycleid: this.cycles[now].id}
+            await this.$deleteCycle(req)
+            now++
+          } catch(e) {
+            alert(e)
+          }
+        }
+      } else {
+        limit *= -1
+        for (; limit > 0; limit--){
+          const cycle = new Cycle(null, this.routine[now].title, "", this.getType(now), now + 1, parseInt(this.routine[now].serie, 10), this.routine[now].cycle.length)
+          try {
+            const req = {cycle: cycle, id: this.routineid}
+            const createdCycle = await this.$createCycle(req)
+            await this.createExcercises(createdCycle.id, now)
+          } catch(e) {
+            alert(e)
+          }
+          now++
+        }
+      }
+    },
+
+    async notSameExercise(cycleid, cycleidx, idx, exid, available) {
+      const otherex = this.exercises[cycleidx][idx]
+      if (otherex.exercise.id != exid) {
+        if (!available.includes(idx)) {
+          try {
+            await this.$deleteExercise({cycleid: cycleid, exerciseid: otherex.exercise.id})
+          } catch(e) {
+            alert(e)
+          }
+          return true
+        } 
+        return true
+      }
+      return false
+    },
+
+    needEditExercise(cycleidx, idx, exid) {
+      for (let i = idx; i < this.exercises[cycleidx].length; i++) {
+        if (this.exercises[cycleidx][i].exercise.id == exid){
+          return i
+        }
+      }
+      return -1
+    },
+
+    async putExercises(cycleid, index) {
+      let put = []
+      let available = []
+      const actualCycle = this.routine[index].cycle
+      const actualLen = actualCycle.length
+      const oldLen = this.exercises[index].length
+      let limit = oldLen - actualLen
+      const sub = limit < 0 ? -limit : 0
+      let now = 0
+      for (; now < (actualLen - sub); now++) {
+        const exid = this.getExercise(actualCycle[now].actual)
+        const reqs = {order: now + 1, duration: actualCycle[now].enabled2 ? this.getDuration(actualCycle[now].dur):0, repetitions: actualCycle[now].enabled1 ? parseInt(actualCycle[now].reps, 10) : 0}
+        const req = new CycleExercise(null, cycleid, exid, reqs)
+        try {
+          if (await this.notSameExercise(cycleid, index, now, exid, available)) {
+            let ans = this.needEditExercise(index, now + 1, exid)
+            if (ans > 0) {
+              available.push(ans)
+              put.push(exid)
+              await this.$putExercise(req)
+            } else {
+              await this.$createCycleExercise(req) // NO ESTA EN LA LISTA VIEJA, PUSH Y AL PINGO
+            }
+          } else {
+            if (this.exercises[index][now].duration != req.reqs.duration || this.exercises[index][now].repetitions != req.reqs.repetitions) { // VER SI HAY Q HACER PUT O DEJARLO
+              try {
+                await this.$putExercise(req)
+              } catch(e) {
+                alert(e)
+              }
+            }
+          }
+        } catch(e) { 
+          alert(e)
+        }
+        
+      }
+      if (limit > 0) {
+        for (; now < oldLen; now++) {
+          const exid = this.exercises[index][now].exercise.id
+          if (!put.includes(exid)) {
+            try {
+              await this.$deleteExercise({cycleid: cycleid, exerciseid: exid})
+            } catch(e) {
+              alert(e)
+            }
+          }
+        }
+      } else {
+        limit *= -1
+        for (; now < actualLen; now++) {
+          const exid = this.getExercise(actualCycle[now].actual)
+          const reqs = {order: now + 1, duration: actualCycle[now].enabled2 ? this.getDuration(actualCycle[now].dur):0, repetitions: actualCycle[now].enabled1 ? parseInt(actualCycle[now].reps, 10) : 0}
+          const req = new CycleExercise(null, cycleid, exid, reqs)
+          try {
+            await this.$createCycleExercise(req)
+          } catch(e) {
+            alert(e)
+          }
+          
+        }
+      }
     },
 
     async createCycles() {
       const id = this.created.id;
       for (let i = 0; i < this.routine.length; i++){
-        const cycle = new Cycle(null, this.routine[i].title, "", this.getType(i), i + 1, parseInt(this.routine[i].serie, 10))
+        const cycle = new Cycle(null, this.routine[i].title, "", this.getType(i), i + 1, parseInt(this.routine[i].serie, 10), this.routine[i].cycle.length)
         try {
           const req = {cycle: cycle, id: id}
           const createdCycle = await this.$createCycle(req)
@@ -281,9 +602,9 @@ export default {
     },
 
     getExercise(name) {
-      for (let i = 0; i < this.result.content.length; i++) {
-        if (this.result.content[i].name == name)
-          return this.result.content[i].id
+      for (let i = 0; i < this.allExercises.length; i++) {
+        if (this.allExercises[i].name === name)
+          return this.allExercises[i].id
       }
       return -1
     },
@@ -301,8 +622,8 @@ export default {
 
     getId(name) {
       for (let i = 0; i < this.categories.length; i++) {
-        if (this.categories[i].name == name)
-          return i + 1
+        if (this.categories[i].name === name)
+          return {id: this.categories[i].id, name: this.categories[i].name}
       }
       return -1;
     },
@@ -324,8 +645,8 @@ export default {
   },
 
   mounted() {
-    this.$root.$once('getCycles', (cycles, series, titles, finished) => {
-      this.getCycles(cycles, series, titles, finished);
+    this.$root.$once('getCycles', (cycles, series, titles, finished, size) => {
+      this.getCycles(cycles, series, titles, finished, size);
     })
   },
 

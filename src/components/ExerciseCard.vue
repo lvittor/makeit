@@ -237,7 +237,7 @@ export default {
       this.desc = this.auxDesc
     },
     async removeExercise(exerciseID){
-      await this.$removeExercise({id: exerciseID});
+      await this.$removeExercise(exerciseID);
       this.$root.$emit('exerciseDeleted');
     },
     async saveExercise(){

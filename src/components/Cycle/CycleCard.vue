@@ -159,6 +159,7 @@
       return {
         items: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
         id: 0,
+        set: false,
       }
     },
 
@@ -213,6 +214,10 @@
       },
 
       addExercise() {
+        if (!this.set) {
+          this.id = this.exercises.length + 1
+          this.set = true
+        }
         this.exercises.push({
           id: this.id++,
           enabled1: false,
@@ -305,9 +310,6 @@
 </script>
 
 <style scoped>
-  .ashee {
-    background: yellow;
-  }
   .centered-input >>> input {
     text-align: center
   }
