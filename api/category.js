@@ -26,6 +26,11 @@ class CategoryApi {
   static async getAll(filter, controller) {
     return await Api.get(CategoryApi.getUrl(filter), true, controller)
   }
+
+  static async getFiltered(filters, controller) {
+    return await Api.get(CategoryApi.getUrl('?search=' + filters), true, controller)
+  }
+
 }
 
 class Category {

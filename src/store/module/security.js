@@ -38,6 +38,7 @@ export default {
         },
         removeToken({commit}) {
             localStorage.removeItem(SECURITY_TOKEN_KEY)
+            
             commit('setToken', null)
             Api.token = null
         },
@@ -61,11 +62,20 @@ export default {
             commit('setUser', result)
             return result
         },
-
         async modifyUser({commit}, user) {
             const result = await UserApi.modify(user)
             commit('setUser', result)
             return result;
         },
+        async resendVerify( {commit} , user) {
+            const result = await UserApi.resendVerify(user)
+            commit('setToken', null)
+            return result;
+        },
+        /* async getUserRoutines({commit}, controller){
+            const result = await UserApi.getCurrentRoutines(controller);
+            commit("replaceAll", result);
+            return result
+        }, */
     },
 }

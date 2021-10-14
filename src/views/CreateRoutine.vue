@@ -1,5 +1,14 @@
 <template>
   <v-container class="grey lighten-5" fluid>
+    <v-row>
+      <v-col cols="3"></v-col>
+      <v-col cols="8">
+        <span class="titulazos">Crear rutina</span>
+      </v-col>
+      <v-col cols="1" align-self="start">
+        <GoBack class="go-back-position"/>
+      </v-col>
+    </v-row>
     <v-row justify="center" class="mb-10" align="center">
       <v-col
         cols="3"
@@ -29,7 +38,7 @@
         ></v-text-field>
         <v-textarea
           v-model="desc"
-          label="Descripcion"
+          label="Descripción"
           outlined
           hide-details="auto"
           class="pb-4"
@@ -47,32 +56,7 @@
           outlined
           flat
         >
-        </v-autocomplete>
-        <v-card class="mb-4">
-          <v-container>
-            <v-row align="center">
-              <v-col
-                cols="8"
-              >
-                ¿La rutina requiere equipamiento?
-              </v-col>
-              <v-col
-                class="pa-0"
-                cols="4"
-              >
-              <div class="d-flex justify-end">
-                <v-switch
-                  class="pa-0 ma-0"
-                  v-model="switch1"
-                  inset
-                  hide-details="auto"
-                ></v-switch>
-              </div>
-                
-              </v-col>
-            </v-row>
-          </v-container>
-        </v-card>  
+        </v-autocomplete> 
         <v-card>
           <v-container>
             <v-row align="center">
@@ -129,8 +113,22 @@
   </v-container>
 </template>
 
+<style>
+.go-back-position {
+   position: relative;
+   top: 5px;
+}
+
+.titulazos {
+  font-size: 80px;
+  vertical-align: bottom;
+}
+</style>
+
+
 <script>
 import { mapActions } from 'vuex'
+import GoBack from "../components/Buttons/GoBack"
 import RoutineStepper from "../components/Cycle/RoutineStepper.vue"
 import { Routine } from "../../api/routine"
 import { Cycle } from "../../api/routine"
@@ -142,13 +140,13 @@ export default {
     return {
       edit: true,
       controller: null,
-      done: false,
+      done: true,
       routineData: [], // TIPO ROUTINETEST
       cycles: [], // TIPO CYCLESTEST
       exercises: [], // TIPO EXCERCISES TEST
       series: [],
       titles: [],
-      routineid: 1,
+      routineid: 15,
 
       cyclesToSend: [],
       routine: [], // ESTO SERIAN LOS CICLOS QUE LLEGAN AL CREAR
@@ -167,7 +165,8 @@ export default {
   },
 
   created() {
-    if (this.edit){
+    if (this.edit ){
+      this.done = false
       this.loadAll()
     }
     this.getAllCategories();
@@ -404,12 +403,13 @@ export default {
           alert(e)
         }
       }
+      alert('rutina guardada')
       this.$router.push('/');
     },
 
     async createRoutine() {
-      const id = this.getId(this.selected);
-      const category = new Category(id, this.categories[id - 1].name, this.categories[id - 1].name);
+      const obj = this.getId(this.selected);
+      const category = new Category(obj.id, obj.name, obj.name);
       const routine = new Routine(null, this.name, this.desc, true, category, this.mapDifficulty(this.intensity))
       try {
         this.created = await this.$createRoutine(routine)
@@ -417,6 +417,7 @@ export default {
       } catch (e) {
         alert(e)
       }
+      alert('rutina creada')
       this.$router.push('/');
     },
 
@@ -651,6 +652,7 @@ export default {
 
   components: {
     RoutineStepper,
+    GoBack,
   },
 }
 </script>

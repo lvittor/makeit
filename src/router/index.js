@@ -10,6 +10,13 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
+    meta: { requiresAuth: true }
+  },
+  {
+    path: "/welcome",
+    name: "Welcome",
+    component: () => import("../views/Welcome.vue"),
+    meta: { requiresAuth: false },
   },
   {
     path: "/about",
@@ -41,7 +48,14 @@ const routes = [
   {
     path: "/all-your-routines-and-exercises",
     name: "AllYourR&E",
+    meta: { requiresAuth: true },
     component: () => import("../views/AllYourR&E.vue"),
+  },
+  {
+    path: "/all-favourite-routines",
+    name: "FindAllFavourites",
+    meta: { requiresAuth: true },
+    component: () => import("../views/FindAllFavourites.vue"),
   },
   {
     path: "/profile",
@@ -65,11 +79,13 @@ const routes = [
   {
     path: "/create-routine",
     name: "CreateRoutine",
+    meta: { requiresAuth: true },
     component: () => import("../views/CreateRoutine.vue"),
   },
   {
     path: "/find-all-routines",
     name: "FindAllRoutines",
+    meta: { requiresAuth: true },
     component: () => import("../views/FindAllRoutines.vue"),
   },
 ];
@@ -78,11 +94,10 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeResolve((to, from, next) => {
   if (to.matched.some(route => route.meta.requiresAuth)) {
-    if (!index.getters['security/isLoggedIn']) {
-      
-      next({ path: "/auth/signin", query: { redirect: to.fullPath } });
+    if (!index.getters['security/isLoggedIn'] ) {
+      next({ path: "/welcome"});
     } 
     else {
       next();

@@ -19,14 +19,29 @@ class UserApi {
         return Api.get(UserApi.getUrl('current'), true, controller)
     }
 
+    static async getUser(username, controller) {
+        return Api.get(UserApi.getUrl('?search=' + username), true, controller)
+    }
+
     static async add(user, controller){
         return await Api.post(UserApi.getUrl(), false, user, controller)
     }
 
+    static async resendVerify(user, controller){
+        return await Api.post(UserApi.getUrl('resend_verification'), false, user, controller)
+    }
+
     static async modify(user, controller) {
         return await Api.put(UserApi.getUrl('current'), true, user, controller)
-      }
+    }
 
+    static async getCurrentRoutines(controller){
+        return await Api.get(UserApi.getUrl('current/routines'), true, controller)
+    }
+
+    static async getUserRoutines(req, controller){
+        return await Api.get(UserApi.getUrl(req.id + '/routines' + req.filters), true, controller)
+    }
 }
 
 class Credentials {
@@ -45,6 +60,7 @@ class User {
         this.password = password;
         this.firstName = firstName;
         this.lastName = lastName;
-        this.email = username;
+        this.email = mail;
+        this.avatarUrl = username
     }
 }

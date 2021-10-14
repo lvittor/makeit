@@ -8,10 +8,11 @@
       <v-btn
         color="primary"
         dark
+        x-large
         v-bind="attrs"
         v-on="on"
       >
-        Open Dialog
+        Crear nuevo ejercicio
       </v-btn>
     </template>
     <v-card>
@@ -29,6 +30,7 @@
               dense
               required
               class="mt-3"
+              v-model="name"
             ></v-text-field>
           </v-row>
           <v-row>
@@ -38,6 +40,7 @@
               outlined
               rows="1"
               row-height="15"
+              v-model="detail"
             ></v-textarea>
           </v-row>
           <v-row  justify="center">
@@ -86,7 +89,7 @@
         <v-btn
           color="dark purple"
           text
-          @click="dialog = false"
+          @click="creation()"
         >
           Guardar
         </v-btn>
@@ -96,7 +99,10 @@
 </template>
 
 <script>
-import Media from '@dongido/vue-viaudio'
+import Media from '@dongido/vue-viaudio';
+import {Exercise} from "../../api/exercise";
+import { mapActions } from "vuex";
+
 export default {
   name: "NewExercise",
   components: {
@@ -108,6 +114,79 @@ export default {
       videoLoaded: false,
       srcVideo: "https://www.w3schools.com/html/mov_bbb.mp4",
     }
-  }
+  },
+  props: {
+    name: {
+      type: String,
+    },
+    detail: {
+      type: String,
+    },
+  },
+  methods:{
+    ...mapActions('exercise', {
+    $createExerciseNasty: 'create',
+    }),
+
+    async creation(){
+      if(this.name && this.detail){
+        try {
+          const ans = new Exercise(null, this.name, this.detail, "exercise");
+          await this.createExerciseNasty(ans);
+          this.dialog = false
+          this.$root.$emit("exerciseCreated")
+        } catch(e){
+          alert("UPS")
+        }
+      } else {
+        alert("no entendiste nada pa")
+      }
+    },
+    /* async creation(){
+      let val = this.validate()
+      switch(val){
+        case 0:
+          alert("ejercicio ya existente. Cambie el título")
+          break
+        case 1:
+          alert("ejercicio creado con exito")
+          this.dialog = false
+          break
+        case -1:
+          alert("Completa todos los campos")
+          break
+      }
+    }, */
+    /* async validate(){
+      if(this.detail && this.name){
+        const exerciseTest = new Exercise(null, this.name, this.detail, "exercise");
+        alert('Ejercicio de prueba ' + JSON.stringify(exerciseTest));
+        const answer = await this.$getExerciseNasty(exerciseTest);
+        alert('Answer ' + JSON.stringify(answer));
+        if(answer.description == "Data constraint"){
+          return 0
+        }
+        if(this.name != answer.name){
+          await this.$createExerciseNasty(exerciseTest)
+          return 1;
+        }
+      }
+      return -1;
+    }, */
+
+    async createExerciseNasty(ex){
+      try{
+        await this.$createExerciseNasty(ex);
+        //this.userExercises.push(exercise);
+        //alert("Creado... " + JSON.stringify(this.userExercises))
+      } catch(e){
+        alert("ERROR createExerciseNasty");
+        this.setResult(e)
+      }
+    },
+  },
+  mounted:{
+
+  },
 }
 </script>

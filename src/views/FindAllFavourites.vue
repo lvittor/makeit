@@ -6,7 +6,7 @@
       <v-row align="end">
         <v-col cols="2" />
         <v-col cols="9" class="left">
-          <span class="titulazos">{{ this.$route.params.category.name }}</span>
+          <span class="titulazos">Favoritas</span>
         </v-col>
         <v-col cols="1" align-self="start"><GoBack/></v-col>
       </v-row>
@@ -14,7 +14,7 @@
       <v-row justify="center">
         <v-col md="8">
           <v-row>
-            <v-col md="3" v-for="eachroutine in routines" v-bind:key="eachroutine.id">
+            <v-col md="3" v-for="eachroutine in  routines" v-bind:key="eachroutine.id">
               <div
                 @click="
                   $refs.nav.toggleDrawer(
@@ -34,13 +34,6 @@
                 />
               </div>
             </v-col>
-            <!-- <v-col md="2">
-                    <div @click="$refs.nav.toggleDrawer(getDifficulty('rookie'), normalizeScore(9), 'titulo rutina 1', 'descripcion de la rutina 1')">
-                        <Routine :reviews="22"  />
-                    </div>
-                    </v-col>
-                    <v-col md="2"><Routine /></v-col>
-                    <v-col md="2"><Routine /></v-col> -->
           </v-row>
         </v-col>
       </v-row>
@@ -84,37 +77,39 @@ export default {
   data: () => ({
     page: 1,
     totalPages: 1,
-    currentCatId: null,
     routines: [],
-    
   }),
 
   created(){
       this.loadData();
   },
 
-  methods: {
+  mounted(){
+    this.$root.$on('updateFavs', () => {
+      this.loadData();
+    })
+  },
 
+  methods: {
     async changePage(){
-      this.routines = await this.getCategoryPage(this.currentCatId,this.page-1)
+      this.routines = await this.getFavouritesPage({page: this.page-1, size: 12})
       this.routines = this.routines.content
     },
     
     async loadData(){
-      this.currentCatId = this.$route.params.category.id
-      this.routines = await this.getCategoryPage(this.currentCatId,0)
+      this.routines = await this.getFavouritesPage({page: this.page-1, size: 12})
       this.totalPages = Math.ceil((this.routines.totalCount)/12)
       this.routines = this.routines.content
     },
 
     ...mapActions('routine', {
-      $getPageByCat: 'getPageByCat',
+      $getFavouritesPage: 'getFavouritesPage',
     }),
 
-    async getCategoryPage(cat, page) {
+    async getFavouritesPage(page) {
       try {
-        const routines = await this.$getPageByCat({cat: cat, page: page});
-        return routines 
+        const routines = await this.$getFavouritesPage(page);
+        return routines
       } catch (e) {
         this.setResult(e);
       }

@@ -40,11 +40,7 @@ export default {
       commit('push', result)
       return result;
     },
-    async getAll({commit}, req) {
-      const result = await CycleExerciseApi.get(req)
-      commit("replaceAll", result.content)
-      return result;
-    },
+    
     async delete({getters, commit}, req) {
       await CycleExerciseApi.delete(req.cycleid, req.exerciseid)
       const index = getters.findIdIndex(req.cycleid);
@@ -57,5 +53,11 @@ export default {
       if (index >= 0) commit("replace", obj);
       return result;
     },
+      
+      async getAll({commit}, req) {
+        const result = await CycleExerciseApi.get(req)
+        commit("replaceAll", result.content)
+        return result;
+      },
   },
 };

@@ -3,7 +3,13 @@
     <v-container class="profile white">
       <v-row justify="center">
         <v-col cols="8">
-          
+          <v-row>
+            <span class="titulazos">Perfil</span>
+            
+          </v-row>
+          <v-row>
+            <v-divider></v-divider>
+          </v-row>
           <v-row justify="center">
             
                 <v-avatar class="mt-16 mb-5" size="280" color="secondary">
@@ -64,11 +70,11 @@
             </v-col>
             <v-col>
               <div v-if="!editionMode">
-                <h3>{{this.$user.email.substr(0,this.$user.email.length - 10)}}</h3>
+                <h3>{{this.$user.avatarUrl}}</h3>
               </div>
               <div v-else>
                 <v-text-field
-                    :value="$user.email"
+                    :value="$user.avatarUrl"
                     label="Empty"
                     solo
                     disabled
@@ -88,11 +94,11 @@
             </v-col>
             <v-col>
               <div v-if="!editionMode">
-                <h3>{{this.$user.username}}</h3>
+                <h3>{{this.$user.email}}</h3>
               </div>
               <div v-else>
                 <v-text-field
-                    :value="this.$user.username"
+                    :value="this.$user.email"
                     label="Empty"
                     solo
                     disabled
@@ -131,6 +137,7 @@
                 depressed
                 color="primary"
                 x-large
+                class="mb-10"
                 @click="editionMode = true"
               >
                 {{ buttons[1].text }}
@@ -141,6 +148,7 @@
                 outlined
                 color="primary"
                 x-large
+                class="mb-10"
                 @click="logout()"
                 
               >
@@ -154,6 +162,7 @@
                 depressed
                 color="primary"
                 x-large
+                class="mb-10"
                 @click="cancelEdition()"
               >
                 {{ buttons[3].text }}
@@ -162,6 +171,7 @@
                 depressed
                 outlined
                 color="primary"
+                class="mb-10"
                 x-large
                 @click="changeUserData()"
               >
@@ -217,7 +227,7 @@ export default {
             buttons: [
               { text: "Editar", route: "/" },
               { text: "Editar perfil", route: "/profile" },
-              { text: "Cerrar sesion", route: "/auth/signin" },
+              { text: "Cerrar sesion", route: "/welcome" },
               { text: "Cancelar", route: "/" },
               { text: "Guardar cambios", route: "/" },
             ],
@@ -254,7 +264,7 @@ export default {
     }),
 
     async logout() {
-      this.$router.push('/auth/signin')
+      this.$router.push('/welcome')
       await this.$logout()
       Helper.clearResult()  
     },
@@ -301,4 +311,8 @@ export default {
     width: 50%;
     height: 100%;
   }
+  .titulazos {
+  font-size: 80px;
+  vertical-align: bottom;
+}
 </style>

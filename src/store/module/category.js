@@ -56,7 +56,12 @@ export default {
       if (!filter)
         filter = ''
       const result = await CategoryApi.getAll(filter);
-      commit("replaceAll", result.content);
+      commit("replaceAll", result.content)
+      return result;
+    },
+    async getFiltered({ commit }, filters){
+      const result = await CategoryApi.getFiltered(filters);
+      commit("replaceAll", result);
       return result;
     },
   },

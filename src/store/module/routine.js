@@ -1,17 +1,24 @@
 //import { getOwnPropertyNames } from "core-js/core/object";
 import { RoutineApi } from "../../../api/routine";
-//import category from "../../../api/category";
+import { UserApi } from "../../../api/user";
+import { FavouritesApi } from "../../../api/favourites";
 
 export default {
   namespaced: true,
   state: {
     items: [],
     cycles: [],
+    favourites:[]
   },
   getters: {
     findIndex(state) {
       return (routine) => {
         return state.items.findIndex((item) => item.id === routine.id);
+      };
+    },
+    findIndexFavourites(state) {
+      return (favId) => {
+        return state.favourites.findIndex((item) => item.id === favId);
       };
     },
     findIdIndex(state) {
@@ -43,17 +50,27 @@ export default {
     replace(state, obj) {
       state.items[obj.index] = obj.routine;
     },
+    pushFavouritepush(state, routine) {
+      state.favourites.push(routine);
+    },
+    
     splice(state, index) {
       state.items.splice(index, 1);
     },
     spliceCycles(state, index) {
       state.cycles.splice(index, 1)
     },
+    spliceFavourites(state, index) {
+      state.favourites.splice(index, 1);
+    },
     replaceAll(state, routine) {
       state.items = routine;
     },
     replaceCycle(state, obj) {
       state.cycles[obj.index] = obj.cycle;
+    },
+    replaceAllFavourites(state, favourite) {
+      state.favourites = favourite;
     },
   },
   actions: {
@@ -62,6 +79,7 @@ export default {
       if (!getters.findIndex(result)) commit("push", result);
       return result;
     },
+
     async createCycle({ commit }, req) {
       const result = await RoutineApi.createCycle(req.id, req.cycle);
       commit('pushCycle', result)
@@ -81,6 +99,7 @@ export default {
       if (index >= 0) commit("replaceCycle", obj);
       return result;
     },
+
     async delete({ getters, commit }, routine) {
       await RoutineApi.deleteRoutine(routine.id);
       const index = getters.findIndex(routine);
@@ -103,6 +122,13 @@ export default {
       commit("replaceAll", result.content);
       return result;
     },
+
+    async getFiltered({ commit }, filters){
+      const result = await RoutineApi.getFiltered(filters);
+      commit("replaceAll", result.content);
+      return result;
+    },
+
     async getFour({ commit }, cat) {
       alert("Cargo 4 rutinas de una categoria");
       const result = await RoutineApi.getFourRoutinesBy(cat);
@@ -116,6 +142,49 @@ export default {
     async getAllCycles({commit}, routineid) {
       const result = await RoutineApi.getAllCycles(routineid);
       commit("replaceAllCycles", result.content)
+      return result;
+    },
+
+    async getPageByCat({ commit }, {cat,page}) {
+      const result = await RoutineApi.getRoutinesByCat(cat,page,12);
+      commit("replaceAll", result.content);
+      return result;
+    },
+
+    async getUserRoutines({commit}, controller){
+      const result = await UserApi.getCurrentRoutines(controller);
+      commit("replaceAll", result.content);
+      return result;
+    },
+
+    async setFavourite({getters, commit}, routineID){
+      const result = await FavouritesApi.setFavourite(routineID);
+      if (!getters.findIndexFavourites(result)) commit("pushFavourite", result);
+      return result;
+      
+    },
+
+    async getFavourites({commit}, controller){
+      const result = await FavouritesApi.getFavourites(controller);
+      commit("replaceAllFavourites", result.content);
+      return result;
+    },
+
+    async getFavouritesPage({commit}, {page, size}){
+      const result = await FavouritesApi.getFavouritesPage(page,size);
+      commit("replaceAllFavourites", result.content);
+      return result;
+    },
+
+    async deleteFavourite({getters, commit}, routineID){
+      await FavouritesApi.deleteFavourite(routineID);
+      const index = getters.findIndexFavourites(routineID);
+      if (index >= 0) commit("spliceFavourites", index);
+    },
+    
+    async getRoutinePage({commit}, page){
+      const result = await RoutineApi.getPage(page,12);
+      commit("replaceAll", result.content);
       return result;
     }
   },

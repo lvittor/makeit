@@ -1,11 +1,75 @@
 <template>
   <div>
-    <v-container v-for="cat in routinesByCat" v-bind:key="cat.category.id" fluid>
+
+    <v-container fluid>
+      <v-row class=" primary lighten-5">
+        <v-col cols="2"></v-col>
+        <v-col cols="9">
+          <span class="titulazos">Rutinas por categoría</span>
+        </v-col>
+        <v-col cols="1" align-self="start">
+          <GoBack class="go-back-position"/>
+       </v-col>
+      </v-row>
+      <v-row>
+        <v-divider></v-divider>
+      </v-row>
+    </v-container>
+    <!-- -------------------------------------- -->
+    <v-container v-if="foundFavourite == true" class="pa-0" fluid>
+      <v-container class="primary lighten-5 pa-0" fluid>
+        <v-row align="end">
+          <v-col md="2" />
+          <v-col md="6" class="left">
+            <span class="titulazos2">Favoritas</span>
+          </v-col>
+          <v-col md="4">
+            <v-btn
+              text
+              color="primary"
+              x-large
+              append
+              @click="routerPushFav()"
+              ><h3>Ver más</h3></v-btn
+            >
+          </v-col>
+        </v-row>
+        <v-row justify="center">
+          <v-col
+            md="2"
+            v-for="fav in favourites.content"
+            v-bind:key="fav.id"
+          > 
+            
+            <div
+              @click="
+                $refs.nav.toggleDrawer(
+                  getDifficulty(fav.difficulty),
+                  normalizeScore(fav.score),
+                  fav.name,
+                  fav.detail,
+                  fav.id
+                )
+              "
+            >
+              <Routine
+                :namep="fav.name"
+                :desc="fav.detail"
+                :difficulty="getDifficulty(fav.difficulty)"
+                :score="normalizeScore(fav.score)"
+              />
+            </div>
+          </v-col>
+        </v-row>
+      </v-container>
+    </v-container>
+    <!-- -------------------------------------- -->
+    <v-container v-for="cat in routinesByCat" v-bind:key="cat.category.id" fluid class="pa-0">
       <v-container class="primary lighten-5" fluid>
         <v-row align="end">
           <v-col md="2" />
           <v-col md="6" class="left">
-            <tit class="titulazos">{{ cat.category.name }}</tit>
+            <span class="titulazos2">{{ cat.category.name }}</span>
           </v-col>
           <v-col md="4">
             <v-btn
@@ -23,14 +87,16 @@
             md="2"
             v-for="eachroutine in cat.routines"
             v-bind:key="eachroutine.id"
-          >
+          > 
+            
             <div
               @click="
                 $refs.nav.toggleDrawer(
                   getDifficulty(eachroutine.difficulty),
                   normalizeScore(eachroutine.score),
                   eachroutine.name,
-                  eachroutine.detail
+                  eachroutine.detail,
+                  eachroutine.id
                 )
               "
             >
@@ -45,7 +111,7 @@
         </v-row>
       </v-container>
     </v-container>
-    <NavDrawer ref="nav" />
+    <NavDrawer :editable=false ref="nav" />
   </div>
 </template>
 
@@ -55,10 +121,20 @@
   vertical-align: bottom;
 }
 
+.titulazos2 {
+  font-size: 70px;
+  vertical-align: bottom;
+  font-weight: lighter;
+}
+
 .view-more {
   font-size: 25px;
   color: #6200ee;
   vertical-align: middle;
+}
+.go-back-position {
+   position: relative;
+   top: 5px;
 }
 </style>
 
@@ -67,6 +143,7 @@ import Routine from "../components/Routine.vue";
 import NavDrawer from "../components/NavigationDrawer.vue";
 import { mapActions } from "vuex";
 import RoutineHelper from "@/RoutineHelper.js";
+import GoBack from "../components/Buttons/GoBack"
 
 export default {
   name: "FindRoutine",
@@ -76,14 +153,22 @@ export default {
     categories2: null,
     routinesByCat: [],
     routiness: [],
-
+    favourites: [],
+    foundFavourite: false,
   }),
 
   created(){
     this.loadData()
+    this.foundFavourite = false
+    this.getAllFavourites()
   },
 
-  
+  mounted(){
+    this.$root.$on('updateFavs', () => {
+      this.getAllFavourites();
+    })
+  },
+
 
   methods: {
 
@@ -114,6 +199,13 @@ export default {
       });
     },
 
+    routerPushFav() {
+      this.$router.push({
+        name: "FindAllFavourites",
+      });
+    },
+    
+
     ...mapActions('category', {
       $getAllCategories: 'getAll',
     }),
@@ -123,9 +215,23 @@ export default {
       //$modifyRoutine: 'modify',
       //$deleteRoutine: 'delete',
       //$getRoutine: 'get',
+      $getAllFavourites: 'getFavouritesPage',
       $getAllRoutines: 'getAll',
       $getFourRoutines: 'getFour',
     }),
+
+    async getAllFavourites(){
+      try{
+        const favs = await this.$getAllFavourites({page: 0, size: 4});
+        this.foundFavourite = false;
+        if(favs.totalCount != 0)
+          this.foundFavourite = !this.foundFavourite;
+        this.favourites = favs
+        return favs
+      }catch(e){
+        alert("Problemas")
+      }
+    },
 
     async getAllCategories() {
       try {
@@ -188,6 +294,7 @@ export default {
   components: {
     Routine,
     NavDrawer,
+    GoBack
   },
 };
 </script>

@@ -29,7 +29,12 @@ class CycleExerciseApi {
     return await Api.put(CycleExerciseApi.getUrl(cycleid, exid), true, reqs, controller).catch(err => {
         throw err;
     })
-}
+  }
+  
+  static async getAll(cycleId, controller) {
+    return await Api.get(CycleExerciseApi.getUrl(cycleId), true, controller)
+  }
+
 }
 
 
