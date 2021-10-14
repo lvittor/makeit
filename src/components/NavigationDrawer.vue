@@ -48,7 +48,7 @@
             <FavIconB :routineID="this.routineid" ref="fav"/>
           </v-col>
             <v-col v-if="editable" cols=2>
-            <EditIconB/>
+            <EditIconB :routineid="routineid"/>
           </v-col>
           <v-col v-if="editable" cols=2>
             <RemoveIconB :routineID="this.routineid" />
