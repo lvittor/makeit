@@ -524,16 +524,15 @@ export default {
               put.push(exid)
               await this.$putExercise(req)
             } else {
-              const ret = await this.$createCycleExercise(req) // NO ESTA EN LA LISTA VIEJA, PUSH Y AL PINGO
+              await this.$createCycleExercise(req) // NO ESTA EN LA LISTA VIEJA, PUSH Y AL PINGO
             }
           } else {
             if (this.exercises[index][now].duration != req.reqs.duration || this.exercises[index][now].repetitions != req.reqs.repetitions) { // VER SI HAY Q HACER PUT O DEJARLO
               try {
-                const returned = await this.$putExercise(req)
+                await this.$putExercise(req)
               } catch(e) {
                 alert(e)
               }
-            } else {
             }
           }
         } catch(e) { 
