@@ -141,6 +141,7 @@
                 outlined
                 color="primary"
                 x-large
+                :to="buttons[2].route"
                 @click="logout()"
                 
               >
@@ -217,7 +218,7 @@ export default {
             buttons: [
               { text: "Editar", route: "/" },
               { text: "Editar perfil", route: "/profile" },
-              { text: "Cerrar sesion", route: "/auth/signin" },
+              { text: "Cerrar sesion", route: "/welcome" },
               { text: "Cancelar", route: "/" },
               { text: "Guardar cambios", route: "/" },
             ],
