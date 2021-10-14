@@ -105,8 +105,6 @@
             :disabled="!validate()"
           >
             Guardar rutina
-          </v-btn>
-          <v-btn @click="printealo()"/>
         </div>
       </v-col>
     </v-row>
@@ -211,7 +209,7 @@ export default {
     }),
 
     async loadAll() {
-      await this.getRoutine(this.routineid) // deberia hacer el GET de la rutina. Ahora uso routineTest como ejemplo de lo que devuelve
+      await this.getRoutine(this.routineid)
       this.name = this.routineData.name;
       this.desc = this.routineData.detail;
       this.intensity = this.reverseMapDifficulty(this.routineData.difficulty);
