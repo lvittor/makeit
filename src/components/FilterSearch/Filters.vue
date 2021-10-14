@@ -113,17 +113,22 @@ export default {
       ordenar: 0,
       tipo: 0,
       rating: 0,
-      intensity: 1,
+      intensity: 0,
     };
   },
   methods: {
+    getIntensity() {
+      return this.intensity
+    },
+
+    getRating() {
+      return this.rating
+    },
+
     setOrdenar(n) {
       this.ordenar = n;
       this.$root.$emit("orderable", n);
-    },
-    setTipo(n) {
-      this.tipo = n;
-      this.$root.$emit("filtertable", n);
+      this.$root.$emit("getOrder", n)
     },
     setRating(n) {
       this.rating = n;
@@ -133,6 +138,10 @@ export default {
       this.intensity = n;
       this.$root.$emit("intensity", n);
     },
+    setTipo(n) {
+      this.tipo = n;
+      this.$root.$emit("type", n);
+    }
   },
 };
 </script>
