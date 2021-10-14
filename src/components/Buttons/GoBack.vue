@@ -1,6 +1,6 @@
 <template>
   <span class="go-back">
-    <v-btn @click="goBack" class="btn" icon x-large><v-icon>mdi-arrow-left-thick</v-icon>Volver</v-btn>
+    <v-btn @click="goBack" text x-large><v-icon>mdi-arrow-left-thick</v-icon>Volver</v-btn>
   </span>
 </template>
 
@@ -14,13 +14,3 @@ export default {
   }
 };
 </script>
-
-<style scoped>
-.go-back {
-  display: flex;
-  cursor: pointer;
-}
-button {
-  border: 0;
-}
-</style>

@@ -1,7 +1,11 @@
 <template>
   <v-container class="grey lighten-5" fluid>
     <v-row>
-      <v-col>
+      <v-col cols="3"></v-col>
+      <v-col cols="8">
+        <span class="titulazos">Crear rutina</span>
+      </v-col>
+      <v-col cols="1">
         <GoBack class="go-back-position"/>
       </v-col>
     </v-row>
@@ -137,7 +141,11 @@
 .go-back-position {
    position: relative;
    top: 5px;
-   right: -1750px;
+}
+
+.titulazos {
+  font-size: 80px;
+  vertical-align: bottom;
 }
 </style>
 

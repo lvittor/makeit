@@ -38,6 +38,7 @@ export default {
         },
         removeToken({commit}) {
             localStorage.removeItem(SECURITY_TOKEN_KEY)
+            
             commit('setToken', null)
             Api.token = null
         },

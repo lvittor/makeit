@@ -88,9 +88,9 @@ const router = new VueRouter({
   routes,
 });
 
-router.beforeEach((to, from, next) => {
+router.beforeResolve((to, from, next) => {
   if (to.matched.some(route => route.meta.requiresAuth)) {
-    if (!index.getters['security/isLoggedIn']) {
+    if (!index.getters['security/isLoggedIn'] ) {
       next({ path: "/welcome"});
     } 
     else {

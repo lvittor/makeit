@@ -3,7 +3,13 @@
     <v-container class="profile white">
       <v-row justify="center">
         <v-col cols="8">
-          
+          <v-row>
+            <span class="titulazos">Perfil</span>
+            
+          </v-row>
+          <v-row>
+            <v-divider></v-divider>
+          </v-row>
           <v-row justify="center">
             
                 <v-avatar class="mt-16 mb-5" size="280" color="secondary">
@@ -131,6 +137,7 @@
                 depressed
                 color="primary"
                 x-large
+                class="mb-10"
                 @click="editionMode = true"
               >
                 {{ buttons[1].text }}
@@ -141,7 +148,7 @@
                 outlined
                 color="primary"
                 x-large
-                :to="buttons[2].route"
+                class="mb-10"
                 @click="logout()"
                 
               >
@@ -155,6 +162,7 @@
                 depressed
                 color="primary"
                 x-large
+                class="mb-10"
                 @click="cancelEdition()"
               >
                 {{ buttons[3].text }}
@@ -163,6 +171,7 @@
                 depressed
                 outlined
                 color="primary"
+                class="mb-10"
                 x-large
                 @click="changeUserData()"
               >
@@ -255,7 +264,7 @@ export default {
     }),
 
     async logout() {
-      this.$router.push('/auth/signin')
+      this.$router.push('/welcome')
       await this.$logout()
       Helper.clearResult()  
     },
@@ -302,4 +311,8 @@ export default {
     width: 50%;
     height: 100%;
   }
+  .titulazos {
+  font-size: 80px;
+  vertical-align: bottom;
+}
 </style>
