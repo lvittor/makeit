@@ -10,7 +10,6 @@
               contain
               src="../assets/HomeTitle.svg"
               transition="scale-transition"
-              width="650"
             />
           </div>
         </v-col>
@@ -22,7 +21,6 @@
               contain
               src="../assets/colorLogo.svg"
               transition="scale-transition"
-              width="380"
             />
           </div>
         </v-col>
@@ -47,6 +45,10 @@
   align-items: flex-end;
   text-align: center;
   min-height: 73vh;
+}
+
+.welcome_msg{
+  width: 100%;
 }
 </style>
 

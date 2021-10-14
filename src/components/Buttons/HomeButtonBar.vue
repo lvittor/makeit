@@ -7,10 +7,9 @@
             <v-btn
               depressed
               :to="bt.route"
-              color="primary"
-              class="white--text"
-              width="300px"
-              height="150px"
+              color="primary "
+              class="white--text button_style"
+              height="130px"
             >
               <v-container>
                 <v-row align="start" justify="start" style="height: 100px">
@@ -47,3 +46,11 @@ export default {
   },
 };
 </script>
+
+<style scoped>
+
+.button_style{
+  width: 100%;
+}
+
+</style>
