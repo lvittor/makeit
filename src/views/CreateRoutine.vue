@@ -458,10 +458,7 @@ export default {
           alert(e);
         }
       }
-      this.$router.push({
-        name: "Home",
-        params: { saved: true },
-      });
+      this.$router.push('/')
     },
 
     async createRoutine() {
@@ -481,10 +478,7 @@ export default {
       } catch (e) {
         alert(e);
       }
-      this.$router.push({
-        name: "Home",
-        params: { created: true },
-      });
+      this.$router.push('/')
     },
 
     needEditCycle(cycle, idx) {
