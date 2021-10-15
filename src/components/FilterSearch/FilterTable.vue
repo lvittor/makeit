@@ -153,7 +153,7 @@ export default {
     setRoutines(username) {
       for (let i = 0; i < this.result.content.length; i++) {
         const r = this.result.content[i];
-        if (r.user != null) {
+        if (r.user !== null) {
           username = r.user.name;
         }
         this.routines.push({

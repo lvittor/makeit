@@ -633,14 +633,13 @@ export default {
               put.push(exid);
               await this.$putExercise(req);
             } else {
-              await this.$createCycleExercise(req); // NO ESTA EN LA LISTA VIEJA, PUSH Y AL PINGO
+              await this.$createCycleExercise(req);
             }
           } else {
             if (
               this.exercises[index][now].duration != req.reqs.duration ||
               this.exercises[index][now].repetitions != req.reqs.repetitions
             ) {
-              // VER SI HAY Q HACER PUT O DEJARLO
               try {
                 await this.$putExercise(req);
               } catch (e) {
