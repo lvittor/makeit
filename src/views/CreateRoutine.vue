@@ -19,8 +19,7 @@
           contain
           height="400"
           width="400"
-          lazy-src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/2048px-LEGO_logo.svg.png"
-          src="https://upload.wikimedia.org/wikipedia/commons/thumb/2/24/LEGO_logo.svg/2048px-LEGO_logo.svg.png"
+          src="https://media.gettyimages.com/vectors/dumbbell-weight-loss-flat-design-icon-vector-id1078218468?k=20&m=1078218468&s=612x612&w=0&h=x5CP96gF-RWE-QnulkzAfsSsm1B8x6xyHaCIczaDGak="
         ></v-img>
       </v-col>
       <v-col

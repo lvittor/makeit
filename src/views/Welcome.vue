@@ -7,7 +7,7 @@
                 <v-btn
                     x-large
                     color="primary"
-                    class="px-7"
+                    class="px-7 bt"
                     dark
                     rounded 
                     outlined
@@ -19,6 +19,7 @@
             </v-col>
             <v-col cols="2" right>
                 <v-btn
+                  class="bt"
                     x-large
                     height="10vh"
                     color="primary"
@@ -70,7 +71,7 @@
   transform: translateY(-50%);
 }
 
-.v-btn {
+.bt {
   width: 100%;
 }
 

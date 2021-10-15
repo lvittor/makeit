@@ -18,6 +18,7 @@
           <v-row >
             <v-img
                 :src="img"
+                max-height="15vh"
             ></v-img>
           </v-row>
         </v-container>
@@ -203,7 +204,7 @@ export default {
     },
     img: {
       type: String,
-      default: require("@/assets/defaultImage.png"),
+      default: "https://media.gettyimages.com/vectors/jump-rope-weight-loss-flat-design-icon-vector-id1078232284?k=20&m=1078232284&s=612x612&w=0&h=LNqFRgHe_LJM4kQiq4xLBX0STGqZjNWBeOwRYjEH0Ps=",
     },
     namep: {
       type: String,

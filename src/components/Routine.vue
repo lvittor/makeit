@@ -5,7 +5,8 @@
       <!-- <template> -->
       <v-card class="mx-auto" max-width="344">
         <v-img
-          src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"
+          max-height="15vh"
+          src="https://media.gettyimages.com/vectors/dumbbell-weight-loss-flat-design-icon-vector-id1078218468?k=20&m=1078218468&s=612x612&w=0&h=x5CP96gF-RWE-QnulkzAfsSsm1B8x6xyHaCIczaDGak="
         ></v-img>
 
         <v-card-text>
