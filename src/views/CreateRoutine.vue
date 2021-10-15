@@ -251,7 +251,7 @@ export default {
           this.exercises.push(pickedExercises.content)
         }
       } catch(e) {
-        alert(e)
+        alert(JSON.stringify(e))
       }
     },
 

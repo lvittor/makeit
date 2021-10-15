@@ -130,7 +130,7 @@ export default {
     }),
 
     ...mapActions('cycleexercise', {
-      $getAllCycleExcercises: 'getAll',
+      $getAllCycleExcercises: 'getAll2',
     }),
 
     getString(duration, repetitions){

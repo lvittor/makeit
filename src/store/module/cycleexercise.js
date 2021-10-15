@@ -55,6 +55,12 @@ export default {
     },
       
       async getAll({commit}, req) {
+        const result = await CycleExerciseApi.get(req)
+        commit("replaceAll", result.content)
+        return result;
+      },
+
+      async getAll2({commit}, req) {
         const result = await CycleExerciseApi.getAll(req)
         commit("replaceAll", result.content)
         return result;
