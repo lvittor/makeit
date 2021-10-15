@@ -57,33 +57,38 @@
         </v-container>
       </v-form>
       <div v-if="password != confirmpassword">
-          <span>Las contraseñas no coinciden</span>
+        <span>Las contraseñas no coinciden</span>
       </div>
       <div class="transition-wrapper">
         <div class="d-flex justify-space-between mt-8">
-          <v-dialog
-            v-model="dialog"
-            persistent
-            max-width="400"
-          >
-          <template v-slot:activator="{  attrs }">
-          <v-btn
-            block
-            style="min-width: 88px"
-            color="primary"
-            depressed
-            v-bind="attrs"
-            :loading="tryingtoRegister"
-            @click="createUser(email, password, confirmpassword, firstName, lastName, username)"
-          >
-            {{ $vuetify.lang.t("$vuetify.auth.sign-up.signup") }}
-          </v-btn>
-          </template>
-              <v-card>
+          <v-dialog v-model="dialog" persistent max-width="400">
+            <template v-slot:activator="{ attrs }">
+              <v-btn
+                block
+                style="min-width: 88px"
+                color="primary"
+                depressed
+                v-bind="attrs"
+                :loading="tryingtoRegister"
+                @click="
+                  createUser(
+                    email,
+                    password,
+                    confirmpassword,
+                    firstName,
+                    lastName,
+                    username
+                  )
+                "
+              >
+                {{ $vuetify.lang.t("$vuetify.auth.sign-up.signup") }}
+              </v-btn>
+            </template>
+            <v-card>
               <v-card-title class="text-h5">
-                {{dialogData.header}}
+                {{ dialogData.header }}
               </v-card-title>
-              <v-card-text>{{dialogData.detail}}</v-card-text>
+              <v-card-text>{{ dialogData.detail }}</v-card-text>
               <v-card-actions>
                 <v-btn
                   v-if="registered"
@@ -101,7 +106,7 @@
                   :to="dialogData.button.route"
                   @click="dialog = false"
                 >
-                  {{dialogData.button.text}}
+                  {{ dialogData.button.text }}
                 </v-btn>
               </v-card-actions>
             </v-card>
@@ -109,17 +114,10 @@
         </div>
       </div>
     </v-container>
-    <v-snackbar
-      v-model="snackbar"
-    >
+    <v-snackbar v-model="snackbar">
       El mail ha sido reenviado
       <template v-slot:action="{ attrs }">
-        <v-btn
-          color="primary"
-          text
-          v-bind="attrs"
-          @click="snackbar = false"
-        >
+        <v-btn color="primary" text v-bind="attrs" @click="snackbar = false">
           Cerrar
         </v-btn>
       </template>
@@ -130,8 +128,8 @@
 <script>
 import { Helper } from "@/helpers.js";
 import { User } from "@/../api/user";
-import { mapActions } from 'vuex'
- 
+import { mapActions } from "vuex";
+
 export default {
   components: {
     PasswordTF: () => import("../../components/TextFields/Password"),
@@ -146,70 +144,84 @@ export default {
       dialog: false,
       snackbar: false,
       user: null,
-      email: '',
-      password: '',
-      confirmpassword: '',
-      firstName: '',
-      lastName: '',
-      username: '',
+      email: "",
+      password: "",
+      confirmpassword: "",
+      firstName: "",
+      lastName: "",
+      username: "",
       dialogData: {
         header: "Se ha registrado exitosamente",
-        detail: "En breve podrá ver un mail en su casilla de correo electrónico. Presione el link que se encuentra en el mismo para confirmar su cuenta",
+        detail:
+          "En breve podrá ver un mail en su casilla de correo electrónico. Presione el link que se encuentra en el mismo para confirmar su cuenta",
         button: {
           text: "OK",
-          route: "/auth/signin"
-        }
+          route: "/auth/signin",
+        },
       },
       success: {
         header: "Se ha registrado exitosamente",
-        detail: "En breve podrá ver un mail en su casilla de correo electrónico. Presione el link que se encuentra en el mismo para confirmar su cuenta",
+        detail:
+          "En breve podrá ver un mail en su casilla de correo electrónico. Presione el link que se encuentra en el mismo para confirmar su cuenta",
         button: {
           text: "OK",
-          route: "/auth/signin"
-        }
+          route: "/auth/signin",
+        },
       },
       error: {
         header: "Ha ocurrido un error",
         detail: "Los datos ingresados no son válidos",
         button: {
           text: "reintentar",
-          route: "/auth/signup"
-        }
+          route: "/auth/signup",
+        },
       },
-  
-    }
+    };
   },
 
   methods: {
-    ...mapActions('security', {
-      $createUser: 'createUser',
-      $resendVerify: 'resendVerify',
+    ...mapActions("security", {
+      $createUser: "createUser",
+      $resendVerify: "resendVerify",
     }),
 
-    async resendVerificationEmail(){
-        this.resendingEmail = true
-        const user = new User(this.email, this.password, this.firstName, this.lastName, this.username  );
-        await this.$resendVerify(user);
-        this.resendingEmail = false
-        this.snackbar = true         
+    async resendVerificationEmail() {
+      this.resendingEmail = true;
+      const user = new User(
+        this.email,
+        this.password,
+        this.firstName,
+        this.lastName,
+        this.username
+      );
+      await this.$resendVerify(user);
+      this.resendingEmail = false;
+      this.snackbar = true;
     },
 
-    async createUser(mail, password, confirmpassword, firstName, lastName, username) {
-      if(password == confirmpassword){
-        this.tryingtoRegister = true
-        const user = new User(mail, password, firstName, lastName, username  );
+    async createUser(
+      mail,
+      password,
+      confirmpassword,
+      firstName,
+      lastName,
+      username
+    ) {
+      if (password == confirmpassword) {
+        this.tryingtoRegister = true;
+        const user = new User(mail, password, firstName, lastName, username);
         try {
           this.user = await this.$createUser(user);
-          this.tryingtoRegister = false
-          this.dialogData = this.success
-          this.registered = true
-          this.dialog = true          
+          this.tryingtoRegister = false;
+          this.dialogData = this.success;
+          this.registered = true;
+          this.dialog = true;
         } catch (e) {
-          this.tryingtoRegister = false
-          this.dialogData = this.error
-          this.registered = false
-          this.dialog = true
-          Helper.setResult(e)
+          this.tryingtoRegister = false;
+          this.dialogData = this.error;
+          this.registered = false;
+          this.dialog = true;
+          Helper.setResult(e);
         }
       }
     },

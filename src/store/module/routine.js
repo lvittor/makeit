@@ -8,7 +8,7 @@ export default {
   state: {
     items: [],
     cycles: [],
-    favourites:[]
+    favourites: [],
   },
   getters: {
     findIndex(state) {
@@ -42,10 +42,10 @@ export default {
       state.items.push(routine);
     },
     pushCycle(state, cycle) {
-      state.cycles.push(cycle)
+      state.cycles.push(cycle);
     },
     replaceAllCycles(state, cycles) {
-      state.cycles = cycles
+      state.cycles = cycles;
     },
     replace(state, obj) {
       state.items[obj.index] = obj.routine;
@@ -53,12 +53,12 @@ export default {
     pushFavouritepush(state, routine) {
       state.favourites.push(routine);
     },
-    
+
     splice(state, index) {
       state.items.splice(index, 1);
     },
     spliceCycles(state, index) {
-      state.cycles.splice(index, 1)
+      state.cycles.splice(index, 1);
     },
     spliceFavourites(state, index) {
       state.favourites.splice(index, 1);
@@ -82,20 +82,20 @@ export default {
 
     async createCycle({ commit }, req) {
       const result = await RoutineApi.createCycle(req.id, req.cycle);
-      commit('pushCycle', result)
-      return result
+      commit("pushCycle", result);
+      return result;
     },
     async modify({ getters, commit }, req) {
       const result = await RoutineApi.modifyRoutine(req.routineid, req.routine);
       const index = getters.findIndex(result);
-      const obj = {index: index, routine: result}
+      const obj = { index: index, routine: result };
       if (index >= 0) commit("replace", obj);
       return result;
     },
     async modifyCycle({ getters, commit }, req) {
       const result = await RoutineApi.modifyCycle(req.routineid, req.cycle);
       const index = getters.findCycleIndex(result);
-      const obj = {index: index, cycle: result}
+      const obj = { index: index, cycle: result };
       if (index >= 0) commit("replaceCycle", obj);
       return result;
     },
@@ -113,7 +113,7 @@ export default {
     async getRoutine({ state, getters, commit }, routineid) {
       const index = getters.findIdIndex(routineid); // mmmmmmmmm ver esto
       if (index >= 0) return state.items[index];
-      const result = await RoutineApi.getRoutine(routineid)
+      const result = await RoutineApi.getRoutine(routineid);
       commit("push", result);
       return result;
     },
@@ -123,7 +123,7 @@ export default {
       return result;
     },
 
-    async getFiltered({ commit }, filters){
+    async getFiltered({ commit }, filters) {
       const result = await RoutineApi.getFiltered(filters);
       commit("replaceAll", result.content);
       return result;
@@ -134,53 +134,52 @@ export default {
       commit("replaceAll", result.content);
       return result;
     },
-    async getAllCycles({commit}, routineid) {
+    async getAllCycles({ commit }, routineid) {
       const result = await RoutineApi.getAllCycles(routineid);
-      commit("replaceAllCycles", result.content)
+      commit("replaceAllCycles", result.content);
       return result;
     },
 
-    async getPageByCat({ commit }, {cat,page}) {
-      const result = await RoutineApi.getRoutinesByCat(cat,page,12);
+    async getPageByCat({ commit }, { cat, page }) {
+      const result = await RoutineApi.getRoutinesByCat(cat, page, 12);
       commit("replaceAll", result.content);
       return result;
     },
 
-    async getUserRoutines({commit}, controller){
+    async getUserRoutines({ commit }, controller) {
       const result = await UserApi.getCurrentRoutines(controller);
       commit("replaceAll", result.content);
       return result;
     },
 
-    async setFavourite({getters, commit}, routineID){
+    async setFavourite({ getters, commit }, routineID) {
       const result = await FavouritesApi.setFavourite(routineID);
       if (!getters.findIndexFavourites(result)) commit("pushFavourite", result);
       return result;
-      
     },
 
-    async getFavourites({commit}, controller){
+    async getFavourites({ commit }, controller) {
       const result = await FavouritesApi.getFavourites(controller);
       commit("replaceAllFavourites", result.content);
       return result;
     },
 
-    async getFavouritesPage({commit}, {page, size}){
-      const result = await FavouritesApi.getFavouritesPage(page,size);
+    async getFavouritesPage({ commit }, { page, size }) {
+      const result = await FavouritesApi.getFavouritesPage(page, size);
       commit("replaceAllFavourites", result.content);
       return result;
     },
 
-    async deleteFavourite({getters, commit}, routineID){
+    async deleteFavourite({ getters, commit }, routineID) {
       await FavouritesApi.deleteFavourite(routineID);
       const index = getters.findIndexFavourites(routineID);
       if (index >= 0) commit("spliceFavourites", index);
     },
-    
-    async getRoutinePage({commit}, page){
-      const result = await RoutineApi.getPage(page,12);
+
+    async getRoutinePage({ commit }, page) {
+      const result = await RoutineApi.getPage(page, 12);
       commit("replaceAll", result.content);
       return result;
-    }
+    },
   },
 };

@@ -1,11 +1,5 @@
 <template>
-  <v-navigation-drawer
-    v-model="drawer"
-    app
-    temporary  
-    width="700px"
-    right
-  >
+  <v-navigation-drawer v-model="drawer" app temporary width="700px" right>
     <v-img src="https://cdn.vuetifyjs.com/images/cards/forest-art.jpg"></v-img>
     <v-container>
       <v-row align="center">
@@ -13,7 +7,6 @@
           <h1 class="primary--text h-6 RoutineTitle">{{ this.title }}</h1>
         </v-col>
         <v-col>
-          
           <v-rating
             :value="difficulty"
             dense
@@ -43,28 +36,39 @@
         </v-col>
       </v-row>
       <v-row justify="center">
-          
-          <v-col cols=2>
-            <FavIconB :routineID="this.routineid" ref="fav"/>
-          </v-col>
-            <v-col v-if="editable" cols=2>
-            <EditIconB :routineid="routineid"/>
-          </v-col>
-          <v-col v-if="editable" cols=2>
-            <RemoveIconB :routineID="this.routineid" />
-          </v-col>
+        <v-col cols="2">
+          <FavIconB :routineID="this.routineid" ref="fav" />
+        </v-col>
+        <v-col v-if="editable" cols="2">
+          <EditIconB :routineid="routineid" />
+        </v-col>
+        <v-col v-if="editable" cols="2">
+          <RemoveIconB :routineID="this.routineid" />
+        </v-col>
       </v-row>
       <v-row>
         <v-col>
           <p>{{ this.desc }}</p>
-          <v-row v-for="cycleandexercise in cyclesAndExercises" :key="cycleandexercise.cycle.id">
+          <v-row
+            v-for="cycleandexercise in cyclesAndExercises"
+            :key="cycleandexercise.cycle.id"
+          >
             <v-col>
-              <h2 class="pl-1" v-if="cycleandexercise.cycle.repetitions > 1">{{ cycleandexercise.cycle.name }} - {{ cycleandexercise.cycle.repetitions }} series </h2>
-              <h2 class="pl-1" v-else>{{ cycleandexercise.cycle.name }} - {{ cycleandexercise.cycle.repetitions }} serie </h2>
+              <h2 class="pl-1" v-if="cycleandexercise.cycle.repetitions > 1">
+                {{ cycleandexercise.cycle.name }} -
+                {{ cycleandexercise.cycle.repetitions }} series
+              </h2>
+              <h2 class="pl-1" v-else>
+                {{ cycleandexercise.cycle.name }} -
+                {{ cycleandexercise.cycle.repetitions }} serie
+              </h2>
               <ul>
-                <li v-for="exercise in cycleandexercise.exercises" :key="exercise.id">
-                  <h3 class="text--secondary" >{{ exercise.description }} </h3>
-                </li> 
+                <li
+                  v-for="exercise in cycleandexercise.exercises"
+                  :key="exercise.id"
+                >
+                  <h3 class="text--secondary">{{ exercise.description }}</h3>
+                </li>
               </ul>
             </v-col>
           </v-row>
@@ -78,26 +82,25 @@
 .RoutineTitle {
   font-size: 50px;
 }
-.cicle{
+.cicle {
   font-size: 40px;
 }
-.exercise{
+.exercise {
   font-size: 30px;
 }
 </style>
 
 <script>
-import { mapActions } from 'vuex'
-import FavIconB from './Buttons/FavIconB.vue' 
-import EditIconB from './Buttons/EditIconB.vue'
-import RemoveIconB from './Buttons/RemoveIconB.vue'
+import { mapActions } from "vuex";
+import FavIconB from "./Buttons/FavIconB.vue";
+import EditIconB from "./Buttons/EditIconB.vue";
+import RemoveIconB from "./Buttons/RemoveIconB.vue";
 export default {
-  
   props: {
-      editable: {
-          type: Boolean
-      }
+    editable: {
+      type: Boolean,
     },
+  },
 
   data: () => ({
     drawer: false,
@@ -114,38 +117,37 @@ export default {
   components: {
     FavIconB,
     EditIconB,
-    RemoveIconB
+    RemoveIconB,
   },
 
-  mounted(){
-    this.$root.$on('update', () => {
-      this.drawer = false
-    })
+  mounted() {
+    this.$root.$on("update", () => {
+      this.drawer = false;
+    });
   },
 
   methods: {
-
-    ...mapActions('routine', {
-      $getAllCycles: 'getAllCycles',
+    ...mapActions("routine", {
+      $getAllCycles: "getAllCycles",
     }),
 
-    ...mapActions('cycleexercise', {
-      $getAllCycleExcercises: 'getAll2',
+    ...mapActions("cycleexercise", {
+      $getAllCycleExcercises: "getAll2",
     }),
 
-    getString(duration, repetitions){
-      const connector = " en "
+    getString(duration, repetitions) {
+      const connector = " en ";
 
-      if(repetitions > 0 && duration > 0){
-        return repetitions + " repeticiones" + connector + duration + "s"
-      }else if(repetitions > 0){
-        if(repetitions == 1){
-          return "1 repetición"
-        }else{
-          return repetitions + " repeticiones"
+      if (repetitions > 0 && duration > 0) {
+        return repetitions + " repeticiones" + connector + duration + "s";
+      } else if (repetitions > 0) {
+        if (repetitions == 1) {
+          return "1 repetición";
+        } else {
+          return repetitions + " repeticiones";
         }
-      }else{
-        return duration + "s"
+      } else {
+        return duration + "s";
       }
     },
 
@@ -155,41 +157,54 @@ export default {
       this.difficulty = diff;
       this.title = title;
       this.desc = desc;
-      this.routineid = id
-      this.getAllCycles()
-      this.$refs.fav.isRoutineFavourite(this.routineid)
+      this.routineid = id;
+      this.getAllCycles();
+      this.$refs.fav.isRoutineFavourite(this.routineid);
     },
 
     async getAllCycles() {
       try {
         const pickedCycles = await this.$getAllCycles(this.routineid);
-        this.cycles = pickedCycles.content
-        
-        this.cyclesAndExercises = []
-        
-        for(let i=0 ; i<this.cycles.length ; ++i){
-          const exercisesData = await this.getAllCycleExcercises(this.cycles[i].id)
-          let ex = []
-          for(let j=0 ; j<exercisesData.content.length ; ++j){
-            const s = exercisesData.content[j].exercise.name +" - "+ this.getString(exercisesData.content[j].duration,  exercisesData.content[j].repetitions )
-            ex.push({ id: exercisesData.content[j].exercise.id, description: s })
+        this.cycles = pickedCycles.content;
+
+        this.cyclesAndExercises = [];
+
+        for (let i = 0; i < this.cycles.length; ++i) {
+          const exercisesData = await this.getAllCycleExcercises(
+            this.cycles[i].id
+          );
+          let ex = [];
+          for (let j = 0; j < exercisesData.content.length; ++j) {
+            const s =
+              exercisesData.content[j].exercise.name +
+              " - " +
+              this.getString(
+                exercisesData.content[j].duration,
+                exercisesData.content[j].repetitions
+              );
+            ex.push({
+              id: exercisesData.content[j].exercise.id,
+              description: s,
+            });
           }
-          this.cyclesAndExercises.push({ cycle: this.cycles[i], exercises:  ex})
+          this.cyclesAndExercises.push({
+            cycle: this.cycles[i],
+            exercises: ex,
+          });
         }
-      } catch(e){
+      } catch (e) {
         //this.setResult(e);
       }
     },
 
-    async getAllCycleExcercises(cycleId){
+    async getAllCycleExcercises(cycleId) {
       try {
         const pickedExercises = await this.$getAllCycleExcercises(cycleId);
-        return pickedExercises
-      } catch(e){
+        return pickedExercises;
+      } catch (e) {
         //this.setResult(e);
       }
-    }
-    
+    },
   },
 };
 </script>

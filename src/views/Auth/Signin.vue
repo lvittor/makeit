@@ -19,7 +19,12 @@
             :password.sync="password"
           />
           <div class="d-flex justify-end">
-            <a class="pa-0 text-none red--text" text color="red" max-height="19">
+            <a
+              class="pa-0 text-none red--text"
+              text
+              color="red"
+              max-height="19"
+            >
               {{ errMessage }}
             </a>
           </div>
@@ -37,10 +42,9 @@
           >
             {{ $vuetify.lang.t("$vuetify.auth.sign-in.signin") }}
           </v-btn>
-          
         </div>
       </div>
-      <div class="transition-wrapper" v-if=verificationError>
+      <div class="transition-wrapper" v-if="verificationError">
         <div class="d-flex justify-space-between mt-8">
           <v-btn
             block
@@ -51,9 +55,8 @@
             @click="resendVerificationEmail()"
             :loading="resendingEmail"
           >
-            Reenviar email de verificación 
+            Reenviar email de verificación
           </v-btn>
-          
         </div>
       </div>
     </v-container>
@@ -61,9 +64,8 @@
 </template>
 
 <script>
-import {mapState, mapGetters, mapActions} from 'vuex'
-import {Credentials} from "@/../api/user.js";
-
+import { mapState, mapGetters, mapActions } from "vuex";
+import { Credentials } from "@/../api/user.js";
 
 export default {
   components: {
@@ -72,59 +74,59 @@ export default {
   },
   data() {
     return {
-      email: '',
+      email: "",
       verificationError: false,
       resendingEmail: false,
-      password: '',
+      password: "",
       result: null,
       controller: null,
-      errMessage: '',
-    }
+      errMessage: "",
+    };
   },
   computed: {
-    ...mapState('security', {
-      $user: state => state.user,
+    ...mapState("security", {
+      $user: (state) => state.user,
     }),
-    ...mapGetters('security', {
-      $isLoggedIn: 'isLoggedIn'
+    ...mapGetters("security", {
+      $isLoggedIn: "isLoggedIn",
     }),
     canAbort() {
-      return this.$isLoggedIn && this.controller
-    }
+      return this.$isLoggedIn && this.controller;
+    },
   },
   methods: {
-     ...mapActions('security', {
-      $getCurrentUser: 'getCurrentUser',
-      $login: 'login',
-      $logout: 'logout',
-      $resendVerify: 'resendVerify',
+    ...mapActions("security", {
+      $getCurrentUser: "getCurrentUser",
+      $login: "login",
+      $logout: "logout",
+      $resendVerify: "resendVerify",
     }),
 
-    async resendVerificationEmail(){
-        this.resendingEmail = true
-        await this.$resendVerify({email: this.email});
-        this.resendingEmail = false
-        this.snackbar = true         
+    async resendVerificationEmail() {
+      this.resendingEmail = true;
+      await this.$resendVerify({ email: this.email });
+      this.resendingEmail = false;
+      this.snackbar = true;
     },
 
     async login(username, password) {
       try {
-        const credentials = new Credentials(username, password)
-        this.$root.$emit("updateAppbar")
-        await this.$login({credentials, rememberMe: true })
+        const credentials = new Credentials(username, password);
+        this.$root.$emit("updateAppbar");
+        await this.$login({ credentials, rememberMe: true });
         this.$router.push({
           name: "Home",
         });
-        this.$emit("updateAppbar")
+        this.$emit("updateAppbar");
       } catch (e) {
-        if(e.code == 4){
-          this.errMessage = "Contraseña o usuario inválidos"
-        }else if(e.code == 8){
-          this.errMessage = "El email ingresado no se encuentra verificado"
-          this.verificationError = true
+        if (e.code == 4) {
+          this.errMessage = "Contraseña o usuario inválidos";
+        } else if (e.code == 8) {
+          this.errMessage = "El email ingresado no se encuentra verificado";
+          this.verificationError = true;
         }
       }
     },
-  }
+  },
 };
 </script>

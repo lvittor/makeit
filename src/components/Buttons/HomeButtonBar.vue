@@ -14,7 +14,7 @@
               <v-container>
                 <v-row align="start" justify="start" style="height: 100px">
                   <v-col align="start" justify="start">
-                    <div class="text-h6">{{ bt.text1 }}</div> 
+                    <div class="text-h6">{{ bt.text1 }}</div>
                     <div class="text-h6">{{ bt.text2 }}</div>
                   </v-col>
                 </v-row>
@@ -40,7 +40,11 @@ export default {
       buttons: [
         { text1: "Buscar una rutina", text2: "", route: "/find-routine" },
         { text1: "Crear una rutina", text2: "", route: "/create-routine" },
-        { text1: "Tus rutinas y", text2: "ejercicios", route: "/all-your-routines-and-exercises" },
+        {
+          text1: "Tus rutinas y",
+          text2: "ejercicios",
+          route: "/all-your-routines-and-exercises",
+        },
       ],
     };
   },
@@ -48,9 +52,7 @@ export default {
 </script>
 
 <style scoped>
-
-.button_style{
+.button_style {
   width: 100%;
 }
-
 </style>

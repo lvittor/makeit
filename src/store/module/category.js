@@ -35,7 +35,7 @@ export default {
     async modify({ getters, commit }, category) {
       const result = await CategoryApi.modify(category);
       const index = getters.findIndex(result);
-      const obj = {index: index, category: result}
+      const obj = { index: index, category: result };
       if (index >= 0) commit("replace", obj);
       return result;
     },
@@ -53,13 +53,12 @@ export default {
       return result;
     },
     async getAll({ commit }, filter) {
-      if (!filter)
-        filter = ''
+      if (!filter) filter = "";
       const result = await CategoryApi.getAll(filter);
-      commit("replaceAll", result.content)
+      commit("replaceAll", result.content);
       return result;
     },
-    async getFiltered({ commit }, filters){
+    async getFiltered({ commit }, filters) {
       const result = await CategoryApi.getFiltered(filters);
       commit("replaceAll", result);
       return result;

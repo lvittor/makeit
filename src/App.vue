@@ -3,13 +3,12 @@
     <AppBar />
 
     <v-main>
-      <router-view :key="$route.path"/>
+      <router-view :key="$route.path" />
     </v-main>
 
     <div v-if="['signin', 'signup', 'Welcome'].indexOf($route.name) <= -1">
       <Footer />
     </div>
-    
   </v-app>
 </template>
 

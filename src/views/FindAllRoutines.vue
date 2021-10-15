@@ -1,20 +1,24 @@
 <template>
   <div>
     <v-container class="primary lighten-5" fluid>
-      <NavDrawer :editable=false ref="nav" />
-      
+      <NavDrawer :editable="false" ref="nav" />
+
       <v-row align="end">
         <v-col cols="2" />
         <v-col cols="9" class="left">
           <span class="titulazos">{{ this.$route.params.category.name }}</span>
         </v-col>
-        <v-col cols="1" align-self="start"><GoBack/></v-col>
+        <v-col cols="1" align-self="start"><GoBack /></v-col>
       </v-row>
 
       <v-row justify="center">
         <v-col md="8">
           <v-row>
-            <v-col md="3" v-for="eachroutine in routines" v-bind:key="eachroutine.id">
+            <v-col
+              md="3"
+              v-for="eachroutine in routines"
+              v-bind:key="eachroutine.id"
+            >
               <div
                 @click="
                   $refs.nav.toggleDrawer(
@@ -54,8 +58,6 @@
         ></v-pagination>
       </div>
     </v-container>
-    
-    
   </div>
 </template>
 
@@ -77,7 +79,7 @@ import Routine from "../components/Routine.vue";
 import NavDrawer from "../components/NavigationDrawer.vue";
 import RoutineHelper from "@/RoutineHelper.js";
 import { mapActions } from "vuex";
-import GoBack from "../components/Buttons/GoBack"
+import GoBack from "../components/Buttons/GoBack";
 export default {
   name: "FindRoutine",
 
@@ -86,53 +88,53 @@ export default {
     totalPages: 1,
     currentCatId: null,
     routines: [],
-    
   }),
 
-  created(){
-      this.loadData();
+  created() {
+    this.loadData();
   },
 
   methods: {
-
-    async changePage(){
-      this.routines = await this.getCategoryPage(this.currentCatId,this.page-1)
-      this.routines = this.routines.content
-    },
-    
-    async loadData(){
-      this.currentCatId = this.$route.params.category.id
-      this.routines = await this.getCategoryPage(this.currentCatId,0)
-      this.totalPages = Math.ceil((this.routines.totalCount)/12)
-      this.routines = this.routines.content
+    async changePage() {
+      this.routines = await this.getCategoryPage(
+        this.currentCatId,
+        this.page - 1
+      );
+      this.routines = this.routines.content;
     },
 
-    ...mapActions('routine', {
-      $getPageByCat: 'getPageByCat',
+    async loadData() {
+      this.currentCatId = this.$route.params.category.id;
+      this.routines = await this.getCategoryPage(this.currentCatId, 0);
+      this.totalPages = Math.ceil(this.routines.totalCount / 12);
+      this.routines = this.routines.content;
+    },
+
+    ...mapActions("routine", {
+      $getPageByCat: "getPageByCat",
     }),
 
     async getCategoryPage(cat, page) {
       try {
-        const routines = await this.$getPageByCat({cat: cat, page: page});
-        return routines 
+        const routines = await this.$getPageByCat({ cat: cat, page: page });
+        return routines;
       } catch (e) {
         this.setResult(e);
       }
     },
 
     getDifficulty(difficultyString) {
-      return RoutineHelper.getDifficulty(difficultyString)
+      return RoutineHelper.getDifficulty(difficultyString);
     },
     normalizeScore(score010) {
-      return RoutineHelper.normalizeScore(score010)
+      return RoutineHelper.normalizeScore(score010);
     },
-   
   },
 
   components: {
     Routine,
     NavDrawer,
-    GoBack
+    GoBack,
   },
 };
 </script>

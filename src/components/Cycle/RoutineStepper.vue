@@ -14,17 +14,10 @@
     <v-stepper v-model="e1" class="mb-10">
       <v-stepper-header>
         <template v-for="n in realSteps">
-          <v-stepper-step
-            :key="`${n}-step`"
-            :complete="e1 > n"
-            :step="n"
-          >
+          <v-stepper-step :key="`${n}-step`" :complete="e1 > n" :step="n">
           </v-stepper-step>
 
-          <v-divider
-            v-if="n !== realSteps"
-            :key="n"
-          ></v-divider>
+          <v-divider v-if="n !== realSteps" :key="n"></v-divider>
         </template>
       </v-stepper-header>
 
@@ -35,7 +28,14 @@
           :step="n"
           class="pa-0 mt-0"
         >
-          <CycleCard :exercises="cycles[n-1]" :serie="series[n-1]" :title="getTitle()" :readonly="getReadonly()" :cycle="n" :max="realSteps"/>
+          <CycleCard
+            :exercises="cycles[n - 1]"
+            :serie="series[n - 1]"
+            :title="getTitle()"
+            :readonly="getReadonly()"
+            :cycle="n"
+            :max="realSteps"
+          />
         </v-stepper-content>
       </v-stepper-items>
     </v-stepper>
@@ -43,15 +43,15 @@
 </template>
 
 <script>
-import CycleCard from "./CycleCard.vue"
+import CycleCard from "./CycleCard.vue";
 
 export default {
-  data () {
+  data() {
     return {
       e1: 1,
       finished: false,
       realSteps: null,
-    }
+    };
   },
 
   props: {
@@ -61,30 +61,30 @@ export default {
     },
     cycles: {
       type: Array,
-      default(){
+      default() {
         return [];
-      }
+      },
     },
     series: {
       type: Array,
-      default(){
+      default() {
         return [];
-      }
+      },
     },
     titles: {
       type: Array,
-      default(){
+      default() {
         return [];
-      }
+      },
     },
   },
 
   created() {
-    this.realSteps = this.steps
+    this.realSteps = this.steps;
   },
 
   watch: {
-    realSteps (val) {
+    realSteps(val) {
       if (this.e1 > val) {
         this.e1 = val;
       }
@@ -92,24 +92,23 @@ export default {
   },
 
   methods: {
-    setSteps(n){
-      this.realSteps = n
+    setSteps(n) {
+      this.realSteps = n;
     },
 
     getTitle() {
-      switch(this.e1) {
+      switch (this.e1) {
         case 1:
           return "Calentamiento";
         case this.realSteps:
           return "Enfriamiento";
         default:
-          return this.titles[this.e1-1];
+          return this.titles[this.e1 - 1];
       }
     },
 
     getReadonly() {
-      if (this.e1 == 1 || this.e1 == this.realSteps)
-        return true;
+      if (this.e1 == 1 || this.e1 == this.realSteps) return true;
       return false;
     },
 
@@ -122,12 +121,18 @@ export default {
     },
 
     sendCycles(finished) {
-      this.$root.$emit('getCycles', this.cycles, this.series, this.titles, finished, this.e1 - 1);
+      this.$root.$emit(
+        "getCycles",
+        this.cycles,
+        this.series,
+        this.titles,
+        finished,
+        this.e1 - 1
+      );
     },
 
-    prevStep () {
-      if (this.e1 != 1)
-        this.e1--;
+    prevStep() {
+      if (this.e1 != 1) this.e1--;
     },
 
     getStatus(n) {
@@ -136,30 +141,30 @@ export default {
 
     updateCycles(object, cycle, serie, title) {
       if (cycle == this.e1) {
-        this.cycles[cycle-1] = object;
-        this.series[cycle-1] = serie;
-        this.titles[cycle-1] = title;
+        this.cycles[cycle - 1] = object;
+        this.series[cycle - 1] = serie;
+        this.titles[cycle - 1] = title;
       }
-    }
+    },
   },
 
   mounted() {
-    this.$root.$on('routinestepper', () => {
+    this.$root.$on("routinestepper", () => {
       this.nextStep();
     }),
-    this.$root.$on('routineprevstepper', () => {
-      this.prevStep();
-    }),
-    this.$root.$on('updatecycle', (object, cycle, serie, title) => {
-      this.updateCycles(object, cycle, serie, title);
-    }),
-    this.$root.$once('updateSteps', (n) => {
-      this.setSteps(n);
-    })
+      this.$root.$on("routineprevstepper", () => {
+        this.prevStep();
+      }),
+      this.$root.$on("updatecycle", (object, cycle, serie, title) => {
+        this.updateCycles(object, cycle, serie, title);
+      }),
+      this.$root.$once("updateSteps", (n) => {
+        this.setSteps(n);
+      });
   },
 
   components: {
     CycleCard,
-  }
-}
+  },
+};
 </script>

@@ -1,25 +1,12 @@
 <template>
-  <v-dialog
-    v-model="dialog"
-    persistent
-    max-width="600"
-  >
+  <v-dialog v-model="dialog" persistent max-width="600">
     <template v-slot:activator="{ on, attrs }">
-      <v-btn
-        color="primary"
-        dark
-        x-large
-        v-bind="attrs"
-        v-on="on"
-      >
+      <v-btn color="primary" dark x-large v-bind="attrs" v-on="on">
         Crear nuevo ejercicio
       </v-btn>
     </template>
     <v-card>
-
-      <v-card-title class="text-h5">
-        Nuevo ejercicio
-      </v-card-title>
+      <v-card-title class="text-h5"> Nuevo ejercicio </v-card-title>
 
       <v-card-text>
         <v-container>
@@ -43,64 +30,42 @@
               v-model="detail"
             ></v-textarea>
           </v-row>
-          <v-row  justify="center">
-<!--            https://vuejsexamples.com/dynamically-reactively-render-videos-and-audios/-->
+          <v-row justify="center">
+            <!--            https://vuejsexamples.com/dynamically-reactively-render-videos-and-audios/-->
             <div v-if="videoLoaded">
-              <Media
-                :kind="'video'"
-                :controls="true"
-                :src=srcVideo
-              >
-              </Media>
+              <Media :kind="'video'" :controls="true" :src="srcVideo"> </Media>
             </div>
-            <div v-else >
+            <div v-else>
               <v-btn
                 depressed
-                color = "grey"
-                class = "white--text"
+                color="grey"
+                class="white--text"
                 width="550px"
                 height="150px"
               >
                 <v-container>
-                  <v-row align="center"
-                         justify="center"
-                  >
-                    Añadir video
-                  </v-row>
+                  <v-row align="center" justify="center"> Añadir video </v-row>
                 </v-container>
               </v-btn>
             </div>
           </v-row>
         </v-container>
-
       </v-card-text>
 
-
       <v-card-actions>
-
-        <v-btn
-          color="dark purple"
-          text
-          @click="dialog = false"
-        >
+        <v-btn color="dark purple" text @click="dialog = false">
           Cancelar
         </v-btn>
         <v-spacer></v-spacer>
-        <v-btn
-          color="dark purple"
-          text
-          @click="creation()"
-        >
-          Guardar
-        </v-btn>
+        <v-btn color="dark purple" text @click="creation()"> Guardar </v-btn>
       </v-card-actions>
     </v-card>
   </v-dialog>
 </template>
 
 <script>
-import Media from '@dongido/vue-viaudio';
-import {Exercise} from "../../api/exercise";
+import Media from "@dongido/vue-viaudio";
+import { Exercise } from "../../api/exercise";
 import { mapActions } from "vuex";
 
 export default {
@@ -113,7 +78,7 @@ export default {
       dialog: false,
       videoLoaded: false,
       srcVideo: "https://www.w3schools.com/html/mov_bbb.mp4",
-    }
+    };
   },
   props: {
     name: {
@@ -123,23 +88,23 @@ export default {
       type: String,
     },
   },
-  methods:{
-    ...mapActions('exercise', {
-    $createExerciseNasty: 'create',
+  methods: {
+    ...mapActions("exercise", {
+      $createExerciseNasty: "create",
     }),
 
-    async creation(){
-      if(this.name && this.detail){
+    async creation() {
+      if (this.name && this.detail) {
         try {
           const ans = new Exercise(null, this.name, this.detail, "exercise");
           await this.createExerciseNasty(ans);
-          this.dialog = false
-          this.$root.$emit("exerciseCreated")
-        } catch(e){
-          alert("UPS")
+          this.dialog = false;
+          this.$root.$emit("exerciseCreated");
+        } catch (e) {
+          alert("UPS");
         }
       } else {
-        alert("no entendiste nada pa")
+        alert("no entendiste nada pa");
       }
     },
     /* async creation(){
@@ -174,19 +139,17 @@ export default {
       return -1;
     }, */
 
-    async createExerciseNasty(ex){
-      try{
+    async createExerciseNasty(ex) {
+      try {
         await this.$createExerciseNasty(ex);
         //this.userExercises.push(exercise);
         //alert("Creado... " + JSON.stringify(this.userExercises))
-      } catch(e){
+      } catch (e) {
         alert("ERROR createExerciseNasty");
-        this.setResult(e)
+        this.setResult(e);
       }
     },
   },
-  mounted:{
-
-  },
-}
+  mounted: {},
+};
 </script>

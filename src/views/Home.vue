@@ -47,7 +47,7 @@
   min-height: 73vh;
 }
 
-.welcome_msg{
+.welcome_msg {
   width: 100%;
 }
 </style>

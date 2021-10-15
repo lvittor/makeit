@@ -19,7 +19,7 @@ export default {
     },
     email: {
       type: String,
-    }
+    },
   },
   data: () => ({
     emailRules: [
@@ -29,9 +29,13 @@ export default {
   }),
   computed: {
     computedEmail: {
-      get() { return this.email },
-      set(value){ this.$emit('update:email', value) },
-    }
-  }
+      get() {
+        return this.email;
+      },
+      set(value) {
+        this.$emit("update:email", value);
+      },
+    },
+  },
 };
 </script>

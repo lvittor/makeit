@@ -10,7 +10,7 @@ const routes = [
     path: "/",
     name: "Home",
     component: Home,
-    meta: { requiresAuth: true }
+    meta: { requiresAuth: true },
   },
   {
     path: "/welcome",
@@ -74,7 +74,7 @@ const routes = [
     alias: "*",
     name: "NotFound",
     component: () =>
-      import(/* webpackChunkName: "NotFound" */ "@/views/NotFound.vue")
+      import(/* webpackChunkName: "NotFound" */ "@/views/NotFound.vue"),
   },
   {
     path: "/create-routine",
@@ -95,17 +95,15 @@ const router = new VueRouter({
 });
 
 router.beforeResolve((to, from, next) => {
-  if (to.matched.some(route => route.meta.requiresAuth)) {
-    if (!index.getters['security/isLoggedIn'] ) {
-      next({ path: "/welcome"});
-    } 
-    else {
+  if (to.matched.some((route) => route.meta.requiresAuth)) {
+    if (!index.getters["security/isLoggedIn"]) {
+      next({ path: "/welcome" });
+    } else {
       next();
     }
   } else {
     next();
   }
 });
-
 
 export default router;

@@ -118,17 +118,17 @@ export default {
   },
   methods: {
     getIntensity() {
-      return this.intensity
+      return this.intensity;
     },
 
     getRating() {
-      return this.rating
+      return this.rating;
     },
 
     setOrdenar(n) {
       this.ordenar = n;
       this.$root.$emit("orderable", n);
-      this.$root.$emit("getOrder", n)
+      this.$root.$emit("getOrder", n);
     },
     setRating(n) {
       this.rating = n;
@@ -141,7 +141,7 @@ export default {
     setTipo(n) {
       this.tipo = n;
       this.$root.$emit("type", n);
-    }
+    },
   },
 };
 </script>

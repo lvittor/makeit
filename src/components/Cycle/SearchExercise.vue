@@ -16,7 +16,7 @@
 </template>
 
 <script>
-import { mapGetters, mapState } from 'vuex'
+import { mapGetters, mapState } from "vuex";
 
 export default {
   data: () => ({
@@ -34,48 +34,47 @@ export default {
     },
     cycle: {
       type: Number,
-    }
+    },
   },
 
   computed: {
-    ...mapState('exercise', {
-      $exercises: state => state.items,
+    ...mapState("exercise", {
+      $exercises: (state) => state.items,
     }),
-    ...mapGetters('exercise', {
+    ...mapGetters("exercise", {
       $getAll: "getAllExercises",
-    })
+    }),
   },
 
   async created() {
     await this.getAllExercises();
-    this.setExercises()
+    this.setExercises();
   },
 
-  methods: {    
-    setResult(result){
+  methods: {
+    setResult(result) {
       this.result = result;
     },
 
-    async getAllExercises(){
+    async getAllExercises() {
       try {
-        const exercises = await this.$getAll
-        this.setResult(exercises)
-      } catch (e){
-        alert(e)
+        const exercises = await this.$getAll;
+        this.setResult(exercises);
+      } catch (e) {
+        alert(e);
       }
     },
 
-    setExercises(){
-      for (let i = 0; i < this.result.length; i++){
-        this.exercises.push(this.result[i].name)
+    setExercises() {
+      for (let i = 0; i < this.result.length; i++) {
+        this.exercises.push(this.result[i].name);
       }
-      
     },
 
     changeActual(text) {
       this.actual = text;
-      this.$root.$emit('setter', text, this.id, this.cycle);
-    }
+      this.$root.$emit("setter", text, this.id, this.cycle);
+    },
   },
-}
+};
 </script>

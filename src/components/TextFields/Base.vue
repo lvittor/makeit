@@ -18,16 +18,20 @@ export default {
     label: {
       type: String,
     },
-    name:{
+    name: {
       type: String,
-    }
+    },
   },
 
   computed: {
     computedName: {
-      get() { return this.name },
-      set(value){ this.$emit('update:name', value) },
-    }
-  }
+      get() {
+        return this.name;
+      },
+      set(value) {
+        this.$emit("update:name", value);
+      },
+    },
+  },
 };
 </script>

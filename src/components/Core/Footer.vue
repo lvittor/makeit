@@ -1,5 +1,9 @@
 <template>
-  <v-footer color="primary" padless :value="['signin', 'signup'].indexOf($route.name) <= -1">
+  <v-footer
+    color="primary"
+    padless
+    :value="['signin', 'signup'].indexOf($route.name) <= -1"
+  >
     <v-row justify="center" no-gutters>
       <v-btn
         v-for="link in links"
@@ -22,10 +26,15 @@
 <script>
 export default {
   data: () => ({
-    links: [{text: "Inicio", route: "/"},
-            {text: "Buscar rutina", route: "/find-routine"},
-            {text: "Crear rutina", route: "/create-routine"},
-            {text: "Tus rutinas y ejercicios", route: "/all-your-routines-and-exercises"}],
+    links: [
+      { text: "Inicio", route: "/" },
+      { text: "Buscar rutina", route: "/find-routine" },
+      { text: "Crear rutina", route: "/create-routine" },
+      {
+        text: "Tus rutinas y ejercicios",
+        route: "/all-your-routines-and-exercises",
+      },
+    ],
   }),
 };
 </script>

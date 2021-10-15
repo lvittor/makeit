@@ -1,8 +1,5 @@
 <template>
-  <v-toolbar
-    dense
-    color="primary"
-  >
+  <v-toolbar dense color="primary">
     <v-btn icon color="white" @click="prevStep()">
       <v-icon> mdi-arrow-left </v-icon>
     </v-btn>
@@ -23,7 +20,6 @@
 </template>
 
 <script>
-
 export default {
   props: {
     value: {
@@ -34,17 +30,17 @@ export default {
     },
     cycle: {
       type: Number,
-    }
+    },
   },
 
   methods: {
     sendText(text) {
-      this.$root.$emit('updateTitle', text, this.cycle);
+      this.$root.$emit("updateTitle", text, this.cycle);
     },
 
-    prevStep(){
-      this.$root.$emit('routineprevstepper');
+    prevStep() {
+      this.$root.$emit("routineprevstepper");
     },
-  }
-}
+  },
+};
 </script>

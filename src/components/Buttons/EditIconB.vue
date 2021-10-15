@@ -5,21 +5,20 @@
 </template>
 
 <script>
-
 export default {
   props: {
     routineid: {
-      type: Number
-    }
+      type: Number,
+    },
   },
 
   methods: {
     pushEdit() {
       this.$router.push({
         name: "CreateRoutine",
-        params: {edit: true, routineid: this.routineid}
-      })
-    }
-  }
-}
+        params: { edit: true, routineid: this.routineid },
+      });
+    },
+  },
+};
 </script>

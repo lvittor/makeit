@@ -1,17 +1,17 @@
-<template>
+<template class="grey lighten-5">
   <v-container fluid>
     <v-row align="end">
-      <v-col cols=3 />
-      <v-col cols=8>
+      <v-col cols="3" />
+      <v-col cols="8">
         <span class="titulazos">Rutinas encontradas</span>
       </v-col>
-      <v-col cols=1 align-self="start">
-         <GoBack class="go-back-position"/>
+      <v-col cols="1" align-self="start">
+        <GoBack class="go-back-position" />
       </v-col>
     </v-row>
     <v-container class="pt-16" fluid>
       <div class="back grey lighten-5 align-center fluid" @click="message()">
-          <FilterTable class="pa-16"/>
+        <FilterTable class="pa-16" />
       </div>
     </v-container>
   </v-container>
@@ -23,21 +23,21 @@
   vertical-align: bottom;
 }
 .go-back-position {
-   position: relative;
-   top: 5px;
+  position: relative;
+  top: 5px;
 }
 </style>
 
-
 <script>
 import FilterTable from "../components/FilterSearch/FilterTable.vue";
-import GoBack from "../components/Buttons/GoBack"
+import GoBack from "../components/Buttons/GoBack";
 
 export default {
   name: "FindRoutine",
 
   components: {
-    FilterTable,GoBack,
+    FilterTable,
+    GoBack,
   },
 };
 </script>
@@ -54,5 +54,4 @@ export default {
   -ms-transform: translateY(-50%);
   transform: translateY(-50%);
 }
-
 </style>

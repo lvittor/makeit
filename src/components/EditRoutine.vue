@@ -72,8 +72,8 @@ export default {
       default: 0,
     },
     id: {
-      type: Number
-    }
+      type: Number,
+    },
   },
   data: () => ({
     //

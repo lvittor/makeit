@@ -8,12 +8,12 @@ export default {
   getters: {
     findIndex(state) {
       return (exercise) => {
-       return state.items.findIndex((item) => item.id === exercise.id);
+        return state.items.findIndex((item) => item.id === exercise.id);
       };
     },
     findIndex2(state) {
       return (exercise) => {
-       return state.items.content.findIndex((item) => item.id === exercise.id);
+        return state.items.content.findIndex((item) => item.id === exercise.id);
       };
     },
     findIdIndex(state) {
@@ -23,7 +23,7 @@ export default {
     },
     getAllExercises(state) {
       return state.items;
-    }
+    },
   },
   mutations: {
     push(state, exercise) {
@@ -55,7 +55,7 @@ export default {
     async modify({ getters, commit }, exercise) {
       const result = await ExerciseApi.modify(exercise);
       const index = getters.findIndex(result);
-      const obj = {index: index, exercise: result}
+      const obj = { index: index, exercise: result };
       if (index >= 0) commit("replace", obj);
       return result;
     },
@@ -77,7 +77,7 @@ export default {
       return result;
     },
     async getExercisesPage({ commit }, page) {
-      const result = await ExerciseApi.getPage(page,12);
+      const result = await ExerciseApi.getPage(page, 12);
       commit("replaceAll", result.content);
       return result;
     },

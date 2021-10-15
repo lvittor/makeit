@@ -1,24 +1,17 @@
 <template>
   <v-container>
     <v-row>
-      <v-col
-        class="pa-0"
-      >
-        <v-card 
-          tile
-          elevation="0"
-        >
-          <v-divider/>
+      <v-col class="pa-0">
+        <v-card tile elevation="0">
+          <v-divider />
           <v-container>
-            <v-row align="center"> 
+            <v-row align="center">
               <v-col>
-                <SearchExercise :actual="actual" :id="id" :cycle="cycle"/>
+                <SearchExercise :actual="actual" :id="id" :cycle="cycle" />
               </v-col>
             </v-row>
             <v-row align="center" justify-md="center">
-              <v-col
-                cols="1"
-              >
+              <v-col cols="1">
                 <v-checkbox
                   v-model="enabled1"
                   hide-details
@@ -37,9 +30,7 @@
                   @change="setReps($event)"
                 ></v-select>
               </v-col>
-              <v-col
-                cols="1"
-              >
+              <v-col cols="1">
                 <v-checkbox
                   v-model="enabled2"
                   hide-details
@@ -64,7 +55,7 @@
               </v-col>
             </v-row>
           </v-container>
-          <v-divider/>
+          <v-divider />
         </v-card>
       </v-col>
     </v-row>
@@ -72,72 +63,72 @@
 </template>
 
 <script>
-  import SearchExercise from "./SearchExercise.vue"
+import SearchExercise from "./SearchExercise.vue";
 
-  export default {
-    data: () => ({
-      items: ['1', '2', '3', '4', '5', '6', '7', '8', '9'],
-    }),
+export default {
+  data: () => ({
+    items: ["1", "2", "3", "4", "5", "6", "7", "8", "9"],
+  }),
 
-    props: {
-      id: {
-        type: Number,
-      },
-      cycle: {
-        type: Number,
-      },
-      enabled1: {
-        type: Boolean,
-        default: false,
-      },
-      enabled2: {
-        type: Boolean,
-        default: false,
-      },
-      actual: {
-        type: String,
-        default: '',
-      },
-      reps: {
-        type: String,
-      },
-      dur: {
-        type: String,
+  props: {
+    id: {
+      type: Number,
+    },
+    cycle: {
+      type: Number,
+    },
+    enabled1: {
+      type: Boolean,
+      default: false,
+    },
+    enabled2: {
+      type: Boolean,
+      default: false,
+    },
+    actual: {
+      type: String,
+      default: "",
+    },
+    reps: {
+      type: String,
+    },
+    dur: {
+      type: String,
+    },
+  },
+
+  methods: {
+    setActual(text, id, cycle) {
+      if (this.id == id && this.cycle == cycle) {
+        this.$root.$emit("updateText", text, this.id, this.cycle);
       }
     },
-
-    methods: {
-      setActual(text, id, cycle) {
-        if (this.id == id && this.cycle == cycle){
-          this.$root.$emit('updateText', text, this.id, this.cycle);
-        }
-      },
-      setReps(text) {
-        this.reps = text;
-        this.$root.$emit('updateReps', text, this.id, this.cycle);
-      },
-      setDur(text) {
-        this.dur = text;
-        this.$root.$emit('updateDur', text, this.id, this.cycle);
-      },
-      setEnabled1(value){
-        this.enabled1 = value;
-        this.$root.$emit('updateEnable1', value, this.id, this.cycle);
-      },
-      setEnabled2(value){
-        this.enabled2 = value;
-        this.$root.$emit('updateEnable2', value, this.id, this.cycle);
-      },
+    setReps(text) {
+      this.reps = text;
+      this.$root.$emit("updateReps", text, this.id, this.cycle);
     },
-
-    mounted() {
-      this.$root.$on('setter', (text, id, cycle) => {
-        this.setActual(text, id, cycle);
-      })
+    setDur(text) {
+      this.dur = text;
+      this.$root.$emit("updateDur", text, this.id, this.cycle);
     },
-
-    components: {
-      SearchExercise,
+    setEnabled1(value) {
+      this.enabled1 = value;
+      this.$root.$emit("updateEnable1", value, this.id, this.cycle);
     },
-  }
+    setEnabled2(value) {
+      this.enabled2 = value;
+      this.$root.$emit("updateEnable2", value, this.id, this.cycle);
+    },
+  },
+
+  mounted() {
+    this.$root.$on("setter", (text, id, cycle) => {
+      this.setActual(text, id, cycle);
+    });
+  },
+
+  components: {
+    SearchExercise,
+  },
+};
 </script>

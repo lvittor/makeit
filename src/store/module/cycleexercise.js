@@ -1,4 +1,4 @@
-import { CycleExerciseApi } from "../../../api/cycleexercise"
+import { CycleExerciseApi } from "../../../api/cycleexercise";
 
 export default {
   namespaced: true,
@@ -8,7 +8,13 @@ export default {
   getters: {
     findIndex(state) {
       return (exercise) => {
-        return state.items.findIndex((item) => (item.exercise.id === exercise.exercise.id) && (item.order === exercise.order) && (item.duration === exercise.duration) && (item.repetitions === exercise.repetitions));
+        return state.items.findIndex(
+          (item) =>
+            item.exercise.id === exercise.exercise.id &&
+            item.order === exercise.order &&
+            item.duration === exercise.duration &&
+            item.repetitions === exercise.repetitions
+        );
       };
     },
     findIdIndex(state) {
@@ -18,7 +24,7 @@ export default {
     },
     getAllExercises(state) {
       return state.items.content;
-    }
+    },
   },
   mutations: {
     push(state, exercise) {
@@ -37,33 +43,37 @@ export default {
   actions: {
     async create({ commit }, cycleexercise) {
       const result = await CycleExerciseApi.add(cycleexercise);
-      commit('push', result)
+      commit("push", result);
       return result;
     },
-    
-    async delete({getters, commit}, req) {
-      await CycleExerciseApi.delete(req.cycleid, req.exerciseid)
+
+    async delete({ getters, commit }, req) {
+      await CycleExerciseApi.delete(req.cycleid, req.exerciseid);
       const index = getters.findIdIndex(req.cycleid);
       if (index >= 0) commit("splice", index);
     },
     async modify({ getters, commit }, req) {
-      const result = await CycleExerciseApi.modify(req.cycleid, req.exid, req.reqs);
+      const result = await CycleExerciseApi.modify(
+        req.cycleid,
+        req.exid,
+        req.reqs
+      );
       const index = getters.findIndex(result);
-      const obj = {index: index, exercise: result}
+      const obj = { index: index, exercise: result };
       if (index >= 0) commit("replace", obj);
       return result;
     },
-      
-      async getAll({commit}, req) {
-        const result = await CycleExerciseApi.get(req)
-        commit("replaceAll", result.content)
-        return result;
-      },
 
-      async getAll2({commit}, req) {
-        const result = await CycleExerciseApi.getAll(req)
-        commit("replaceAll", result.content)
-        return result;
-      },
+    async getAll({ commit }, req) {
+      const result = await CycleExerciseApi.get(req);
+      commit("replaceAll", result.content);
+      return result;
+    },
+
+    async getAll2({ commit }, req) {
+      const result = await CycleExerciseApi.getAll(req);
+      commit("replaceAll", result.content);
+      return result;
+    },
   },
 };

@@ -24,8 +24,8 @@ export default {
       type: String,
     },
     password: {
-      type: String, 
-    }
+      type: String,
+    },
   },
   data() {
     return {
@@ -38,9 +38,13 @@ export default {
   },
   computed: {
     computedPassword: {
-      get() { return this.password },
-      set(value) {this.$emit('update:password', value) },
-    }
-  }
+      get() {
+        return this.password;
+      },
+      set(value) {
+        this.$emit("update:password", value);
+      },
+    },
+  },
 };
 </script>
