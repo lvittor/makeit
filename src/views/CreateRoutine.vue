@@ -409,7 +409,6 @@ export default {
           alert(e)
         }
       }
-      alert('rutina guardada')
       this.$router.push('/');
     },
 
@@ -423,7 +422,7 @@ export default {
       } catch (e) {
         alert(e)
       }
-      alert('rutina creada')
+
       this.$router.push('/');
     },
 
