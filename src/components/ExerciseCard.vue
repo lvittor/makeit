@@ -153,7 +153,7 @@
                     prominent
                     border="left"
                   >
-                    ¿Estás seguro desea eliminar el ejercicio?
+                    ¿Está seguro que desea eliminar el ejercicio?
                   </v-alert>
                   <v-row class="ma-0">
                     <v-col
